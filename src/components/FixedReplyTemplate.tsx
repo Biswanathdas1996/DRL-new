@@ -42,7 +42,10 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
   if (!data) return;
   console.log("================>", data);
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div
+      style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}
+      className="chat-msg-stack"
+    >
       {/* Display the first text dynamically */}
       <div style={{ marginBottom: "20px", fontSize: "14px" }}>
         {data?.text1}
