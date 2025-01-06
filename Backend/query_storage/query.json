@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1733987657824,
+    "name": "what is the % returns for brand %brand_name_string% in %hq_name_string% in last 3 months",
+    "query": "SELECT (SUM(sales.primary_sales) / SUM(target.target_value)) * 100 as percent_returns FROM sales JOIN target ON sales.divisioncode = target.divisioncode AND sales.skucode = target.skucode JOIN sku ON sales.skucode = sku.code JOIN stockisthqmapping ON sales.stockistid = stockisthqmapping.stockistid JOIN hq ON stockisthqmapping.hqid = hq.id WHERE sku.name = '%brand_name_string%' AND hq.name = '%hq_name_string%' AND sales.transaction_date >= (CURRENT_DATE - INTERVAL '3 months')",
+    "questions": ["Give me all the hq?", "Give me all the division"]
+  },
+  {
+    "id": 1733987824,
+    "name": "query 14",
+    "query": "SELECT\n\tST.NAME AS STOCKIST_NAME,\n\tH.NAME AS HQ_NAME,\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 8\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) AS PRIMARYSALES_AUG_24,\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 9\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) AS PRIMARYSALES_SEP_24,\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 10\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) AS PRIMARYSALES_OCT_24,\n\tAVG(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) IN (8, 9, 10)\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE NULL\n\t\tEND\n\t) AS PRIMARYSALES_AVG_LAST_3_MONTHS,\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 11\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) AS PRIMARYSALES_NOV_24,\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 11\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) - AVG(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) IN (8, 9, 10)\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE NULL\n\t\tEND\n\t) AS DIFFERENCE_IN_BILLING\nFROM\n\tSALES S\n\tJOIN STOCKIST ST ON S.STOCKISTID = ST.ID\n\tJOIN HQ H ON S.HQID = H.ID\n\nGROUP BY\n\tST.ID,\n\tH.ID \nHAVING\n\tSUM(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 11\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE 0\n\t\tEND\n\t) < AVG(\n\t\tCASE\n\t\t\tWHEN EXTRACT(\n\t\t\t\tMONTH\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) IN (8, 9, 10)\n\t\t\tAND EXTRACT(\n\t\t\t\tYEAR\n\t\t\t\tFROM\n\t\t\t\t\tS.TRANSACTION_DATE\n\t\t\t) = 2024 THEN S.PRIMARY_SALES\n\t\t\tELSE NULL\n\t\tEND\n\t)\nORDER BY\n\tDIFFERENCE_IN_BILLING DESC LIMIT 10;",
+    "questions": [
+      "Would you like to compare the overall billing for the same stockists for the same time period?",
+      "Give me all the division"
+    ]
+  },
+  {
+    "id": 1733987777,
+    "name": "Give me all the division",
+    "query": "SELECT * FROM public.division",
+    "questions": ["Give me all the hq?", "query 14 ?"]
+  },
+  {
+    "id": 1733987776,
+    "name": "Give me all the hq",
+    "query": "SELECT * FROM public.hq",
+    "questions": ["Give me all the division", "Question 8?"]
+  }
+]
