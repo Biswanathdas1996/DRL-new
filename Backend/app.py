@@ -87,7 +87,7 @@ if __name__ == "__main__":
             return jsonify({"error": "No question provided"}), 400
 
 
-        pre_data = pre_process_data(user_question)
+        pre_data = pre_process_data(user_question, working_table_description)
         if pre_data:
             print("Process: ==============6=======>", pre_data)
             return jsonify(pre_data)

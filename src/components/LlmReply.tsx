@@ -183,8 +183,8 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
                   </div>
                 ) : (
                   <>
-                    <Box sx={{ width: "100%" }}>
-                      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <div style={{ width: "100%" }}>
+                      <div style={{ borderBottom: 1, borderColor: "divider" }}>
                         <Tabs
                           value={value}
                           onChange={handleChange}
@@ -201,7 +201,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
                             style={{ fontSize: 11 }}
                           />
                         </Tabs>
-                      </Box>
+                      </div>
                       <CustomTabPanel value={value} index={0}>
                         {message.llmReply && (
                           <div className="chat-indv" style={{ all: "unset" }}>
@@ -224,7 +224,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
                           chatId={id}
                         />
                       </CustomTabPanel>
-                    </Box>
+                    </div>
                   </>
                 )}
               </>
