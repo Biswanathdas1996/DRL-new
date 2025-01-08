@@ -1,15 +1,5 @@
 [
   {
-    "id": 1733987777,
-    "name": "Give me all the division",
-    "query": "SELECT * FROM public.division",
-    "use": "Static",
-    "questions": [
-      "Give me all the hq?",
-      "Would you like to compare the overall billing for the same stockists for the same time period?"
-    ]
-  },
-  {
     "id": 1733987776,
     "name": "Give me all the hq",
     "use": "Static",
@@ -18,7 +8,7 @@
   },
   {
     "id": 2,
-    "name": "What is the % returns for brand Cheerio in Mumbai HQ in last 3 months?",
+    "name": "What is the % returns for sku %%sku_name%% in Mumbai HQ in last 3 months?",
     "use": "Dynamic",
     "query": "SELECT st.name, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 9 AND s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) AS Sept_Returns, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 10 AND s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) AS Oct_Returns, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 11 AND s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) AS Nov_Returns, SUM(CASE WHEN s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) AS Total_Returns, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) IN (9, 10, 11) THEN s.primary_sales ELSE 0 END) AS Total_Sales, (SUM(CASE WHEN s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) * 100.0) / NULLIF(SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) IN (9, 10, 11) THEN s.primary_sales ELSE 0 END), 0) AS Returns_Percentage FROM sales s JOIN stockist st ON s.stockistid = st.id JOIN sku sk ON s.skucode = sk.code WHERE sk.name = 'Ketorol Injection 1Ml' AND s.transaction_date >= '2024-09-01' AND s.transaction_date <= '2024-11-30' GROUP BY st.name HAVING SUM(CASE WHEN s.primary_sales < 0 THEN s.primary_sales ELSE 0 END) != 0 ORDER BY Total_Returns DESC LIMIT 3;",
     "questions": ["Give me all the division", "Question 8?"]
@@ -89,17 +79,12 @@
   },
   {
     "id": 14.1,
-    "name": "Billing for which A class stockist for Brand Ketorol Inj was lesser in November as compared to previous 3 months?",
+    "name": "Billing for which sku %%sku_name%% Inj was lesser in November as compared to previous 3 months?",
     "query": "SELECT st.name AS Stockist_Name, h.name AS HQ_Name, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 8 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) AS primarysales_Aug_24, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 9 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) AS primarysales_Sep_24, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 10 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) AS primarysales_Oct_24, AVG(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) IN (8, 9, 10) AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE NULL END) AS primarysales_Avg_Last_3_Months, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 11 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) AS primarysales_Nov_24, SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 11 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) - AVG(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) IN (8, 9, 10) AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE NULL END) AS Difference_in_billing FROM sales s JOIN stockist st ON s.stockistid = st.id JOIN hq h ON s.hqid = h.id GROUP BY st.id, h.id HAVING SUM(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) = 11 AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE 0 END) < AVG(CASE WHEN EXTRACT(MONTH FROM s.transaction_date) IN (8, 9, 10) AND EXTRACT(YEAR FROM s.transaction_date) = 2024 THEN s.primary_sales ELSE NULL END) ORDER BY Difference_in_billing DESC;",
     "use": "Dynamic",
     "questions": [
       "Would you like to compare the overall billing for the same stockists for the same time period?",
       "Give me all the division"
     ]
-  },
-  {
-    "id": 1736244628550,
-    "name": "what is the total sales amount ?",
-    "query": "SELECT SUM(primary_sales) AS total_sales_amount FROM sales;"
   }
 ]

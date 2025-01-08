@@ -133,7 +133,7 @@ def execute_sql_query(query, DB_CONFIG = {
             return dict_list
         except Exception as e:
             print(f"The error '{e}' occurred")
-            return None
+            raise e
         finally:
             cursor.close()
             connection.close()

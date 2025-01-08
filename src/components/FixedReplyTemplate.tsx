@@ -19,7 +19,7 @@ interface Data {
 
 interface Props {
   data: Data;
-  doQuery: any;
+  doQuery?: any;
 }
 
 const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {

@@ -17,8 +17,8 @@ import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
 interface TableProps {
   data: any[];
-  loadingUi: boolean;
-  chatId: number;
+  loadingUi?: boolean;
+  chatId?: number;
 }
 
 const CustomTable: React.FC<TableProps> = ({ data, loadingUi, chatId }) => {
@@ -56,12 +56,14 @@ const CustomTable: React.FC<TableProps> = ({ data, loadingUi, chatId }) => {
       });
       return newItem;
     });
-    dispatch(
-      updateResult({
-        chatId,
-        result: updatedData,
-      })
-    );
+    if (chatId !== undefined) {
+      dispatch(
+        updateResult({
+          chatId,
+          result: updatedData,
+        })
+      );
+    }
     console.log("Updated Data: ", updatedData);
     // chatId;
   };

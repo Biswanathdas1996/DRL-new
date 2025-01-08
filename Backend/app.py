@@ -150,14 +150,20 @@ if __name__ == "__main__":
         try:
             print("User Question:", user_sql_query)
             
-          
-            # result = execute_query(user_sql_query)
-            result = execute_sql_query(user_sql_query)
 
+            # result = execute_query(user_sql_query)
+            try:
+                result = execute_sql_query(user_sql_query)
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
+
+            
             # result_json = convert_to_json(result)
 
             # analitics = getAnalitics(result_json)
             
+            if 'error' in result:
+                return jsonify({"error": str(e)}), 500
             response = jsonify({
                 "result": result,
                 "query": user_sql_query

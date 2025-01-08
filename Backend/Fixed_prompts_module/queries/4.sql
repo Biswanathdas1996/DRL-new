@@ -1,0 +1,160 @@
+SELECT
+	HQ.NAME AS "HQs",
+	TO_CHAR(CURRENT_DATE - INTERVAL '4 months', 'Mon') AS formatted_date4,
+    ROUND(
+		(
+			SUM(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							S.TRANSACTION_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '4 months') THEN S.PRIMARY_SALES
+					ELSE 0
+				END
+			) / MAX(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							T.TARGET_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '4 months') THEN T.TARGET_VALUE
+					ELSE NULL
+				END
+			)
+		) * 100,
+		2
+    ) AS formatted_date4,
+    TO_CHAR(CURRENT_DATE - INTERVAL '3 months', 'Mon') AS formatted_date3,
+	ROUND(
+		(
+			SUM(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							S.TRANSACTION_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '3 months') THEN S.PRIMARY_SALES
+					ELSE 0
+				END
+			) / MAX(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							T.TARGET_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '3 months') THEN T.TARGET_VALUE
+					ELSE NULL
+				END
+			)
+		) * 100,
+		2
+	) AS TO_CHAR(CURRENT_DATE - INTERVAL '3 months', 'Mon'),
+
+	ROUND(
+		(
+			SUM(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							S.TRANSACTION_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '2 months') THEN S.PRIMARY_SALES
+					ELSE 0
+				END
+			) / MAX(
+				CASE
+					WHEN EXTRACT(
+						MONTH
+						FROM
+							T.TARGET_DATE
+					) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '2 months') THEN T.TARGET_VALUE
+					ELSE NULL
+				END
+			)
+		) * 100,
+		2
+	) AS TO_CHAR(CURRENT_DATE - INTERVAL '2 months', 'Mon'),
+	ROUND(
+		(
+			(
+				SUM(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								S.TRANSACTION_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '4 months') THEN S.PRIMARY_SALES
+						ELSE 0
+					END
+				) / MAX(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								T.TARGET_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '4 months') THEN T.TARGET_VALUE
+						ELSE NULL
+					END
+				)
+			) + (
+				SUM(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								S.TRANSACTION_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '3 months') THEN S.PRIMARY_SALES
+						ELSE 0
+					END
+				) / MAX(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								T.TARGET_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '3 months') THEN T.TARGET_VALUE
+						ELSE NULL
+					END
+				)
+			) + (
+				SUM(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								S.TRANSACTION_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '2 months') THEN S.PRIMARY_SALES
+						ELSE 0
+					END
+				) / MAX(
+					CASE
+						WHEN EXTRACT(
+							MONTH
+							FROM
+								T.TARGET_DATE
+						) = EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '2 months') THEN T.TARGET_VALUE
+						ELSE NULL
+					END
+				)
+			)
+		) / 3,
+		2
+	) AS "Grand Total"
+FROM
+	SALES S
+	JOIN HQ ON S.HQID = HQ.ID
+	JOIN TARGET T ON S.HQID = T.HQID
+	AND EXTRACT(
+		YEAR
+		FROM
+			S.TRANSACTION_DATE
+	) = EXTRACT(
+		YEAR
+		FROM
+			T.TARGET_DATE
+	)
+GROUP BY
+	HQ.NAME
+ORDER BY
+	HQ.NAME;
