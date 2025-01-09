@@ -18,7 +18,7 @@ import Modal from "@mui/material/Modal";
 import { format } from "sql-formatter";
 import Loader from "../components/Loader";
 import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/mode-mysql";
 // import "ace-builds/src-noconflict/worker-mysql";
 
@@ -281,7 +281,7 @@ const Queries: React.FC = () => {
               key="testScript"
               placeholder="Placeholder Text"
               mode="mysql"
-              theme="github"
+              theme="monokai"
               name="blah2"
               fontSize={12}
               lineHeight={15}
@@ -298,7 +298,7 @@ const Queries: React.FC = () => {
               editorProps={{ $blockScrolling: true }}
               //   height="400px"
               width="100%"
-              style={{ padding: 5, borderRadius: 15 }}
+              style={{ padding: 10, borderRadius: 15 }}
             />
             {/* <textarea
               // rows={10}

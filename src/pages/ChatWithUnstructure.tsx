@@ -9,6 +9,7 @@ import { RootState, AppDispatch } from "../redux/store";
 import { addMessage } from "../redux/slices/unStructureChatSlice";
 import { useFetch } from "../hook/useFetch";
 import ContextData from "../pages/Code/components/ContextData";
+import ContextFromMongo from "../components/ContextFromMongo";
 import SelectCollection from "../components/SelectCollection";
 
 const Chat: React.FC = () => {
@@ -28,7 +29,7 @@ const Chat: React.FC = () => {
     const raw = JSON.stringify({
       query: query,
       collection_name: localStorage.getItem("selected_collection"),
-      no_of_results: 3,
+      no_of_results: 5,
       fine_chunking: false,
       if_gpt_summarize: false,
     });
@@ -79,7 +80,8 @@ const Chat: React.FC = () => {
     const contextData = await getContext(query);
 
     setContextDataForStory(contextData);
-    const effectiveContext = JSON.stringify(contextData?.results?.documents);
+    const effectiveContext = JSON.stringify(contextData);
+    // const effectiveContext = JSON.stringify(contextData?.results?.documents);
     // const effectiveContext = contextData?.results?.gpt_results;
     // const effectiveContext = contextData?.results?.fine_results;
 
@@ -259,7 +261,9 @@ const Chat: React.FC = () => {
             </button>
           </div>
         </form>
-        {contextDataForStory && <ContextData data={contextDataForStory} />}
+        {contextDataForStory && (
+          <ContextFromMongo data={contextDataForStory?.results as any} />
+        )}
       </div>
 
       <button className="newConversationButton">
