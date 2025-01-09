@@ -17,8 +17,8 @@ export const GENERATE_ERD_FROM_DB = `${BASE_URL}/generate-erd-from-db`;
 export const GET_ERD_IMG = `${BASE_URL}/get-erd-image`;
 export const SEARCH = `${BASE_URL}/get-context-mongo`;
 export const ANALITICS = USE_MOCK
-  ? `${BASE_URL}/analitics-mock`
-  : `${BASE_URL}/analitics`;
+  ? `${BASE_URL}/analytics-mock`
+  : `${BASE_URL}/analytics`;
 
 export const colors = [
   // "#d04a02cf",

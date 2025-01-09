@@ -49,7 +49,7 @@ const chatSlice = createSlice({
               result: result.result,
               query: result.query,
               type: result.type,
-              analitics: null,
+              analytics: null,
               llmReply: llmReply,
             },
           };
@@ -62,10 +62,10 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<{
         chatId: number;
-        analitics: Analitics[];
+        analytics: Analitics[];
       }>
     ) => {
-      const { chatId, analitics } = action.payload;
+      const { chatId, analytics } = action.payload;
       state.value = state.value.map((item) => {
         if (item.id === chatId) {
           return {
@@ -74,7 +74,7 @@ const chatSlice = createSlice({
               ...(typeof item.message === "object" && item.message !== null
                 ? item.message
                 : {}),
-              analitics: analitics,
+              analytics: analytics,
             },
           };
         }
@@ -123,7 +123,7 @@ const chatSlice = createSlice({
                 ? item.message
                 : {}),
               result: result,
-              analitics: null,
+              analytics: null,
             },
           };
         }

@@ -4,7 +4,6 @@ import os
 import json
 
 # Function to load CSV into a temporary SQLite database
-
 def load_all_csv_to_sqlite():
     data_folder = os.path.join(os.path.dirname(__file__), '../data')
     try:
@@ -30,7 +29,7 @@ def get_table_headers(table_name, conn):
     except Exception as e:
         print(f"Error getting table headers: {e}")
         return None
-    
+
 def get_erd():
     try:
         with open(os.path.join(os.path.dirname(__file__), '../data/ERD/data.json'), 'r') as file:
@@ -42,8 +41,7 @@ def get_erd():
         print("Error decoding JSON from the configuration file.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-  
-    
+
 def delete_temp_table(conn, table_name):
     try:
         cursor = conn.cursor()
@@ -52,43 +50,44 @@ def delete_temp_table(conn, table_name):
     except Exception as e:
         print(f"Error deleting temp table: {e}")
 
-
-
 # Function to execute SQL query and return results
 def execute_query(query):
     print("Executing query:", query)
     try:
         conn = load_all_csv_to_sqlite()
+        if conn is None:
+            raise ValueError("Failed to load CSV files into SQLite.")
         cursor = conn.cursor()
         cursor.execute(query)
         result = cursor.fetchall()
         result_with_headers = format_sql_result(result, conn, query)
-        conn.close()    
+        conn.close()
         return result_with_headers
-        
     except Exception as e:
         print(f"Error executing query: {e}")
         return None
 
-
-def format_sql_result(result,conn, query):
-    if not result:
-        return None
-    if len(result) == 1 and len(result[0]) == 1:
+def format_sql_result(result, conn, query):
+    try:
+        if not result:
+            return None
+        if len(result) == 1 and len(result[0]) == 1:
             return result[0][0]
-        
-    table_name = query.split()[query.split().index('FROM') + 1]
-    headers = get_table_headers(table_name, conn)
-    if headers is None:
-        raise ValueError(f"Could not get headers for table: {table_name}")
-    result_with_headers = [headers.split(", ")] + result
-    delete_temp_table(conn, table_name)
-    if 'JOIN' in query.upper():
-        joined_table_name = query.split()[query.split().index('JOIN') + 1]
-        joined_headers = get_table_headers(joined_table_name, conn)
-        if joined_headers is None:
-            raise ValueError(f"Could not get headers for joined table: {joined_table_name}")
-        headers += ", " + joined_headers
-        result_with_headers = [headers.split(", ")] + result
-    return result_with_headers
 
+        table_name = query.split()[query.split().index('FROM') + 1]
+        headers = get_table_headers(table_name, conn)
+        if headers is None:
+            raise ValueError(f"Could not get headers for table: {table_name}")
+        result_with_headers = [headers.split(", ")] + result
+        delete_temp_table(conn, table_name)
+        if 'JOIN' in query.upper():
+            joined_table_name = query.split()[query.split().index('JOIN') + 1]
+            joined_headers = get_table_headers(joined_table_name, conn)
+            if joined_headers is None:
+                raise ValueError(f"Could not get headers for joined table: {joined_table_name}")
+            headers += ", " + joined_headers
+            result_with_headers = [headers.split(", ")] + result
+        return result_with_headers
+    except Exception as e:
+        print(f"Error formatting SQL result: {e}")
+        return None

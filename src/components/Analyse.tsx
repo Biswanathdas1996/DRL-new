@@ -101,7 +101,7 @@ const Home: React.FC<HomeProps> = ({ data, chatId }) => {
   }
 
   interface AnaliticsResult {
-    analitics: any;
+    analytics: any;
   }
 
   const fetchAnaliticsData = (requestOptions: RequestOptions): void => {
@@ -111,11 +111,11 @@ const Home: React.FC<HomeProps> = ({ data, chatId }) => {
       .then((response) => response.json())
       .then((result: AnaliticsResult) => {
         setLoading(false);
-        if (result?.analitics && typeof result.analitics === "object") {
+        if (result?.analytics && typeof result.analytics === "object") {
           dispatch(
             addAnalitics({
               chatId,
-              analitics: result.analitics,
+              analytics: result.analytics,
             })
           );
         }
@@ -139,7 +139,7 @@ const Home: React.FC<HomeProps> = ({ data, chatId }) => {
       body: raw,
       redirect: "follow" as RequestRedirect,
     };
-    if (!data?.analitics) {
+    if (!data?.analytics) {
       fetchAnaliticsData(requestOptions as RequestOptions);
     }
   }, []);
@@ -151,7 +151,7 @@ const Home: React.FC<HomeProps> = ({ data, chatId }) => {
           <div
             style={{ display: "flex", gridColumn: "span 4", flexWrap: "wrap" }}
           >
-            {data?.analitics?.map((chart, index) => {
+            {data?.analytics?.map((chart, index) => {
               return (
                 <DynamicChart
                   key={index}

@@ -1,167 +1,129 @@
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
+from flask_compress import Compress
+import os
+
 from main.nlq import nlq
 from helper.utils import add_query_to_json
-from flask import Flask, request, jsonify, send_file, Response
-from gpt.analiticts import getAnalitics, call_gpt
-from flask_cors import CORS
-import os
+from gpt.analiticts import getAnalytics, call_gpt
 from helper.gpt import extract_image
 from sql.db import generate_erd_from, execute_sql_query
 from mongodb.rag import render_mongo_pack
-from flask_compress import Compress
-from Fixed_prompts_module.index import  pre_process_data
+from Fixed_prompts_module.index import pre_process_data
 
-if __name__ == "__main__":
-    
-    app = Flask(__name__)
+app = Flask(__name__)
+Compress(app)
+CORS(app)
+app = render_mongo_pack(app)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
-    Compress(app)
+@app.before_request
+def before_request():
+    custom_header = request.headers.get('X-Ai-Model')
+    if custom_header:
+        os.environ["X-Ai-Model"] = custom_header
+        print(f"X-Ai-Model: {custom_header}")
 
-    app = render_mongo_pack(app)
-
-    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
-    CORS(app)
-
-    
-    @app.before_request
-    def before_request():
-        custom_header = request.headers.get('X-Ai-Model')
-        if custom_header:
-          
-            os.environ["X-Ai-Model"] = custom_header
-            print(f"X-Ai-Model: {custom_header}")
-
-   
 @app.route('/save-query', methods=['POST'])
 def save_query():
-        data = request.json
-        q_data = data.get('data')
-        if not q_data:
-            return jsonify({"error": "No question provided"}), 400
-        try:
-            add_query_to_json(q_data)
-            return jsonify({
-                "status": "success"
-            })
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    data = request.json
+    q_data = data.get('data')
+    if not q_data:
+        return jsonify({"error": "No question provided"}), 400
+    try:
+        add_query_to_json(q_data)
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/query-list', methods=['GET'])
 def get_all_query():
-        try:
-            with open('query_storage/query.json', 'r') as file:
-                result_json = file.read()
-                print("Mock Result:", result_json)
-                return result_json
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    try:
+        with open('query_storage/query.json', 'r') as file:
+            result_json = file.read()
+            print("Mock Result:", result_json)
+            return result_json
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/query', methods=['POST'])
 def query():
-        data = request.json
-        user_question = data.get('question')
-        working_table_description = data.get('working_table_description')
-        if not user_question:
-            return jsonify({"error": "No question provided"}), 400
+    data = request.json
+    user_question = data.get('question')
+    working_table_description = data.get('working_table_description')
+    if not user_question:
+        return jsonify({"error": "No question provided"}), 400
 
-
+    try:
         pre_data = pre_process_data(user_question, working_table_description)
         if pre_data:
             print("Process: ==============6=======>", pre_data)
             return jsonify(pre_data)
         else:
-            try:
-                print("User Question:", user_question)
-                query = nlq(user_question, working_table_description)
-                print("SQL Query:", query)
-                result = execute_sql_query(query)
-                return jsonify({
-                    "result": result,
-                    "query": query,
-                    "type": "dynamic"
-                })
-                
-            except Exception as e:
-                return jsonify({"error": str(e)}), 500
-        
-@app.route('/analitics', methods=['POST'])
-def analitics_data():
-        data = request.json
-        result_json = data.get('result_json')
-        if not result_json:
-            return jsonify({"error": "No data provided"}), 400
+            print("User Question:", user_question)
+            query = nlq(user_question, working_table_description)
+            print("SQL Query:", query)
+            result = execute_sql_query(query)
+            return jsonify({"result": result, "query": query, "type": "dynamic"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        try:
-            analitics = getAnalitics(result_json)
-            return jsonify({
-                "analitics": analitics
-            })
-           
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-        
-@app.route('/analitics-mock', methods=['POST'])
-def analitics_data_mock():
-        data = request.json
-        result_json = data.get('result_json')
-        if not result_json:
-            return jsonify({"error": "No data provided"}), 400
+@app.route('/analytics', methods=['POST'])
+def analytics_data():
+    data = request.json
+    result_json = data.get('result_json')
+    if not result_json:
+        return jsonify({"error": "No data provided"}), 400
+    try:
+        analytics = getAnalytics(result_json)
+        return jsonify({"analytics": analytics})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        try:
-            with open('data/mock/analitics.json', 'r') as file:
-                result_json = file.read()
-                print("Mock Result:", result_json)
-                return result_json
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+@app.route('/analytics-mock', methods=['POST'])
+def analytics_data_mock():
+    data = request.json
+    result_json = data.get('result_json')
+    if not result_json:
+        return jsonify({"error": "No data provided"}), 400
+    try:
+        with open('data/mock/analytics.json', 'r') as file:
+            result_json = file.read()
+            print("Mock Result:", result_json)
+            return result_json
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/exicute-raw-query', methods=['POST'])
-def exicute_query():
-        data = request.json
-        user_sql_query = data.get('sql_query')
-        if not user_sql_query:
-            return jsonify({"error": "No question provided"}), 400
-
-        try:
-            print("User Question:", user_sql_query)
-            
-
-            # result = execute_query(user_sql_query)
-            try:
-                result = execute_sql_query(user_sql_query)
-            except Exception as e:
-                return jsonify({"error": str(e)}), 500
-
-            
-            # result_json = convert_to_json(result)
-
-            # analitics = getAnalitics(result_json)
-            
-            if 'error' in result:
-                return jsonify({"error": str(e)}), 500
-            response = jsonify({
-                "result": result,
-                "query": user_sql_query
-            })
-            response.headers['Content-Type'] = 'application/json'
-            response.headers['Content-Disposition'] = 'attachment; filename=result.json'
-            return response
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+@app.route('/execute-raw-query', methods=['POST'])
+def execute_query():
+    data = request.json
+    user_sql_query = data.get('sql_query')
+    if not user_sql_query:
+        return jsonify({"error": "No question provided"}), 400
+    try:
+        print("User Question:", user_sql_query)
+        result = execute_sql_query(user_sql_query)
+        if 'error' in result:
+            return jsonify({"error": str(result['error'])}), 500
+        response = jsonify({"result": result, "query": user_sql_query})
+        response.headers['Content-Type'] = 'application/json'
+        response.headers['Content-Disposition'] = 'attachment; filename=result.json'
+        return response
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/call-gpt', methods=['POST'])
 def direct_gpt_call():
-        data = request.json
-        user_question = data.get('question')
-        token_limit = data.get('token_limit')
-        if not user_question:
-            return jsonify({"error": "No question provided"}), 400
-        try:
-            if not token_limit:
-                token_limit = 1000
-            result_json = call_gpt("You are a polite, helping inteligent agent", user_question, token_limit)
-            return result_json
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
+    data = request.json
+    user_question = data.get('question')
+    token_limit = data.get('token_limit', 1000)
+    if not user_question:
+        return jsonify({"error": "No question provided"}), 400
+    try:
+        result_json = call_gpt("You are a polite, helping intelligent agent", user_question, token_limit)
+        return result_json
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/extract-img', methods=['POST'])
 def extract_img_api():
@@ -175,7 +137,6 @@ def extract_img_api():
         return jsonify({"details": img_details}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/generate-erd-from-db', methods=['POST'])
 def generate_erd_from_db():
@@ -195,20 +156,13 @@ def generate_erd_from_db():
         'host': host,
         'port': port
     }
-    # DB_CONFIG = {
-    #     'dbname': 'postgres',
-    #     'user': 'rittikbasu',
-    #     'password': 'Postgres_007',
-    #     'host': 'testpgprac.postgres.database.azure.com',
-    #     'port': '5432'
-    # }
     
     try:
         json_result = generate_erd_from(DB_CONFIG)
         return json_result, 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route('/get-erd-image', methods=['GET'])
 def get_erd_img():
     try:
@@ -216,13 +170,6 @@ def get_erd_img():
         return send_file(erd_image_path, mimetype='image/png')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

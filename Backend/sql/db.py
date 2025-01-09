@@ -5,8 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import networkx as nx
-
-
+from secretes.secrets import DB_CONFIG
 
 def create_connection(DB_CONFIG):
     try:
@@ -66,37 +65,42 @@ def get_erd_as_json(connection):
         return None
 
 def save_erd_as_png(input_data, filename="sql/erd.png"):
-    G = nx.DiGraph()
+    try:
+        G = nx.DiGraph()
 
-    for table, details in input_data.items():
-        G.add_node(table)
-        for relationship in details['relationships']:
-            G.add_edge(table, relationship['target_table'], label=relationship['source_column'])
+        for table, details in input_data.items():
+            G.add_node(table)
+            for relationship in details['relationships']:
+                G.add_edge(table, relationship['target_table'], label=relationship['source_column'])
 
-    pos = nx.spring_layout(G)
-    plt.figure(figsize=(12, 9))
-    pos = nx.spring_layout(G, k=1, iterations=50)  # Adjust k for spacing between nodes
-    nx.draw(G, pos, with_labels=True, node_size=3000, node_color="#d04a0275", font_size=10, font_weight="bold", arrows=True, node_shape='s')
-    edge_labels = nx.get_edge_attributes(G, 'label')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
-    plt.title("Entity Relationship Diagram")
-    plt.savefig(filename)
-    plt.close()
+        pos = nx.spring_layout(G)
+        plt.figure(figsize=(12, 9))
+        pos = nx.spring_layout(G, k=1, iterations=50)  # Adjust k for spacing between nodes
+        nx.draw(G, pos, with_labels=True, node_size=3000, node_color="#d04a0275", font_size=10, font_weight="bold", arrows=True, node_shape='s')
+        edge_labels = nx.get_edge_attributes(G, 'label')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
+        plt.title("Entity Relationship Diagram")
+        plt.savefig(filename)
+        plt.close()
+    except Exception as e:
+        print(f"The error '{e}' occurred")
 
 def generate_erd_from(DB_CONFIG):
     try:
         connection = create_connection(DB_CONFIG)
         if connection:
             erd_json = get_erd_as_json(connection)
-            # create_erd(json.loads(erd_json))
-            save_erd_as_png(json.loads(erd_json))
+            if erd_json:
+                save_erd_as_png(json.loads(erd_json))
+                print(erd_json)
             connection.close()
-            print(erd_json)
             return erd_json
     except Exception as e:
-        return e
-    
+        print(f"The error '{e}' occurred")
+        return None
+
 def clean_sql_query(query):
+    try:
         # Remove leading/trailing whitespace and ensure proper formatting
         query = query.strip()
         query = query.replace('\n', ' ').replace('\t', ' ').replace('```sql', '').replace('```', '')
@@ -104,43 +108,36 @@ def clean_sql_query(query):
         if not query.endswith(';'):
             query += ';'
         return query
-
-           
-
-def execute_sql_query(query, DB_CONFIG = {
-                'dbname': 'drlsalesdb',
-                'user': 'testdrl',
-                'password': 'Postgres_007',
-                'host': 'pgtestdrl.postgres.database.azure.com',
-                'port': '5432'
-            }):
-     
-    clean_query = clean_sql_query(query)
-    print("Clean SQL Query:", clean_query)
-    connection = create_connection(DB_CONFIG)
-    if connection:
-        print("Connection success!")
-        try:
-            cursor = connection.cursor()
-            cursor.execute(clean_query)
-            # connection.commit()
-            result = cursor.fetchall()
-            if result:
-                columns = [desc[0] for desc in cursor.description]
-                result = [columns] + result
-            keys = result[0]
-            dict_list = [dict(zip(keys, values)) for values in result[1:]]
-            return dict_list
-        except Exception as e:
-            print(f"The error '{e}' occurred")
-            raise e
-        finally:
-            cursor.close()
-            connection.close()
-            print("Connection close!")
-    else:
+    except Exception as e:
+        print(f"The error '{e}' occurred")
         return None
 
-
-
-
+def execute_sql_query(query, DB_CONFIG=DB_CONFIG):
+    try:
+        clean_query = clean_sql_query(query)
+        print("Clean SQL Query:", clean_query)
+        connection = create_connection(DB_CONFIG)
+        if connection:
+            print("Connection success!")
+            try:
+                cursor = connection.cursor()
+                cursor.execute(clean_query)
+                result = cursor.fetchall()
+                if result:
+                    columns = [desc[0] for desc in cursor.description]
+                    result = [columns] + result
+                keys = result[0]
+                dict_list = [dict(zip(keys, values)) for values in result[1:]]
+                return dict_list
+            except Exception as e:
+                print(f"The error '{e}' occurred")
+                raise e
+            finally:
+                cursor.close()
+                connection.close()
+                print("Connection closed!")
+        else:
+            return None
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+        return None
