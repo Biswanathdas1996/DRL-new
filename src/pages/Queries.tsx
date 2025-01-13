@@ -149,7 +149,46 @@ const Queries: React.FC = () => {
         setLoadingUi(false);
       });
   };
-  const columnsNotToShow = ["id", "use", "questions"];
+
+  const applyDateFilter = (input: string | number): string | number => {
+    if (typeof input !== "string") {
+      return input;
+    }
+
+    const date = new Date();
+    let month = date.getMonth();
+    let year = date.getFullYear();
+
+    const match = input.match(/Current_Month-(\d+)/);
+    if (match) {
+      const monthsToSubtract = parseInt(match[1], 10);
+      month -= monthsToSubtract;
+      while (month < 0) {
+        month += 12;
+        year -= 1;
+      }
+      const monthNames = [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC",
+      ];
+      return `${monthNames[month]}-${year.toString().slice(-2)}`;
+    } else {
+      return input;
+    }
+  };
+
+  const columnsNotToShow = ["use", "questions"];
+
   return (
     <div>
       <h2>Saved Queries</h2>
@@ -172,15 +211,17 @@ const Queries: React.FC = () => {
                           background: "rgb(51 51 51 / 86%)",
                           color: "white",
                           height: 10,
-                          padding: "5px",
+                          padding: 10,
                           margin: 0,
                           textAlign: "left",
                           borderRight: "2px solid #ffffff",
                         }}
                       >
-                        {columnName
-                          .replace(/_/g, " ")
-                          .replace(/^\w/, (c) => c.toUpperCase())}
+                        {applyDateFilter(
+                          columnName
+                            .replace(/_/g, " ")
+                            .replace(/^\w/, (c) => c.toUpperCase())
+                        )}
                       </TableCell>
                     ))}
               </TableRow>
@@ -215,7 +256,7 @@ const Queries: React.FC = () => {
                             align="left"
                             style={{
                               borderRight: "2px solid #ffffff",
-                              padding: 5,
+                              padding: 10,
                             }}
                           >
                             {key === "query" ? (
@@ -230,7 +271,7 @@ const Queries: React.FC = () => {
                               <>
                                 {isNaN(Number(value))
                                   ? value
-                                  : Number(value).toFixed(2)}
+                                  : Number(value).toFixed(1)}
                               </>
                             )}
                           </TableCell>
@@ -325,7 +366,7 @@ const Queries: React.FC = () => {
                 size="small"
                 variant="contained"
               >
-                Run Query
+                Execute
               </Button>
             </div>
             <div style={{ marginTop: 20 }}>

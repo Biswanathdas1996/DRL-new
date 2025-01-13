@@ -3,7 +3,7 @@ export const BASE_URL = "http://127.0.0.1:5000";
 export const USE_MOCK = false;
 
 export const QUERY = USE_MOCK ? `${BASE_URL}/query-mock` : `${BASE_URL}/query`;
-export const EXICUTE_QUERY = `${BASE_URL}/exicute-raw-query`;
+export const EXICUTE_QUERY = `${BASE_URL}/execute-raw-query`;
 export const SAVE_QUERY = `${BASE_URL}/save-query`;
 export const CALL_GPT = `${BASE_URL}/call-gpt`;
 export const UPLOAD_DOC = `${BASE_URL}/upload-collection-doc-mongo`;
