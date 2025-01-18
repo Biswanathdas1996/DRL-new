@@ -57,12 +57,9 @@ def query():
     try:
         pre_data = pre_process_data(user_question, working_table_description)
         if pre_data:
-            print("Process: ==============6=======>", pre_data)
             return jsonify(pre_data)
         else:
-            print("User Question:", user_question)
             query = nlq(user_question, working_table_description)
-            print("SQL Query:", query)
             result = execute_sql_query(query)
             return jsonify({"result": result, "query": query, "type": "dynamic"})
     except Exception as e:
@@ -101,7 +98,6 @@ def execute_query():
     if not user_sql_query:
         return jsonify({"error": "No question provided"}), 400
     try:
-        print("User Question:", user_sql_query)
         result = execute_sql_query(user_sql_query)
         if 'error' in result:
             return jsonify({"error": str(result['error'])}), 500

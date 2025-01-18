@@ -24,6 +24,11 @@ interface TableProps {
 const CustomTable: React.FC<TableProps> = ({ data, loadingUi, chatId }) => {
   const dispatch = useDispatch<AppDispatch>();
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
+
   const columns: GridColDef[] = Object.keys(data[0] || {}).map((key) => {
     if (key === "fullName") {
       return {
@@ -149,10 +154,13 @@ const CustomTable: React.FC<TableProps> = ({ data, loadingUi, chatId }) => {
                 native: true,
               }}
               onPageChange={(event, newPage) => {
-                paginationModel.page = newPage;
+                setPaginationModel((prev) => ({ ...prev, page: newPage }));
               }}
               onRowsPerPageChange={(event) => {
-                paginationModel.pageSize = parseInt(event.target.value, 10);
+                setPaginationModel((prev) => ({
+                  ...prev,
+                  pageSize: parseInt(event.target.value, 10),
+                }));
               }}
             />
           </TableRow>

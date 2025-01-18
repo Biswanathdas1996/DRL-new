@@ -23,7 +23,9 @@ def call_gpt(config, prompt, max_tokens=50):
                 {"role": "system", "content": config},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.5,
+            temperature=0,
+            n=1,
+            stop=None
         )
         result = response.choices[0].message['content'].strip()
         print("GPT Response:", response)

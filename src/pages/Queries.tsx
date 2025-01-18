@@ -52,7 +52,7 @@ const Queries: React.FC = () => {
 
   const fetchData = useFetch();
   const [paginationModel, setPaginationModel] = React.useState<PaginationModel>(
-    { page: 0, pageSize: 10 }
+    { page: 0, pageSize: 20 }
   );
 
   const [open, setOpen] = React.useState(false);
@@ -187,21 +187,21 @@ const Queries: React.FC = () => {
     }
   };
 
-  const columnsNotToShow = ["use", "questions"];
+  const columnsNotToShow = ["id", "name", "query"];
 
   return (
     <div>
       <h2>Saved Queries</h2>
 
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer>
           <Table stickyHeader aria-label="sticky table">
             <TableHead style={{ height: 10 }}>
               <TableRow style={{ height: 10 }}>
                 {message.length > 0 &&
                   Object.keys(message[0])
-                    .filter(
-                      (columnName) => !columnsNotToShow.includes(columnName)
+                    .filter((columnName) =>
+                      columnsNotToShow.includes(columnName)
                     )
                     .map((columnName, index) => (
                       <TableCell
@@ -246,9 +246,8 @@ const Queries: React.FC = () => {
                       }}
                     >
                       {Object.entries(row)
-                        .filter(
-                          ([columnName]) =>
-                            !columnsNotToShow.includes(columnName)
+                        .filter(([columnName]) =>
+                          columnsNotToShow.includes(columnName)
                         )
                         .map(([key, value], cellIndex) => (
                           <TableCell
@@ -341,22 +340,7 @@ const Queries: React.FC = () => {
               width="100%"
               style={{ padding: 10, borderRadius: 15 }}
             />
-            {/* <textarea
-              // rows={10}
-              cols={50}
-              placeholder="Enter your SQL query here..."
-              value={selectedQuery || ""}
-              onChange={(e) => setSelectedQuery(e.target.value)}
-              style={{
-                fontFamily: "inherit",
-                background: "#f1f1f1",
-                width: "100%",
-                height: "100%",
-                maxHeight: 400,
-              }}
-              autoCorrect="off"
-              spellCheck="false"
-            /> */}
+
             <div style={{ marginTop: 20 }}>
               {loadingUi && <Loader text="Exicuting query " showIcon={false} />}
             </div>
@@ -392,5 +376,5 @@ const Queries: React.FC = () => {
   );
 };
 
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 20 };
 export default Queries;

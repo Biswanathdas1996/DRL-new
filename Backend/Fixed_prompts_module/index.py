@@ -18,14 +18,16 @@ def similarity(a, b):
 def call_gpt_to_refactor_query(query_text, query, working_table_description):
     try:
         prompt = f"""Rewrite the below SQL Query as per\n {query}.\n
-                    Refer the Schema of the database and generate the SQL query.\n
-                    Return only the SQL query without any additional text or explanation.\n
+                Return only the SQL query without any additional text or explanation.\n
+                Do not use "=" operator; instead, use LIKE operator in name \n
+                Use only "=" operator for DATE_PART \n
+                for INNER JOIN use only "=" operator\n
+
                     SQL Query:\n
                     {query_text}\n
                     Schema of the database:\n
-                    {working_table_description}
+                    {working_table_description}`
                     """
-        print("Calling GPT for Dynamic Query", prompt)
         result_json = call_gpt("you are a best SQL coder", prompt)
         return result_json
     except Exception as e:
@@ -46,22 +48,39 @@ def pre_process_data(query, working_table_description):
         query_text = most_similar_query.get('query')
         questions_texts = most_similar_query.get('questions')
         use = most_similar_query.get('use')
-        print("query_id===============>", query_id)
+        print("query_id===============>", query_id) 
 
-        if use == "Dynamic":
-            result_query = call_gpt_to_refactor_query(query_text, query, working_table_description)
-            if result_query is None:
-                return None
-            result = execute_sql_query(result_query)
+
+        if(query_id == 3.1):
+            result1 = execute_sql_query(most_similar_query.get('query'))
+            result2 = execute_sql_query(most_similar_query.get('query2'))
+            response = {
+                "text1": "As per your query the Distributor wise details are as below.",
+                "table1": result1,
+                "table2": result2,
+                "text2": "If you would like additional followup information, please type in the chat box below",
+                "questions": questions_texts
+            }
         else:
-            result = execute_sql_query(query_text)
+            if use == "Dynamic":
+                try:
+                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description)
+                except Exception as e:
+                    print(f"Error calling GPT to refactor query: {e}")
+                    return None
+                if result_query is None:
+                    return None
+                result = execute_sql_query(result_query)
+            else:
+                result = execute_sql_query(query_text)
 
-        response = {
-            "text1": "As per your query the Distributor wise details are as below.",
-            "table1": result,
-            "text2": "If you would like additional followup information, please type in the chat box below",
-            "questions": questions_texts
-        }
+            response = {
+                "text1": "As per your query the Distributor wise details are as below.",
+                "table1": result,
+                "text2": "If you would like additional followup information, please type in the chat box below",
+                "questions": questions_texts
+            }
+        
         return {"query": query_text, "result": response, "type": "fixed"}
 
     except Exception as e:
