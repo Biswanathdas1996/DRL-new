@@ -9,6 +9,7 @@ import Chip from "@mui/material/Chip";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
 // Type definitions
 interface Data {
   text1: string;
@@ -24,9 +25,15 @@ interface Props {
 
 const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
   const [page, setPage] = React.useState(0);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
+  const [table1Data, setTable1Data] = React.useState(data.table1);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const shouldDisplayTable = (data: Data) => {
-    return data.table1 && data.table1.length > 0;
+    return table1Data && table1Data.length > 0;
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -62,6 +69,22 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
               </div>
 
               {/* Display the table dynamically */}
+              <TextField
+                label="Search"
+                variant="outlined"
+                size="small"
+                onChange={(e) => {
+                  const searchTerm = e.target.value.toLowerCase();
+                  const filteredData = data.table1.filter((row) =>
+                    Object.values(row).some((value) =>
+                      String(value).toLowerCase().includes(searchTerm)
+                    )
+                  );
+                  setPaginationModel({ ...paginationModel, page: 0 });
+                  setTable1Data(filteredData);
+                }}
+                sx={{ marginBottom: 2 }}
+              />
               <div style={{ marginBottom: "20px" }}>
                 {shouldDisplayTable(data) && (
                   <Paper sx={{ width: "800px", overflow: "hidden" }}>
@@ -69,8 +92,8 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                       <Table stickyHeader aria-label="sticky table">
                         <TableHead style={{ height: 10 }}>
                           <TableRow style={{ height: 10 }}>
-                            {data.table1.length > 0 &&
-                              Object.keys(data.table1[0]).map(
+                            {table1Data.length > 0 &&
+                              Object.keys(table1Data[0]).map(
                                 (columnName, index) => (
                                   <TableCell
                                     key={index}
@@ -94,7 +117,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {data.table1
+                          {table1Data
                             .slice(
                               page * rowsPerPage,
                               page * rowsPerPage + rowsPerPage
@@ -126,9 +149,23 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                                           padding: 5,
                                         }}
                                       >
-                                        {isNaN(Number(value))
-                                          ? value
-                                          : Number(value).toFixed(2)}
+                                        {isNaN(Number(value)) ? (
+                                          value === "button" ? (
+                                            <button
+                                              onClick={() =>
+                                                doQuery(
+                                                  `Which Stockist within Headquarter ${row.name} are trailing?`
+                                                )
+                                              }
+                                            >
+                                              Trailing Stockist
+                                            </button>
+                                          ) : (
+                                            value
+                                          )
+                                        ) : (
+                                          Number(value).toFixed(2)
+                                        )}
                                       </TableCell>
                                     )
                                   )}
@@ -143,7 +180,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                         <TablePagination
                           rowsPerPageOptions={[5, 10, 25]}
                           colSpan={3}
-                          count={data.table1.length}
+                          count={table1Data.length}
                           rowsPerPage={rowsPerPage}
                           page={page}
                           SelectProps={{

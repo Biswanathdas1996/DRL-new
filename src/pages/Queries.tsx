@@ -23,6 +23,7 @@ import "ace-builds/src-noconflict/mode-mysql";
 // import "ace-builds/src-noconflict/worker-mysql";
 
 import FixedReplyTemplate from "../components/Table";
+import TextField from "@mui/material/TextField";
 const style = {
   position: "absolute",
   top: "50%",
@@ -194,6 +195,22 @@ const Queries: React.FC = () => {
       <h2>Saved Queries</h2>
 
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            size="small"
+            onChange={(e) => {
+              const searchTerm = e.target.value.toLowerCase();
+              const filteredData = message.filter((row: Query) =>
+                Object.values(row).some((value) =>
+                  String(value).toLowerCase().includes(searchTerm)
+                )
+              );
+              setMessage(filteredData);
+            }}
+          />
+        </Box>
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
             <TableHead style={{ height: 10 }}>
@@ -355,7 +372,10 @@ const Queries: React.FC = () => {
             </div>
             <div style={{ marginTop: 20 }}>
               {data && (
-                <FixedReplyTemplate data={Array.isArray(data) ? data : []} />
+                <FixedReplyTemplate
+                  data={Array.isArray(data) ? data : []}
+                  setData={setData}
+                />
               )}
               {error && (
                 <pre

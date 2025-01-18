@@ -19,9 +19,8 @@ def call_gpt_to_refactor_query(query_text, query, working_table_description):
     try:
         prompt = f"""Rewrite the below SQL Query as per\n {query}.\n
                 Return only the SQL query without any additional text or explanation.\n
-                Do not use "=" operator; instead, use LIKE operator in name \n
-                Use only "=" operator for DATE_PART \n
-                for INNER JOIN use only "=" operator\n
+                replace only the part of SQL query this is in between %%\n 
+                for example %dummy text% \n
 
                     SQL Query:\n
                     {query_text}\n
@@ -61,6 +60,20 @@ def pre_process_data(query, working_table_description):
                 "text2": "If you would like additional followup information, please type in the chat box below",
                 "questions": questions_texts
             }
+        if(query_id == 8):
+            
+            result = execute_sql_query(query_text)
+
+            for row in result:
+                row['action'] = 'button'
+            response = {
+                "text1": "As per your query the Distributor wise details are as below.",
+                "table1": result,
+                "text2": "If you would like additional followup information, please type in the chat box below",
+                "questions": questions_texts
+            }
+        
+            return {"query": query_text, "result": response, "type": "fixed"}
         else:
             if use == "Dynamic":
                 try:

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../redux/store";
 import { updateResult } from "../redux/slices/chatSlices";
@@ -15,67 +14,53 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
 interface TableProps {
   data: any[];
   loadingUi?: boolean;
   chatId?: number;
+  setData?: any;
 }
 
-const CustomTable: React.FC<TableProps> = ({ data, loadingUi, chatId }) => {
+const CustomTable: React.FC<TableProps> = ({
+  data,
+  loadingUi,
+  chatId,
+  setData,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
   });
-
-  const columns: GridColDef[] = Object.keys(data[0] || {}).map((key) => {
-    if (key === "fullName") {
-      return {
-        field: key,
-        headerName: "Full name",
-        description: "This column has a value getter and is not sortable.",
-        sortable: false,
-        width: 160,
-      };
-    }
-    return {
-      field: key,
-      headerName: key.charAt(0).toUpperCase() + key.slice(1),
-      width: 130,
-    };
-  });
-
-  const rows = data.map((item, index) => {
-    return { id: index, ...item };
-  });
-
-  const handleDeleteColumn = (fields: any) => {
-    console.log("======>", fields, data);
-    const fieldsData = Object.keys(fields);
-
-    const updatedData = data.map((item) => {
-      const newItem = { ...item };
-      fieldsData.forEach((field: string) => {
-        delete newItem[field];
-      });
-      return newItem;
-    });
-    if (chatId !== undefined) {
-      dispatch(
-        updateResult({
-          chatId,
-          result: updatedData,
-        })
-      );
-    }
-    console.log("Updated Data: ", updatedData);
-    // chatId;
-  };
-
+  console.log("data", data);
   if (data.length !== 0) {
     return (
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          onChange={(e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredData = data.filter((row) =>
+              Object.values(row).some((value) =>
+                String(value).toLowerCase().includes(searchTerm)
+              )
+            );
+            setPaginationModel({ ...paginationModel, page: 0 });
+            setData(filteredData);
+            chatId &&
+              dispatch(
+                updateResult({
+                  chatId,
+                  result: filteredData,
+                })
+              );
+          }}
+          sx={{ marginBottom: 2 }}
+        />
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead style={{ height: 10 }}>
