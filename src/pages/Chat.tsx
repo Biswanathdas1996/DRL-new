@@ -26,7 +26,10 @@ const Chat: React.FC = () => {
   };
 
   const doQuery = async (query: string) => {
+    const chatBottom = document.getElementById("chat-bottom");
+    chatBottom?.scrollIntoView({ behavior: "smooth" });
     setLoading(true);
+
     dispatch(
       addMessage({
         id: new Date().getTime(),
@@ -167,7 +170,7 @@ const Chat: React.FC = () => {
             {loading && <Loader />}
           </div>
         </div>
-
+        <div id="chat-bottom"></div>
         <form
           onSubmit={(e) => onsubmitHandler(e)}
           style={{ gridColumn: "span 4", marginBottom: "20px" }}

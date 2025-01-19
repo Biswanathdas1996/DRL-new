@@ -68,26 +68,25 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                 {data?.text1}
               </div>
 
-              {/* Display the table dynamically */}
-              <TextField
-                label="Search"
-                variant="outlined"
-                size="small"
-                onChange={(e) => {
-                  const searchTerm = e.target.value.toLowerCase();
-                  const filteredData = data.table1.filter((row) =>
-                    Object.values(row).some((value) =>
-                      String(value).toLowerCase().includes(searchTerm)
-                    )
-                  );
-                  setPaginationModel({ ...paginationModel, page: 0 });
-                  setTable1Data(filteredData);
-                }}
-                sx={{ marginBottom: 2 }}
-              />
               <div style={{ marginBottom: "20px" }}>
-                {shouldDisplayTable(data) && (
+                {shouldDisplayTable(data) ? (
                   <Paper sx={{ width: "800px", overflow: "hidden" }}>
+                    <TextField
+                      label="Search"
+                      variant="outlined"
+                      size="small"
+                      onChange={(e) => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const filteredData = data.table1.filter((row) =>
+                          Object.values(row).some((value) =>
+                            String(value).toLowerCase().includes(searchTerm)
+                          )
+                        );
+                        setPaginationModel({ ...paginationModel, page: 0 });
+                        setTable1Data(filteredData);
+                      }}
+                      sx={{ marginBottom: 2 }}
+                    />
                     <TableContainer sx={{ maxHeight: 440, width: "100%" }}>
                       <Table stickyHeader aria-label="sticky table">
                         <TableHead style={{ height: 10 }}>
@@ -152,13 +151,22 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                                         {isNaN(Number(value)) ? (
                                           value === "button" ? (
                                             <button
+                                              className="newConversationButton"
                                               onClick={() =>
                                                 doQuery(
                                                   `Which Stockist within Headquarter ${row.name} are trailing?`
                                                 )
                                               }
+                                              style={{
+                                                width: "120px",
+                                                height: 30,
+                                              }}
                                             >
-                                              Trailing Stockist
+                                              Trailing Stockists
+                                              <img
+                                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
+                                                alt="Clear Chat"
+                                              />
                                             </button>
                                           ) : (
                                             value
@@ -195,26 +203,34 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                       </TableRow>
                     </TableFooter>
                   </Paper>
+                ) : (
+                  <b>
+                    Sorry! I can not find any data regarding this. Let me know
+                    how can I help you further.
+                  </b>
                 )}
               </div>
+              {shouldDisplayTable(data) && data?.questions.length > 0 && (
+                <>
+                  {/* Display the second text dynamically */}
+                  <div style={{ fontSize: "14px", fontWeight: "bold" }}>
+                    {data?.text2}
+                  </div>
 
-              {/* Display the second text dynamically */}
-              <div style={{ fontSize: "14px", fontWeight: "bold" }}>
-                {data?.text2}
-              </div>
-
-              {/* Display the buttons for questions dynamically */}
-              {data?.questions?.map((question, index) => (
-                <div
-                  key={index}
-                  style={{ marginTop: "20px", cursor: "pointer" }}
-                >
-                  <Chip
-                    label={`${index + 1}) ${question}`}
-                    onClick={() => doQuery(question)}
-                  />
-                </div>
-              ))}
+                  {/* Display the buttons for questions dynamically */}
+                  {data?.questions?.map((question, index) => (
+                    <div
+                      key={index}
+                      style={{ marginTop: "20px", cursor: "pointer" }}
+                    >
+                      <Chip
+                        label={`${index + 1}) ${question}`}
+                        onClick={() => doQuery(question)}
+                      />
+                    </div>
+                  ))}
+                </>
+              )}
 
               <div
                 style={{ fontSize: "12px", fontWeight: "400", marginTop: 10 }}
