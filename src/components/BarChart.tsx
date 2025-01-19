@@ -66,7 +66,7 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
     const result = Object.entries(groupedData).map(([groupKey, items]) => {
       const yAxisSums = yAxis.reduce((sumAcc, yKey) => {
         sumAcc[yKey] = items.reduce(
-          (sum: number, item: DataType) => sum + (item[yKey] || 0),
+          (sum: number, item: DataType) => sum + Number(item[yKey]) || 0,
           0
         );
         return sumAcc;
@@ -81,8 +81,12 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
     return result;
   }
 
+  console.log(
+    "groupAndSumData(chatData?.result, chartConfig)",
+    groupAndSumData(chatData?.result, chartConfig)
+  );
   return (
-    <ResponsiveContainer width={300} height={300}>
+    <ResponsiveContainer height={400}>
       <BarChart data={groupAndSumData(chatData?.result, chartConfig)}>
         <CartesianGrid strokeDasharray="3 3" />
 
@@ -115,7 +119,7 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
           <Bar key={index} dataKey={valueKey} fill={colors[index]} />
         ))}
 
-        {/* <Brush dataKey="x" height={30} stroke="#8884d8" /> */}
+        <Brush dataKey="x" height={30} stroke="#8884d8" />
       </BarChart>
     </ResponsiveContainer>
   );

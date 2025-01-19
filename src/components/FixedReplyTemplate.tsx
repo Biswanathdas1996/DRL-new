@@ -6,24 +6,38 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
+import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
+
+import Analyse from "./DataVisualations";
+
 // Type definitions
 interface Data {
   text1: string;
   table1: Array<Record<string, string>>;
   text2: string;
   questions: Array<string>;
+  analytics: Array<any>;
 }
 
 interface Props {
   data: Data;
   doQuery?: any;
+  chartId?: number;
 }
 
-const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
+const top100Films = [
+  { title: "The Shawshank Redemption", year: 1994 },
+  { title: "The Godfather", year: 1972 },
+  { title: "The Godfather: Part II", year: 1974 },
+  // Add more film objects as needed
+];
+
+const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
   const [page, setPage] = React.useState(0);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
@@ -33,7 +47,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const shouldDisplayTable = (data: Data) => {
-    return table1Data && table1Data.length > 0;
+    return data.table1 && data.table1.length > 0;
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -47,7 +61,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
     setPage(0);
   };
   if (!data) return;
-  console.log("================>", data);
+  console.log(data);
   return (
     <div data-name="message-1" className="chat-msg-list msg-hldr-cb gap10px">
       <div className="icon-hldr">
@@ -75,11 +89,35 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                       label="Search"
                       variant="outlined"
                       size="small"
+                      // onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      //   if (e.key === "Enter") {
+                      //     const searchTerms = (
+                      //       e.target as HTMLInputElement
+                      //     ).value
+                      //       .toLowerCase()
+                      //       .split(",")
+                      //       .map((term) => term.trim());
+                      //     const filteredData = data.table1.filter((row) =>
+                      //       searchTerms.every((term) =>
+                      //         Object.values(row).some((value) =>
+                      //           String(value).toLowerCase().includes(term)
+                      //         )
+                      //       )
+                      //     );
+                      //     setPaginationModel({ ...paginationModel, page: 0 });
+                      //     setTable1Data(filteredData);
+                      //   }
+                      // }}
                       onChange={(e) => {
-                        const searchTerm = e.target.value.toLowerCase();
+                        const searchTerms = e.target.value
+                          .toLowerCase()
+                          .split(",")
+                          .map((term) => term.trim());
                         const filteredData = data.table1.filter((row) =>
-                          Object.values(row).some((value) =>
-                            String(value).toLowerCase().includes(searchTerm)
+                          searchTerms.some((term) =>
+                            Object.values(row).some((value) =>
+                              String(value).toLowerCase().includes(term)
+                            )
                           )
                         );
                         setPaginationModel({ ...paginationModel, page: 0 });
@@ -230,6 +268,19 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery }) => {
                     </div>
                   ))}
                 </>
+              )}
+
+              {chartId && data?.analytics && (
+                <Analyse
+                  data={{
+                    analytics: data?.analytics,
+                    result: table1Data,
+                    query: "",
+
+                    llmReply: "",
+                    type: "",
+                  }}
+                />
               )}
 
               <div

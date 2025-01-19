@@ -34,7 +34,7 @@ const CustomTable: React.FC<TableProps> = ({
     page: 0,
     pageSize: 5,
   });
-  console.log("data", data);
+
   if (data.length !== 0) {
     return (
       <Paper sx={{ width: "100%", overflow: "hidden" }}>

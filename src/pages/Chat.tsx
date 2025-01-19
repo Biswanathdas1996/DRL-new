@@ -162,6 +162,7 @@ const Chat: React.FC = () => {
                     <FixedReplyTemplate
                       data={chat.message?.result}
                       doQuery={doQuery}
+                      chartId={chat.id}
                     />
                   )}
                 </>

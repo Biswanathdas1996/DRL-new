@@ -11,17 +11,44 @@
     "name": "what is the priority brand performance for last month",
     "use": "Static",
     "query": "SELECT HQ.Name AS \"HQ Name\", SUM(Sales.PRIMARY_SALES) AS \"Total Sales\", SUM(Target.TARGET_VALUE) AS \"Total Target\", ROUND((SUM(Sales.PRIMARY_SALES) / SUM(Target.TARGET_VALUE)) * 100, 2) AS Percent_Achieved FROM Sales INNER JOIN Target ON Sales.HQID = Target.HQID AND Sales.SKUCODE = Target.SKUCODE INNER JOIN HQ ON Sales.HQID = HQ.ID INNER JOIN BrandSKU bsku ON Sales.SKUCODE = bsku.SKUCode INNER JOIN Brand b ON bsku.BrandID = b.ID WHERE DATE_PART('month', Sales.TRANSACTION_DATE) = DATE_PART('month', CURRENT_DATE - INTERVAL '2 month') AND DATE_PART('year', Sales.TRANSACTION_DATE) = DATE_PART('year', CURRENT_DATE - INTERVAL '1 year') AND DATE_PART('month', Target.target_date) = DATE_PART('month', CURRENT_DATE - INTERVAL '2 month') AND DATE_PART('year', Target.target_date) = DATE_PART('year', CURRENT_DATE - INTERVAL '1 year') AND b.category LIKE '%BIG &INVEST%' GROUP BY HQ.ID, HQ.Name ORDER BY Percent_Achieved DESC;",
-    "questions": [
-      "How is the brand performance compare to previous 2 months",
-      "Question 8?"
+    "questions": ["How does it compare to previous 2 months"],
+    "analytics": [
+      {
+        "type": "Bar Chart",
+        "x-axis": "HQ Name",
+        "y-axis": ["Total Sales", "Total Target"]
+      },
+      {
+        "type": "Line Chart",
+        "x-axis": "HQ Name",
+        "y-axis": ["percent_achieved"]
+      }
     ]
   },
   {
     "id": 1.1,
-    "name": "How is the brand performance compare to previous 2 months",
-    "use": "Dynamic",
+    "name": "How does it compare to previous 2 months",
+    "use": "Static",
     "query": "SELECT HQ.Name AS \"HQ Name\", SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '2 months')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END) AS \"Current_Month-2 Target Sales\", CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '2 months')::DATE, 'YYYY-MM') THEN Sales.ACTUAL_SALES ELSE 0 END AS \"Current_Month-2 Actual Sales\", CASE WHEN SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '2 months')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END) = 0 THEN 0 ELSE ROUND((CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '2 months')::DATE, 'YYYY-MM') THEN Sales.ACTUAL_SALES ELSE 0 END) * 100.0 / SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '2 months')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END), 2) END AS \"Current_Month-2 Percentage Achievement\", SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '1 month')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END) AS \"Current_Month-1 Target Sales\", CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '1 month')::DATE, 'YYYY-MM') THEN Sales.ACTUAL_SALES ELSE 0 END AS \"Current_Month-1 Actual Sales\", CASE WHEN SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '1 month')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END) = 0 THEN 0 ELSE ROUND((CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '1 month')::DATE, 'YYYY-MM') THEN Sales.ACTUAL_SALES ELSE 0 END) * 100.0 / SUM(CASE WHEN SALES_MONTH = TO_CHAR((CURRENT_DATE - INTERVAL '1 month')::DATE, 'YYYY-MM') THEN Target.TARGET_VALUE ELSE 0 END), 2) END AS \"Current_Month Percentage Achievement\" FROM (SELECT HQID, TO_CHAR(TRANSACTION_DATE, 'YYYY-MM') AS SALES_MONTH, SUM(PRIMARY_SALES) AS ACTUAL_SALES FROM Sales WHERE TRANSACTION_DATE >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '2 months') AND TRANSACTION_DATE < DATE_TRUNC('month', CURRENT_DATE) GROUP BY HQID, TO_CHAR(TRANSACTION_DATE, 'YYYY-MM')) Sales JOIN Target ON Sales.HQID = Target.HQID AND Sales.SALES_MONTH = TO_CHAR(Target.target_date, 'YYYY-MM') JOIN HQ ON Sales.HQID = HQ.ID WHERE Target.target_date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '2 months') AND Target.target_date < DATE_TRUNC('month', CURRENT_DATE) GROUP BY HQ.Name, SALES_MONTH, sales.actual_sales ORDER BY HQ.Name, SALES_MONTH;",
-    "questions": [""]
+    "questions": [],
+    "analytics": [
+      {
+        "type": "Bar Chart",
+        "x-axis": "HQ Name",
+        "y-axis": [
+          "Current_Month-1 Target Sale",
+          "Current_Month-1 Actual Sales"
+        ]
+      },
+      {
+        "type": "Bar Chart",
+        "x-axis": "HQ Name",
+        "y-axis": [
+          "Current_Month-2 Target Sales",
+          "Current_Month-2 Actual Sales"
+        ]
+      }
+    ]
   },
   {
     "id": 290,
@@ -93,6 +120,18 @@
     "questions": [
       "Which Stockist within these Headquarter are trailing?",
       "Would you like to compare the overall billing for the same stockists for the same time period?"
+    ],
+    "analytics": [
+      {
+        "type": "Bar Chart",
+        "x-axis": "name",
+        "y-axis": ["Total Target CurrentMonth-2"]
+      },
+      {
+        "type": "Line Chart",
+        "x-axis": "name",
+        "y-axis": ["Target Ach % CurrentMonth-2"]
+      }
     ]
   },
   {

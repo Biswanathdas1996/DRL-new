@@ -47,6 +47,7 @@ def pre_process_data(query, working_table_description):
         query_text = most_similar_query.get('query')
         questions_texts = most_similar_query.get('questions')
         use = most_similar_query.get('use')
+        analytics = most_similar_query.get('analytics')
         print("query_id===============>", query_id) 
 
 
@@ -58,7 +59,8 @@ def pre_process_data(query, working_table_description):
                 "table1": result1,
                 "table2": result2,
                 "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts
+                "questions": questions_texts,
+                "analytics": analytics
             }
         if(query_id == 8):
             
@@ -70,7 +72,8 @@ def pre_process_data(query, working_table_description):
                 "text1": "As per your query the Distributor wise details are as below.",
                 "table1": result,
                 "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts
+                "questions": questions_texts,
+                "analytics": analytics
             }
         
             return {"query": query_text, "result": response, "type": "fixed"}
@@ -91,7 +94,8 @@ def pre_process_data(query, working_table_description):
                 "text1": "As per your query the Distributor wise details are as below.",
                 "table1": result,
                 "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts
+                "questions": questions_texts,
+                "analytics": analytics
             }
         
         return {"query": query_text, "result": response, "type": "fixed"}

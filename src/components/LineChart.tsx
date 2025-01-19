@@ -82,7 +82,7 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
   }
 
   return (
-    <ResponsiveContainer width={300} height={300}>
+    <ResponsiveContainer height={400}>
       <LineChart data={groupAndSumData(chatData?.result, chartConfig)}>
         <CartesianGrid strokeDasharray="3 3" />
 
