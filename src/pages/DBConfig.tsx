@@ -11,6 +11,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Loader from "../components/Loader";
 import { useAlert } from "../hook/useAlert";
+
 // Helper function to render each node recursively
 interface Column {
   column_name: string;
@@ -240,7 +241,7 @@ const DBConfig: React.FC = () => {
               </Button>
             </Card>
           )}
-          {value === "two" && (
+          {value === "two" && img && (
             <>
               <ImageListItem key={img}>
                 <img

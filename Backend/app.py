@@ -172,7 +172,25 @@ def get_erd_img():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    employeecode = data.get('employeecode')
+    password = data.get('password')
+    print(f"Employee Code: {employeecode}, Password: {password}")
+    if not employeecode or not password:
+        return jsonify({"error": "Employee code and password are required"}), 400
+           
+    try:
+        query = f"SELECT * FROM userdetails WHERE emp_code = '{employeecode}' AND password = '{password}' LIMIT 1"
+        result = execute_sql_query(query)
+                 
+        if result:
+            return jsonify({"message": "Authentication Successful", "result": result}), 200
+        else:
+             return jsonify({"message": "Unauthenticated"}), 401
+    except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

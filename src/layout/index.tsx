@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "../components/Bredcumbs";
 import Link from "@mui/material/Link";
 import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
-import { useLocation } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
 import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 
@@ -24,48 +24,52 @@ const iconStyle = {
   fontSize: 25,
   marginRight: 5,
 };
-const routes = [
-  {
-    path: "/home",
-    name: "Home",
-    icon: () => <HomeIcon style={iconStyle} />,
-  },
-  {
-    path: "/sql-chat",
-    name: "Q&A (Structure)",
-    icon: () => <SpeakerNotesIcon style={iconStyle} />,
-  },
-  {
-    path: "/db-config",
-    name: "RDBMS Configuration",
-    icon: () => <DatasetLinkedIcon style={iconStyle} />,
-  },
-  {
-    path: "/data-chat",
-    name: "Q&A (Un-Structure)",
-    icon: () => <VoiceChatIcon style={iconStyle} />,
-  },
-  {
-    path: "/query",
-    name: "Saved Query",
-    icon: () => <SaveAsIcon style={iconStyle} />,
-  },
-
-  {
-    path: "/upload",
-    name: "Knowledge Base",
-    icon: () => <UploadFileIcon style={iconStyle} />,
-  },
-  {
-    path: "/config",
-    name: "Configuration",
-    icon: () => <SettingsIcon style={iconStyle} />,
-  },
-];
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("window.location.pathname", window.location.href);
+  const userRoutes = [
+    {
+      path: "/sql-chat",
+      name: "Q&A (Structure)",
+      icon: () => <SpeakerNotesIcon style={iconStyle} />,
+    },
+    {
+      path: "/db-config",
+      name: "RDBMS Configuration",
+      icon: () => <DatasetLinkedIcon style={iconStyle} />,
+    },
+    {
+      path: "/data-chat",
+      name: "Q&A (Un-Structure)",
+      icon: () => <VoiceChatIcon style={iconStyle} />,
+    },
+    {
+      path: "/query",
+      name: "Saved Query",
+      icon: () => <SaveAsIcon style={iconStyle} />,
+    },
+    {
+      path: "/upload",
+      name: "Knowledge Base",
+      icon: () => <UploadFileIcon style={iconStyle} />,
+    },
+    {
+      path: "/config",
+      name: "Configuration",
+      icon: () => <SettingsIcon style={iconStyle} />,
+    },
+  ];
 
+  const publicRoutes = [
+    {
+      path: "/home",
+      name: "Login",
+      icon: () => <DashboardIcon style={iconStyle} />,
+    },
+  ];
+
+  const isUser = localStorage.getItem("user");
+  const routes = isUser ? userRoutes : publicRoutes;
   return (
     <div>
       <div className="chatbot-page">
@@ -119,6 +123,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </a>
               );
             })}
+            {isUser && (
+              <a className={`nav-link`}>
+                <button
+                  className="sidenav-button"
+                  onClick={() => {
+                    localStorage.removeItem("user");
+                    window.location.reload();
+                  }}
+                >
+                  <LogoutIcon style={iconStyle} />
+                  <span style={{ fontSize: 14 }}>Logout</span>
+                </button>
+              </a>
+            )}
           </div>
           <div className="content-container">
             <div>
