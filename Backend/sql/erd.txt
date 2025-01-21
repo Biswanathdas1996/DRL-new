@@ -1,0 +1,119 @@
+The given JSON schema represents a database structure comprising multiple tables, each with defined columns and outlined relationships between them. Below is a textual description of this schema:
+
+1. **Table: `usermanagermap`**
+   - **Columns:**
+     - `id`: Integer
+     - `userid`: Character varying
+     - `managerid`: Character varying
+   - **Relationships:**
+     - `userid` references `userdetails(id)`
+     - `managerid` references `userdetails(id)`
+
+2. **Table: `divisionhqmap`**
+   - **Columns:**
+     - `id`: Integer
+     - `division_code`: Character varying
+     - `hq_id`: Character varying
+   - **Relationships:**
+     - `hq_id` references `hq(id)`
+     - `division_code` references `division(code)`
+
+3. **Table: `stockisthqmap`**
+   - **Columns:**
+     - `id`: Integer
+     - `hq_id`: Character varying
+     - `stockist_id`: Character varying
+   - **Relationships:**
+     - `stockist_id` references `stockist(id)`
+     - `hq_id` references `hq(id)`
+
+4. **Table: `division`**
+   - **Columns:**
+     - `code`: Character varying
+     - `name`: Character varying
+   - **Relationships:** None
+
+5. **Table: `sales`**
+   - **Columns:**
+     - `id`: Integer
+     - `transaction_date`: Date
+     - `primary_sales`: Numeric
+     - `primary_units`: Integer
+     - `sku_code`: Character varying
+     - `division_code`: Character varying
+     - `billing_type`: Character varying
+     - `status`: Character varying
+     - `stockist_id`: Character varying
+     - `hq_id`: Character varying
+   - **Relationships:**
+     - `division_code` references `division(code)`
+     - `sku_code` references `sku(code)`
+     - `stockist_id` references `stockist(id)`
+     - `hq_id` references `hq(id)`
+
+6. **Table: `sku`**
+   - **Columns:**
+     - `code`: Character varying
+     - `name`: Character varying
+   - **Relationships:** None
+
+7. **Table: `target`**
+   - **Columns:**
+     - `target_date`: Date
+     - `id`: Integer
+     - `target_units`: Integer
+     - `target_value`: Numeric
+     - `division_code`: Character varying
+     - `hq_id`: Character varying
+     - `sku_code`: Character varying
+   - **Relationships:**
+     - `sku_code` references `sku(code)`
+     - `division_code` references `division(code)`
+     - `hq_id` references `hq(id)` (Duplicated relationships are mentioned)
+
+8. **Table: `role`**
+   - **Columns:**
+     - `id`: Integer
+     - `name`: Character varying
+   - **Relationships:** None
+
+9. **Table: `hq`**
+   - **Columns:**
+     - `id`: Character varying
+     - `name`: Character varying
+   - **Relationships:** None
+
+10. **Table: `userdetails`**
+    - **Columns:**
+      - `roleid`: Integer
+      - `id`: Character varying
+      - `name`: Character varying
+      - `hq_id`: Character varying
+      - `password`: Text
+      - `emp_code`: Text
+    - **Relationships:**
+      - `roleid` references `role(id)`
+      - `hq_id` references `hq(id)`
+
+11. **Table: `stockist`**
+    - **Columns:**
+      - `id`: Character varying
+      - `name`: Character varying
+    - **Relationships:** None
+
+12. **Table: `brand`**
+    - **Columns:**
+      - `id`: Integer
+      - `name`: Character varying
+      - `category`: Character varying
+    - **Relationships:** None
+
+13. **Table: `brandskumap`**
+    - **Columns:**
+      - `brand_id`: Integer
+      - `sku_code`: Character varying
+    - **Relationships:**
+      - `brand_id` references `brand(id)`
+      - `sku_code` references `sku(code)`
+
+This schema outlines a structured database supporting a business context involving users, managers, sales divisions, headquarters, stockists, and product mapping across brands and SKUs. Relationships allow for the seamless interplay between users, roles, products, and sales data.

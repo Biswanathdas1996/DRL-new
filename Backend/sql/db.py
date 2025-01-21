@@ -5,7 +5,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import networkx as nx
-from secretes.secrets import DB_CONFIG
+from secretes.secrets import DB_CONFIG, OPENAI_API_KEY
+import openai
 
 def create_connection(DB_CONFIG):
     try:
@@ -85,14 +86,38 @@ def save_erd_as_png(input_data, filename="sql/erd.png"):
     except Exception as e:
         print(f"The error '{e}' occurred")
 
+def save_erd_as_text(input_data, filename="sql/erd.txt"):
+    try:
+        openai.api_key = OPENAI_API_KEY
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-4o",
+            messages=[
+               {"role": "system", "content": "Convert the following JSON schema into a descriptive text format:"},
+                {"role": "user", "content": input_data}
+            ],
+            max_tokens=1500
+        )
+        descriptive_text = response.choices[0].message['content'].strip()
+
+     
+
+        with open(filename, 'w') as file:
+            file.write(descriptive_text)
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+
 def generate_erd_from(DB_CONFIG):
     try:
         connection = create_connection(DB_CONFIG)
         if connection:
             erd_json = get_erd_as_json(connection)
+
             if erd_json:
+                save_erd_as_text(erd_json)
                 save_erd_as_png(json.loads(erd_json))
-                print(erd_json)
+                save_erd_as_text(json.loads(erd_json))
+                
             connection.close()
             return erd_json
     except Exception as e:

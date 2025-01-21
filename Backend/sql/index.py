@@ -42,6 +42,18 @@ def get_erd():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
+def get_erd_text():
+    try:
+        with open(os.path.join(os.path.dirname(__file__), './erd.txt'), 'r') as file:
+            erd_text = file.read()
+            return erd_text
+    except FileNotFoundError:
+        print("Configuration file not found.")
+    except json.JSONDecodeError:
+        print("Error decoding JSON from the configuration file.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
 def delete_temp_table(conn, table_name):
     try:
         cursor = conn.cursor()

@@ -1,16 +1,21 @@
 from helper.utils import get_config
 from helper.gpt import call_gpt
-from sql.index import get_erd
+from sql.index import get_erd_text
 
 # Function to generate SQL query using OpenAI
 def generate_sql_query(user_question, working_table_description):
+
+    erd_text = get_erd_text()
+    
     try:
         prompt = f"""
         Translate the following natural language query to SQL query: {user_question}.
         Return only the SQL query without any additional text or explanation.
         
+        Instruction: 
+         - use LIKE operator in the WHERE clause to filter the rows based on the 'name' column.
         Here is the schema of the database:
-            {working_table_description}
+            {erd_text}
         """
         config = get_config()
         sql_query_string = config.get('gpt').get('generate_sql_query')

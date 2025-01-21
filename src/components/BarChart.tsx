@@ -53,7 +53,7 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
     const { "x-axis": xAxis, "y-axis": yAxis } = config;
 
     // Group data by x-axis key
-    const groupedData = data.reduce((acc, item) => {
+    const groupedData = data?.reduce((acc, item) => {
       const key = item[xAxis];
       if (!acc[key]) {
         acc[key] = [];
@@ -63,20 +63,22 @@ const MyBarChart: React.FC<MyBarChartProps> = ({ chatData, chartConfig }) => {
     }, {} as { [key: string]: DataType[] });
 
     // Sum the y-axis values for each group
-    const result = Object.entries(groupedData).map(([groupKey, items]) => {
-      const yAxisSums = yAxis.reduce((sumAcc, yKey) => {
-        sumAcc[yKey] = items.reduce(
-          (sum: number, item: DataType) => sum + Number(item[yKey]) || 0,
-          0
-        );
-        return sumAcc;
-      }, {} as { [key: string]: number });
+    const result =
+      groupedData &&
+      Object.entries(groupedData).map(([groupKey, items]) => {
+        const yAxisSums = yAxis.reduce((sumAcc, yKey) => {
+          sumAcc[yKey] = items.reduce(
+            (sum: number, item: DataType) => sum + Number(item[yKey]) || 0,
+            0
+          );
+          return sumAcc;
+        }, {} as { [key: string]: number });
 
-      return {
-        [xAxis]: groupKey,
-        ...yAxisSums,
-      };
-    });
+        return {
+          [xAxis]: groupKey,
+          ...yAxisSums,
+        };
+      });
 
     return result;
   }

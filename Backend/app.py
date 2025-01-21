@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from flask_compress import Compress
 import os
-
 from main.nlq import nlq
 from helper.utils import add_query_to_json
 from gpt.analiticts import getAnalytics, call_gpt
@@ -55,15 +54,21 @@ def query():
         return jsonify({"error": "No question provided"}), 400
 
     try:
-        pre_data = pre_process_data(user_question, working_table_description)
-        if pre_data:
-            return jsonify(pre_data)
-        else:
-            query = nlq(user_question, working_table_description)
-            result = execute_sql_query(query)
-            return jsonify({"result": result, "query": query, "type": "dynamic"})
+        query = nlq(user_question, working_table_description)
+        result = execute_sql_query(query)
+        return jsonify({"result": result, "query": query, "type": "dynamic"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    # try:
+    #     pre_data = pre_process_data(user_question, working_table_description)
+    #     if pre_data:
+    #         return jsonify(pre_data)
+    #     else:
+    #         query = nlq(user_question, working_table_description)
+    #         result = execute_sql_query(query)
+    #         return jsonify({"result": result, "query": query, "type": "dynamic"})
+    # except Exception as e:
+    #     return jsonify({"error": str(e)}), 500
 
 @app.route('/analytics', methods=['POST'])
 def analytics_data():
@@ -166,6 +171,9 @@ def get_erd_img():
         return send_file(erd_image_path, mimetype='image/png')
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
