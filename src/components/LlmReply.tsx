@@ -183,46 +183,13 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
                 ) : (
                   <>
                     <div style={{ width: "100%" }}>
-                      <div style={{ borderBottom: 1, borderColor: "divider" }}>
-                        <Tabs
-                          value={value}
-                          onChange={handleChange}
-                          aria-label="basic tabs example"
-                        >
-                          <Tab
-                            label="Ai response"
-                            {...a11yProps(0)}
-                            style={{ fontSize: 11 }}
-                          />
-                          <Tab
-                            label="Data"
-                            {...a11yProps(1)}
-                            style={{ fontSize: 11 }}
-                          />
-                        </Tabs>
-                      </div>
-                      <CustomTabPanel value={value} index={0}>
-                        {message.llmReply && (
-                          <div className="chat-indv" style={{ all: "unset" }}>
-                            <div
-                              style={{ all: "unset" }}
-                              dangerouslySetInnerHTML={{
-                                __html: message.llmReply,
-                              }}
-                            />
-                          </div>
-                        )}
-                        {loading && <Loader showIcon={false} />}
-                      </CustomTabPanel>
-                      <CustomTabPanel value={value} index={1}>
-                        <Table
-                          data={
-                            Array.isArray(message?.result) ? message.result : []
-                          }
-                          loadingUi={loadingUi}
-                          chatId={id}
-                        />
-                      </CustomTabPanel>
+                      <Table
+                        data={
+                          Array.isArray(message?.result) ? message.result : []
+                        }
+                        loadingUi={loadingUi}
+                        chatId={id}
+                      />
                     </div>
                   </>
                 )}
@@ -236,7 +203,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
               setLoadingUi={setLoadingUi}
             />
           )}
-          <button
+          {/* <button
             className="newConversationButton"
             onClick={() => setShowAnaliticsSection(!showAnaliticsSection)}
             style={{ background: "#989595" }}
@@ -246,7 +213,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
               alt="Clear Chat"
             />
-          </button>
+          </button> */}
           {!isSingleResponse ? (
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button

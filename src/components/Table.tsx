@@ -33,6 +33,8 @@ const CustomTable: React.FC<TableProps> = ({
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
+    sortBy: "",
+    order: "asc",
   });
 
   if (data.length !== 0) {
@@ -50,7 +52,7 @@ const CustomTable: React.FC<TableProps> = ({
               )
             );
             setPaginationModel({ ...paginationModel, page: 0 });
-            setData(filteredData);
+            if (setData) setData(filteredData);
             chatId &&
               dispatch(
                 updateResult({
@@ -62,7 +64,7 @@ const CustomTable: React.FC<TableProps> = ({
           sx={{ marginBottom: 2 }}
         />
         <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
+          <MuiTable stickyHeader aria-label="sticky table">
             <TableHead style={{ height: 10 }}>
               <TableRow style={{ height: 10 }}>
                 {data.length > 0 &&
@@ -78,11 +80,45 @@ const CustomTable: React.FC<TableProps> = ({
                         margin: 0,
                         textAlign: "center",
                         borderRight: "2px solid #ffffff",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        const isAsc =
+                          paginationModel.sortBy === columnName &&
+                          paginationModel.order === "asc";
+                        const order = isAsc ? "desc" : "asc";
+                        const sortedData = [...data].sort((a, b) => {
+                          const aValue = a[columnName];
+                          const bValue = b[columnName];
+                          if (
+                            typeof aValue === "number" &&
+                            typeof bValue === "number"
+                          ) {
+                            return order === "asc"
+                              ? aValue - bValue
+                              : bValue - aValue;
+                          } else {
+                            return order === "asc"
+                              ? String(aValue).localeCompare(String(bValue))
+                              : String(bValue).localeCompare(String(aValue));
+                          }
+                        });
+                        if (setData) setData(sortedData);
+                        setPaginationModel({
+                          ...paginationModel,
+                          sortBy: columnName,
+                          order,
+                        });
                       }}
                     >
                       {columnName
                         .replace(/_/g, " ")
                         .replace(/^\w/, (c) => c.toUpperCase())}
+                      {paginationModel.sortBy === columnName
+                        ? paginationModel.order === "asc"
+                          ? " 🔼"
+                          : " 🔽"
+                        : ""}
                     </TableCell>
                   ))}
               </TableRow>
@@ -122,7 +158,7 @@ const CustomTable: React.FC<TableProps> = ({
                   </TableRow>
                 ))}
             </TableBody>
-          </Table>
+          </MuiTable>
         </TableContainer>
         <TableFooter>
           <TableRow>
@@ -155,6 +191,6 @@ const CustomTable: React.FC<TableProps> = ({
   }
 };
 
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 5, sortBy: "", order: "asc" };
 
 export default CustomTable;
