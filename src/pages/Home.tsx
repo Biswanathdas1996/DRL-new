@@ -34,7 +34,7 @@ const Login: React.FC = () => {
         }),
       });
       const data = await response.json();
-      console.log("Response:", data?.result[0]);
+
       localStorage.setItem("user", JSON.stringify(data?.result[0]));
       setUser(data?.result[0]);
       setLoading(false);
