@@ -4,11 +4,14 @@ import { LOGIN } from "../config";
 import Loader from "../components/Loader";
 import { useContext } from "react";
 import { UserContext } from "../App";
+import { useAlert } from "../hook/useAlert";
 
 const Login: React.FC = () => {
+  const { triggerAlert } = useAlert();
   const [email, setEmail] = useState("55541");
   const [password, setPassword] = useState("drl1234");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
 
@@ -37,6 +40,7 @@ const Login: React.FC = () => {
       setLoading(false);
       window.location.replace("/#/sql-chat");
     } catch (error) {
+      triggerAlert("Please check your credentials!", "error");
       console.error("Error:", error);
       setLoading(false);
     }
@@ -80,12 +84,23 @@ const Login: React.FC = () => {
             fullWidth
             name="password"
             label="Password"
-            type="password"
             id="password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <Button
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ textTransform: "none" }}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              ),
+            }}
+            type={showPassword ? "text" : "password"}
           />
+
           {loading ? (
             <Loader showIcon={false} text={"Authenticating"} />
           ) : (
