@@ -13,6 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 interface TableProps {
@@ -79,25 +80,55 @@ const CustomTable: React.FC<TableProps> = ({
           <TableHead style={{ height: 10 }}>
             <TableRow style={{ height: 10 }}>
               {table1Data.length > 0 &&
-                Object.keys(table1Data[0]).map((columnName, index) => (
-                  <TableCell
-                    key={index}
-                    style={{
-                      minWidth: 170,
-                      background: "rgb(51 51 51 / 86%)",
-                      color: "white",
-                      height: 10,
-                      padding: "5px",
-                      margin: 0,
-                      textAlign: "center",
-                      borderRight: "2px solid #ffffff",
-                    }}
-                  >
-                    {columnName
-                      .replace(/_/g, " ")
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                  </TableCell>
-                ))}
+                Object.keys(table1Data[0]).map(
+                  (columnName: string, index: number) => (
+                    <TableCell
+                      key={index}
+                      style={{
+                        minWidth: 170,
+                        background: "rgb(51 51 51 / 86%)",
+                        color: "white",
+                        height: 10,
+                        padding: "5px",
+                        margin: 0,
+                        textAlign: "center",
+                        borderRight: "2px solid #ffffff",
+                      }}
+                    >
+                      <TableSortLabel
+                        active={paginationModel.sortBy === columnName}
+                        direction={paginationModel.order as "asc" | "desc"}
+                        onClick={() => {
+                          const isAsc =
+                            paginationModel.sortBy === columnName &&
+                            paginationModel.order === "asc";
+                          setPaginationModel({
+                            ...paginationModel,
+                            sortBy: columnName,
+                            order: isAsc ? "desc" : "asc",
+                          });
+                          const sortedData = [...table1Data].sort(
+                            (
+                              a: Record<string, any>,
+                              b: Record<string, any>
+                            ) => {
+                              if (a[columnName] < b[columnName])
+                                return isAsc ? -1 : 1;
+                              if (a[columnName] > b[columnName])
+                                return isAsc ? 1 : -1;
+                              return 0;
+                            }
+                          );
+                          setTable1Data(sortedData);
+                        }}
+                      >
+                        {columnName
+                          .replace(/_/g, " ")
+                          .replace(/^\w/, (c: string) => c.toUpperCase())}
+                      </TableSortLabel>
+                    </TableCell>
+                  )
+                )}
             </TableRow>
           </TableHead>
           <TableBody>
