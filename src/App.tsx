@@ -21,7 +21,6 @@ function App() {
     const user = localStorage.getItem("user");
     if (user) {
       setUser(JSON.parse(user));
-      window.location.replace("/#/config");
     } else {
       window.location.replace("/#/");
     }
@@ -35,14 +34,16 @@ function App() {
         <Routes key="authenticated">
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          {user && <Route path="/sql-chat" element={<Chat />} />}
-          {user && (
-            <Route path="/data-chat" element={<ChatWithUnstructure />} />
-          )}
-          {user && <Route path="/query" element={<Queries />} />}
-          {user && <Route path="/upload" element={<Upload />} />}
-          {user && <Route path="/config" element={<Config />} />}
-          {user && <Route path="/db-config" element={<DBConfig />} />}
+          {user ? (
+            <>
+              <Route path="/sql-chat" element={<Chat />} />
+              <Route path="/data-chat" element={<ChatWithUnstructure />} />
+              <Route path="/query" element={<Queries />} />
+              <Route path="/upload" element={<Upload />} />
+              <Route path="/config" element={<Config />} />
+              <Route path="/db-config" element={<DBConfig />} />
+            </>
+          ) : null}
         </Routes>
       </Layout>
     </UserContext.Provider>

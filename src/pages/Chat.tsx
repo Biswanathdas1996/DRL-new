@@ -42,6 +42,9 @@ const Chat: React.FC = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    const lastTwoChats = chatHistory.slice(-2);
+    console.log("lastTwoChats", lastTwoChats);
+
     const raw = JSON.stringify({
       question: query,
       working_table_description: localStorage.getItem("dbJson"),
@@ -83,6 +86,7 @@ const Chat: React.FC = () => {
     localStorage.removeItem("chatData");
     window.location.reload();
   };
+
   return (
     <>
       <h2>Chat</h2>

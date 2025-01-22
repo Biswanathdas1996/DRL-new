@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import { addLLMReply } from "../redux/slices/chatSlices";
@@ -13,6 +13,7 @@ import Loader from "./Loader";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import { UserContext } from "../App";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -69,6 +70,8 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
     React.useState<boolean>(false);
   const [showQueryEditSection, setShowQueryEditSection] =
     React.useState<boolean>(false);
+
+  const { user } = useContext(UserContext);
 
   const { triggerAlert } = useAlert();
 
@@ -169,32 +172,47 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
       <div data-name="message-stack-1" className="chat-msg-stack">
         <div className="chat-indv">
           <div className="bot-message">
-            {showAnaliticsSection ? (
-              <Analyse data={message} chatId={id} />
-            ) : (
-              <>
-                {message && isSingleResponse ? (
-                  <div style={{ gridColumn: "span 4" }}>
-                    {typeof message?.result === "string" ||
-                    typeof message?.result === "number"
-                      ? message.result
-                      : null}
+            <>
+              <h3>Certainly, {user?.name}</h3>
+              <div
+                style={{ fontSize: "14px", fontWeight: "600", marginTop: 20 }}
+              >
+                As per your query the Distributor wise details are as below.
+              </div>
+              <br />
+              {message && isSingleResponse ? (
+                <div style={{ gridColumn: "span 4" }}>
+                  {typeof message?.result === "string" ||
+                  typeof message?.result === "number"
+                    ? message.result
+                    : null}
+                </div>
+              ) : (
+                <>
+                  <div style={{ width: "100%" }}>
+                    <Table
+                      data={
+                        Array.isArray(message?.result) ? message.result : []
+                      }
+                      loadingUi={loadingUi}
+                      chatId={id}
+                    />
                   </div>
-                ) : (
-                  <>
-                    <div style={{ width: "100%" }}>
-                      <Table
-                        data={
-                          Array.isArray(message?.result) ? message.result : []
-                        }
-                        loadingUi={loadingUi}
-                        chatId={id}
-                      />
-                    </div>
-                  </>
-                )}
-              </>
-            )}
+                </>
+              )}
+              <div
+                style={{ fontSize: "14px", fontWeight: "600", marginTop: 20 }}
+              >
+                If you would like additional followup information, please type
+                in the chat box below
+              </div>
+              <div
+                style={{ fontSize: "12px", fontWeight: "400", marginTop: 20 }}
+              >
+                If not, please proceed to close the chat, Thank you for your
+                query, We look forward to helping you again!
+              </div>
+            </>
           </div>
           {showQueryEditSection && (
             <SqlUpdate

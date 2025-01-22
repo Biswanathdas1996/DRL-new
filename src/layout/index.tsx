@@ -70,6 +70,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isUser = localStorage.getItem("user");
   const routes = isUser ? userRoutes : publicRoutes;
+  const user = JSON.parse(isUser || "{}");
+
   return (
     <div>
       <div className="chatbot-page">
@@ -93,8 +95,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               alt="User Icon"
             />
             <div>
-              <div className="userName"></div>
-              <div className="role"></div>
+              <div className="userName">{user?.name}</div>
+              <div className="role">{user?.emp_code}</div>
             </div>
           </div>
         </div>
