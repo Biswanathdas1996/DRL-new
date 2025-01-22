@@ -10,24 +10,31 @@ try:
 except Exception as e:
     print(f"Error setting environment variable: {e}")
 
+chat_history = []
+
 def call_gpt(config, prompt, max_tokens=50):
+    global chat_history
     try:
         openai.api_key = os.environ["OPENAI_API_KEY"]
     except KeyError:
         return "API key not found in environment variables."
 
+    global chat_history
+    chat_history.append({"role": "user", "content": prompt})
+
+    # Keep only the last 2 messages in chat_history
+    if len(chat_history) > 2:
+        chat_history = chat_history[-2:]
+    print("Chat History:", chat_history)    
     try:
         response = openai.ChatCompletion.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
-            messages=[
-                {"role": "system", "content": config},
-                {"role": "user", "content": prompt}
-            ],
+            messages=[{"role": "system", "content": config}] + chat_history,
             temperature=0,
-            n=1,
             stop=None
         )
         result = response.choices[0].message['content'].strip()
+        chat_history.append({"role": "assistant", "content": result})
         print("GPT Response:", response)
         return result
     except Exception as e:
