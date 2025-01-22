@@ -186,7 +186,7 @@ def login():
         result = execute_sql_query(query)
         print(result)         
         if result:
-            return jsonify({"message": "Authentication Successful"}), 200
+            return jsonify({"message": "Authentication Successful", "result": result}), 200
         else:
              return jsonify({"message": "Unauthenticated"}), 401
     except Exception as e:
