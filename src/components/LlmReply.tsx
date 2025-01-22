@@ -175,9 +175,9 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
             <>
               <h3>Certainly, {user?.name}</h3>
               <div
-                style={{ fontSize: "14px", fontWeight: "600", marginTop: 20 }}
+                style={{ fontSize: "14px", fontWeight: "500", marginTop: 20 }}
               >
-                As per your query the Distributor wise details are as below.
+                As per your query the details are as below.
               </div>
               <br />
               {message && isSingleResponse ? (
@@ -200,14 +200,14 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
                   </div>
                 </>
               )}
-              <div
+              {/* <div
                 style={{ fontSize: "14px", fontWeight: "600", marginTop: 20 }}
               >
                 If you would like additional followup information, please type
                 in the chat box below
-              </div>
+              </div> */}
               <div
-                style={{ fontSize: "12px", fontWeight: "400", marginTop: 20 }}
+                style={{ fontSize: "14px", fontWeight: "400", marginTop: 20 }}
               >
                 If not, please proceed to close the chat, Thank you for your
                 query, We look forward to helping you again!

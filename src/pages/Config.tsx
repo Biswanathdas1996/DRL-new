@@ -179,48 +179,7 @@ export default function Config() {
             </>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
-          <Grid size={6}>
-            <>
-              <h4>Instructions for generating user story</h4>
-              <BasicTextFields
-                fields={instructionForUserStories}
-                setFields={setInstructionForUserStories}
-                usedFor="instructionForUserStories"
-              />
-            </>
-          </Grid>
-          <Grid size={6}>
-            <>
-              <h4>Instructions for generating test cases</h4>
-              <BasicTextFields
-                fields={instructionForTestCases}
-                setFields={setInstructionForTestCases}
-                usedFor="instructionForTestCases"
-              />
-            </>
-          </Grid>
-          <Grid size={6}>
-            <>
-              <h4>Instructions for generating test data</h4>
-              <BasicTextFields
-                fields={instructionForTestData}
-                setFields={setInstructionForTestData}
-                usedFor="instructionForTestData"
-              />
-            </>
-          </Grid>
-          <Grid size={6}>
-            <>
-              <h4>Instructions for generating code</h4>
-              <BasicTextFields
-                fields={instructionForCode}
-                setFields={setInstructionForCode}
-                usedFor="instructionForCode"
-              />
-            </>
-          </Grid>
-        </Grid>
+
         <br />
         <br />
         <br />
