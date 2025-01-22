@@ -131,6 +131,15 @@ const chatSlice = createSlice({
       });
       localStorage.setItem("chatData", JSON.stringify(state.value));
     },
+
+    getMessageById: (state, action: PayloadAction<number>) => {
+      const chatId = action.payload;
+      const message = state.value.find((item) => item.id === chatId);
+      return {
+        ...state,
+        selectedMessage: message,
+      };
+    },
   },
 });
 
@@ -140,5 +149,6 @@ export const {
   addAnalitics,
   updateResult,
   addLLMReply,
+  getMessageById,
 } = chatSlice.actions;
 export default chatSlice.reducer;

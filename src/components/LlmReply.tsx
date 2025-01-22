@@ -125,9 +125,9 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
     return userStorydata?.replace("```html", "") as string;
   };
 
-  useEffect(() => {
-    generateGPTResponse();
-  }, []);
+  // useEffect(() => {
+  //   generateGPTResponse();
+  // }, []);
 
   const saveQuery = () => {
     const myHeaders = new Headers();
@@ -190,13 +190,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
               ) : (
                 <>
                   <div style={{ width: "100%" }}>
-                    <Table
-                      data={
-                        Array.isArray(message?.result) ? message.result : []
-                      }
-                      loadingUi={loadingUi}
-                      chatId={id}
-                    />
+                    <Table loadingUi={loadingUi} chatId={id} />
                   </div>
                 </>
               )}

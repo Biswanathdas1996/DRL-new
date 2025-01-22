@@ -25,7 +25,19 @@ def call_gpt(config, prompt, max_tokens=50):
     # Keep only the last 2 messages in chat_history
     if len(chat_history) > 2:
         chat_history = chat_history[-2:]
-    print("Chat History:", chat_history)    
+    print("Chat History:", chat_history)  
+
+    # Calculate the total tokens in chat_history
+    total_tokens = sum(len(message['content'].split()) for message in chat_history)
+
+    # Define the maximum number of tokens allowed
+    max_allowed_tokens = 2000
+
+    # If total tokens exceed the maximum allowed, trim the chat_history
+    while total_tokens > max_allowed_tokens and len(chat_history) > 1:
+        chat_history.pop(0)
+        total_tokens = sum(len(message['content'].split()) for message in chat_history)
+
     try:
         response = openai.ChatCompletion.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),

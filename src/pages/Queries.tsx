@@ -373,7 +373,7 @@ const Queries: React.FC = () => {
             <div style={{ marginTop: 20 }}>
               {data && (
                 <FixedReplyTemplate
-                  data={Array.isArray(data) ? data : []}
+                  customData={Array.isArray(data) ? data : []}
                   setData={setData}
                 />
               )}

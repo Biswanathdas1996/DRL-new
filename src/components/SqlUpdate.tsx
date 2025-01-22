@@ -67,6 +67,7 @@ const SqlUpdate: React.FC<SqlUpdateProps> = ({
       .then((response) => response.json())
       .then((result) => {
         setLoadingUi(false);
+        console.log("Result:", result);
         dispatch(
           updateMessage({
             chatId,
