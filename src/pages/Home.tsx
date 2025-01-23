@@ -38,6 +38,7 @@ const Login: React.FC = () => {
       localStorage.setItem("user", JSON.stringify(data?.result[0]));
       setUser(data?.result[0]);
       setLoading(false);
+      localStorage.removeItem("chatData");
       window.location.replace("/#/sql-chat");
     } catch (error) {
       triggerAlert("Please check your credentials!", "error");

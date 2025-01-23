@@ -21,7 +21,7 @@ def call_gpt_to_refactor_query(query_text, query, working_table_description):
                 Return only the SQL query without any additional text or explanation.\n
                 replace only the part of SQL query this is in between %%\n 
                 for example %dummy text% \n
-
+                do no change anything that is related to DATE_PART
                     SQL Query:\n
                     {query_text}\n
                     Schema of the database:\n
