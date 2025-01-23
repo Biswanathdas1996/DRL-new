@@ -50,7 +50,7 @@ def pre_process_data(query, working_table_description):
         analytics = most_similar_query.get('analytics')
         print("query_id===============>", query_id) 
 
-
+        final_query = query_text
         if(query_id == 3.1):
             result1 = execute_sql_query(most_similar_query.get('query'))
             result2 = execute_sql_query(most_similar_query.get('query2'))
@@ -86,10 +86,12 @@ def pre_process_data(query, working_table_description):
                     return None
                 if result_query is None:
                     return None
+                final_query = result_query
                 result = execute_sql_query(result_query)
             else:
+                print("Static run===============>") 
+                final_query = query_text
                 result = execute_sql_query(query_text)
-
             response = {
                 "text1": "As per your query the Distributor wise details are as below.",
                 "table1": result,
@@ -98,7 +100,7 @@ def pre_process_data(query, working_table_description):
                 "analytics": analytics
             }
         
-        return {"query": result_query, "result": response, "type": "fixed"}
+        return {"query": final_query, "result": response, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")
