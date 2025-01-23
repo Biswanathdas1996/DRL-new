@@ -98,7 +98,7 @@ def pre_process_data(query, working_table_description):
                 "analytics": analytics
             }
         
-        return {"query": query_text, "result": response, "type": "fixed"}
+        return {"query": result_query, "result": response, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")

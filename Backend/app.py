@@ -53,22 +53,22 @@ def query():
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
-    try:
-        query = nlq(user_question, working_table_description)
-        result = execute_sql_query(query)
-        return jsonify({"result": result, "query": query, "type": "dynamic"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     # try:
-    #     pre_data = pre_process_data(user_question, working_table_description)
-    #     if pre_data:
-    #         return jsonify(pre_data)
-    #     else:
-    #         query = nlq(user_question, working_table_description)
-    #         result = execute_sql_query(query)
-    #         return jsonify({"result": result, "query": query, "type": "dynamic"})
+    #     query = nlq(user_question, working_table_description)
+    #     result = execute_sql_query(query)
+    #     return jsonify({"result": result, "query": query, "type": "dynamic"})
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
+    try:
+        pre_data = pre_process_data(user_question, working_table_description)
+        if pre_data:
+            return jsonify(pre_data)
+        else:
+            query = nlq(user_question, working_table_description)
+            result = execute_sql_query(query)
+            return jsonify({"result": result, "query": query, "type": "dynamic"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/analytics', methods=['POST'])
 def analytics_data():

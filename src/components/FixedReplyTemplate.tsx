@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,8 +12,46 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
-
+import SqlUpdate from "./SqlUpdate";
 import Analyse from "./DataVisualations";
+import { UserContext } from "../App";
+
+const applyDateFilter = (input: string | number): string | number => {
+  if (typeof input !== "string") {
+    return input;
+  }
+
+  const date = new Date();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+
+  const match = input.match(/Current Month-(\d+)/);
+  if (match) {
+    const monthsToSubtract = parseInt(match[1], 10);
+    month -= monthsToSubtract;
+    while (month < 0) {
+      month += 12;
+      year -= 1;
+    }
+    const monthNames = [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
+    ];
+    return `${monthNames[month]}-${year.toString().slice(-2)}`;
+  } else {
+    return input;
+  }
+};
 
 // Type definitions
 interface Data {
@@ -28,17 +66,16 @@ interface Props {
   data: Data;
   doQuery?: any;
   chartId?: number;
+  chat: any;
 }
 
-const top100Films = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-  // Add more film objects as needed
-];
-
-const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
+const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
+  const { message, time, id } = chat;
+  const { user } = useContext(UserContext);
   const [page, setPage] = React.useState(0);
+  const [loadingUi, setLoadingUi] = React.useState<boolean>(false);
+  const [showQueryEditSection, setShowQueryEditSection] =
+    React.useState<boolean>(false);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
@@ -77,6 +114,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
               style={{ fontFamily: "Arial, sans-serif" }}
               className="chat-msg-stack"
             >
+              <h3>Certainly, {user?.name}!</h3>
               {/* Display the first text dynamically */}
               <div style={{ marginBottom: "20px", fontSize: "14px" }}>
                 {data?.text1}
@@ -145,9 +183,11 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
                                       borderRight: "2px solid #ffffff",
                                     }}
                                   >
-                                    {columnName
-                                      .replace(/_/g, " ")
-                                      .replace(/^\w/, (c) => c.toUpperCase())}
+                                    {applyDateFilter(
+                                      columnName
+                                        .replace(/_/g, " ")
+                                        .replace(/^\w/, (c) => c.toUpperCase())
+                                    )}
                                   </TableCell>
                                 )
                               )}
@@ -248,6 +288,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
                   </b>
                 )}
               </div>
+
               {shouldDisplayTable(data) && data?.questions.length > 0 && (
                 <>
                   {/* Display the second text dynamically */}
@@ -270,7 +311,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
                 </>
               )}
 
-              {chartId && data?.analytics && (
+              {/* {chartId && data?.analytics && (
                 <Analyse
                   data={{
                     analytics: data?.analytics,
@@ -281,7 +322,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
                     type: "",
                   }}
                 />
-              )}
+              )} */}
 
               <div
                 style={{ fontSize: "12px", fontWeight: "400", marginTop: 10 }}
@@ -291,6 +332,38 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId }) => {
               </div>
             </div>
           </div>
+        </div>
+        {showQueryEditSection && (
+          <SqlUpdate
+            query={message?.query}
+            chatId={id}
+            setLoadingUi={setLoadingUi}
+          />
+        )}
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button
+            className="newConversationButton"
+            onClick={() => setShowQueryEditSection(!showQueryEditSection)}
+            style={{ background: "#989595" }}
+          >
+            {showQueryEditSection ? "Hide" : "SQL"}
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
+              alt="Clear Chat"
+            />
+          </button>
+          <button
+            className="newConversationButton"
+            style={{
+              background: "#989595",
+            }}
+          >
+            Export
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
+              alt="Clear Chat"
+            />
+          </button>
         </div>
       </div>
     </div>

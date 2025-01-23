@@ -29,6 +29,43 @@ interface TableProps {
   customData?: any;
 }
 
+const applyDateFilter = (input: string | number): string | number => {
+  if (typeof input !== "string") {
+    return input;
+  }
+
+  const date = new Date();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+
+  const match = input.match(/Current Month-(\d+)/);
+  if (match) {
+    const monthsToSubtract = parseInt(match[1], 10);
+    month -= monthsToSubtract;
+    while (month < 0) {
+      month += 12;
+      year -= 1;
+    }
+    const monthNames = [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
+    ];
+    return `${monthNames[month]}-${year.toString().slice(-2)}`;
+  } else {
+    return input;
+  }
+};
+
 const CustomTable: React.FC<TableProps> = ({
   loadingUi,
   chatId,
@@ -151,9 +188,11 @@ const CustomTable: React.FC<TableProps> = ({
                               setTable1Data(sortedData);
                             }}
                           >
-                            {columnName
-                              .replace(/_/g, " ")
-                              .replace(/^\w/, (c: string) => c.toUpperCase())}
+                            {applyDateFilter(
+                              columnName
+                                .replace(/_/g, " ")
+                                .replace(/^\w/, (c: string) => c.toUpperCase())
+                            )}
                           </TableSortLabel>
                         </TableCell>
                       )

@@ -173,7 +173,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
         <div className="chat-indv">
           <div className="bot-message">
             <>
-              <h3>Certainly, {user?.name}</h3>
+              <h3>Certainly, {user?.name}!</h3>
               <div
                 style={{ fontSize: "14px", fontWeight: "500", marginTop: 20 }}
               >
