@@ -5,14 +5,17 @@ import Loader from "../components/Loader";
 import { useContext } from "react";
 import { UserContext } from "../App";
 import { useAlert } from "../hook/useAlert";
+import { clearChat } from "../redux/slices/chatSlices";
+import { AppDispatch } from "../redux/store";
+import { useDispatch } from "react-redux";
 
 const Login: React.FC = () => {
   const { triggerAlert } = useAlert();
   const [email, setEmail] = useState("55541");
-  const [password, setPassword] = useState("drl1234");
+  const [password, setPassword] = useState("drltest1234");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const { user, setUser } = useContext(UserContext);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -38,7 +41,7 @@ const Login: React.FC = () => {
       localStorage.setItem("user", JSON.stringify(data?.result[0]));
       setUser(data?.result[0]);
       setLoading(false);
-      localStorage.removeItem("chatData");
+      dispatch(clearChat());
       window.location.replace("/#/sql-chat");
     } catch (error) {
       triggerAlert("Please check your credentials!", "error");

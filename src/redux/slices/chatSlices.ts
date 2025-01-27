@@ -140,6 +140,10 @@ const chatSlice = createSlice({
         selectedMessage: message,
       };
     },
+    clearChat: (state) => {
+      state.value = [];
+      localStorage.removeItem("chatData");
+    },
   },
 });
 
@@ -150,5 +154,6 @@ export const {
   updateResult,
   addLLMReply,
   getMessageById,
+  clearChat,
 } = chatSlice.actions;
 export default chatSlice.reducer;
