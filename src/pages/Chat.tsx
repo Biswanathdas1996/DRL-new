@@ -49,7 +49,7 @@ const Chat: React.FC = () => {
     console.log("lastTwoChats", lastTwoChats);
 
     const raw = JSON.stringify({
-      question: `${query}, Where the User name is ${user.name} if applicable`,
+      question: `${query}. Please note: Where the User name is ${user.name} is a must have in the query`,
       working_table_description: localStorage.getItem("dbJson"),
     });
 
