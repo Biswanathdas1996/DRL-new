@@ -30,17 +30,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const userRoutes = [
     {
       path: "/sql-chat",
-      name: "Q&A (Structure)",
+      name: "Q&A to SAP Query",
       icon: () => <SpeakerNotesIcon style={iconStyle} />,
     },
     {
       path: "/db-config",
-      name: "RDBMS Configuration",
+      name: "Database Configuration",
       icon: () => <DatasetLinkedIcon style={iconStyle} />,
     },
     {
       path: "/data-chat",
-      name: "Q&A (Un-Structure)",
+      name: "Medico Marketing Query",
       icon: () => <VoiceChatIcon style={iconStyle} />,
     },
     {

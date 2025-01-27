@@ -21,8 +21,8 @@ const Chat: React.FC = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const query = formData.get("query");
-    await doQuery(query as string);
     (e.target as HTMLFormElement).query.value = "";
+    await doQuery(query as string);
   };
 
   const isUser = localStorage.getItem("user");
