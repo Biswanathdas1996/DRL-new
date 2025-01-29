@@ -9,19 +9,25 @@ from helper.gpt import extract_image
 from sql.db import generate_erd_from, execute_sql_query
 from mongodb.rag import render_mongo_pack
 from Fixed_prompts_module.index import pre_process_data
+from Log.index import log, render_logs_pack
 
 app = Flask(__name__)
 Compress(app)
 CORS(app)
 app = render_mongo_pack(app)
+app = render_logs_pack(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
 @app.before_request
 def before_request():
     custom_header = request.headers.get('X-Ai-Model')
+    custom_user = request.headers.get('X-DRL-USER')
     if custom_header:
         os.environ["X-Ai-Model"] = custom_header
         print(f"X-Ai-Model: {custom_header}")
+    if custom_user:
+        os.environ["X-DRL-USER"] = custom_user
+        print(f"X-DRL-USER: {custom_user}")
 
 @app.route('/save-query', methods=['POST'])
 def save_query():
@@ -66,6 +72,12 @@ def query():
         else:
             query = nlq(user_question, working_table_description)
             result = execute_sql_query(query)
+
+            try:
+                log(os.environ["X-DRL-USER"], user_question, query)
+            except Exception as log_error:
+                print(f"Logging error: {log_error}")
+
             return jsonify({"result": result, "query": query, "type": "dynamic"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

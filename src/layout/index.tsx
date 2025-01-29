@@ -17,6 +17,7 @@ import SpeakerNotesIcon from "@mui/icons-material/SpeakerNotes";
 import LogoutIcon from "@mui/icons-material/Logout";
 import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
+import HistoryIcon from "@mui/icons-material/History";
 
 const iconStyle = {
   //  color: "#5f4ba0",
@@ -57,6 +58,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       path: "/config",
       name: "Configuration",
       icon: () => <SettingsIcon style={iconStyle} />,
+    },
+    {
+      path: "/logs",
+      name: "Logs",
+      icon: () => <HistoryIcon style={iconStyle} />,
     },
   ];
 

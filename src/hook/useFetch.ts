@@ -20,8 +20,11 @@ export const useFetch = (): ((
 
     const selectedMode = localStorage.getItem("model");
 
-    headers.append("X-Ai-Model", selectedMode || "gpt-4");
+    const userDataStr = localStorage.getItem("user");
+    const userData = userDataStr ? JSON.parse(userDataStr) : null;
 
+    headers.append("X-Ai-Model", selectedMode || "gpt-4");
+    headers.append("X-DRL-USER", userData?.name + "-" + userData?.emp_code);
     // Update requestOptions with the new headers
     requestOptions.headers = headers;
 
