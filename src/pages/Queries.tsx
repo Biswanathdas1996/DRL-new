@@ -188,7 +188,7 @@ const Queries: React.FC = () => {
     }
   };
 
-  const columnsNotToShow = ["id", "name", "query"];
+  const columnsNotToShow = ["name", "query"];
 
   return (
     <div>
@@ -225,7 +225,7 @@ const Queries: React.FC = () => {
                         key={index}
                         style={{
                           minWidth: 170,
-                          background: "rgb(51 51 51 / 86%)",
+                          background: "#5f4ba0",
                           color: "white",
                           height: 10,
                           padding: 10,
@@ -280,6 +280,7 @@ const Queries: React.FC = () => {
                                 onClick={() => handleOpen(String(value))}
                                 size="small"
                                 variant="contained"
+                                id="temp_button"
                               >
                                 Run Query
                               </Button>
@@ -366,6 +367,7 @@ const Queries: React.FC = () => {
                 onClick={() => onsubmitHandler(String(selectedQuery))}
                 size="small"
                 variant="contained"
+                id="temp_button"
               >
                 Execute
               </Button>

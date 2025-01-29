@@ -196,7 +196,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
                                     key={index}
                                     style={{
                                       minWidth: 170,
-                                      background: "rgb(51 51 51 / 86%)",
+                                      background: "#5f4ba0",
                                       color: "white",
                                       height: 10,
                                       padding: "5px",

@@ -538,7 +538,7 @@ html {
 }
 
 .visited {
-  color: #d04a02 !important;
+  color: #5f4ba0 !important;
   text-decoration: line-through;
   font-weight: 500;
   cursor: not-allowed !important;
@@ -553,11 +553,11 @@ html {
 
 .capsule {
   padding: 5px 30px;
-  border: 1px solid #d04a02;
+  border: 1px solid #5f4ba0;
   color: #fff;
   border-radius: 15px;
   font-size: 14px;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   font-weight: 700;
 }
 
@@ -604,7 +604,7 @@ html {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  border: 1px solid #d04a02;
+  border: 1px solid #5f4ba0;
   padding: 0 10px;
   border-radius: 10px;
 }
@@ -632,9 +632,9 @@ html {
 #loading-dot {
   width: 40px;
   height: 42px;
-  background-image: radial-gradient(circle, #d04a02 50%, transparent 50%),
-    radial-gradient(circle, #d04a02 50%, transparent 50%),
-    radial-gradient(circle, #d04a02 50%, transparent 50%),
+  background-image: radial-gradient(circle, #5f4ba0 50%, transparent 50%),
+    radial-gradient(circle, #5f4ba0 50%, transparent 50%),
+    radial-gradient(circle, #5f4ba0 50%, transparent 50%),
     radial-gradient(circle, #ebe421 50%, transparent 50%);
   background-size: 10px 10px;
   background-position: 0% 50%, 50% 50%, 100% 50%, 50% 100%;

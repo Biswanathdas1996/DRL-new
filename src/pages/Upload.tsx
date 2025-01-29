@@ -151,6 +151,7 @@ const Upload: React.FC = () => {
           variant="contained"
           color="warning"
           size="small"
+          id="temp_button"
           onClick={() => setShowUpload(true)}
           // style={{ padding: "15px 20px", marginLeft: "10px" }}
         >
@@ -199,13 +200,14 @@ const Upload: React.FC = () => {
                       size="small"
                       onClick={handleUpload}
                       style={{ padding: "15px 20px", marginLeft: "10px" }}
+                      id="temp_button"
                     >
                       Upload
                     </Button>
                   )}
                   <Button
                     variant="outlined"
-                    color="warning"
+                    color="secondary"
                     size="small"
                     onClick={() => setShowUpload(false)}
                     style={{ padding: "15px 20px", marginLeft: "10px" }}
@@ -242,7 +244,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "rgb(51 51 51 / 86%)",
+                    background: "#5f4ba0",
                     color: "white",
                     height: 10,
                     padding: "5px",
@@ -257,7 +259,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "rgb(51 51 51 / 86%)",
+                    background: "#5f4ba0",
                     color: "white",
                     height: 10,
                     padding: "5px",
@@ -272,7 +274,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "rgb(51 51 51 / 86%)",
+                    background: "#5f4ba0",
                     color: "white",
                     height: 10,
                     padding: "5px",

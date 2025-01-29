@@ -19,7 +19,7 @@ import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 
 const iconStyle = {
-  //  color: "#d04a02",
+  //  color: "#5f4ba0",
   color: "black",
   fontSize: 25,
   marginRight: 5,
@@ -79,7 +79,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="logoDiv">
               <h2 style={{ color: "black", fontWeight: 500, fontSize: 20 }}>
                 Intelligent{" "}
-                <b style={{ color: "#d04a02", fontWeight: 700 }}>Assistant</b>
+                <b style={{ color: "#5f4ba0", fontWeight: 700 }}>Assistant</b>
               </h2>
             </div>
             <div className="userDiv">
@@ -122,7 +122,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   >
                     <button className="sidenav-button">
                       {route.icon()}
-                      <span style={{ fontSize: 14 }}>{route.name}</span>
+                      <b style={{ fontSize: 14 }}>{route.name}</b>
                     </button>
                   </a>
                 );

@@ -55,7 +55,7 @@ html {
 }
 
 .background-mobile .bottom-container {
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   position: relative;
   padding-left: 5%;
   padding-right: 9%;
@@ -69,7 +69,7 @@ html {
   padding-top: 3%;
   padding-left: 5%;
   text-align: start;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
 }
 
 .background .left-container::after {
@@ -86,14 +86,14 @@ html {
 }
 
 .main-mobile-container {
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   width: 100% !important;
   /* height: auto !important;  */
 }
 
 .background .right-container {
   width: 50%;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   position: relative;
   display: flex;
   align-items: center;
@@ -198,7 +198,7 @@ html {
 
 .mobile-text {
   flex: 1 1;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   position: relative;
   padding-top: 3%;
   padding-left: 5%;

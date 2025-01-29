@@ -44,7 +44,7 @@ html {
 .background .left-container-login {
   width: 50%;
   flex: 1 1;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   position: relative;
   padding-top: 3%;
   padding-left: 5%;
@@ -71,7 +71,7 @@ html {
 
 .background .right-container-login {
   width: 50%;
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   position: relative;
   display: flex;
   align-items: center;
@@ -231,7 +231,7 @@ button:hover {
   .background {
     /* flex-direction: column-reverse; */
     position: relative;
-    background-color: #d04a02;
+    background-color: #5f4ba0;
   }
 
   .logo2 {

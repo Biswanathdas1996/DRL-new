@@ -35,8 +35,20 @@
 }
 
 .active-link button {
-  background-color: #d04a02;
+  background-color: #5f4ba0;
   color: white;
+}
+.active-link button {
+  background-color: #5f4ba0;
+  color: white;
+}
+
+.active-link .css-1umw9bq-MuiSvgIcon-root {
+  color: white !important;
+}
+
+.active-link .css-1umw9bq-MuiSvgIcon-root::after {
+  color: white !important;
 }
 
 .active-link button::after {

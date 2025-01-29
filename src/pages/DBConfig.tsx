@@ -236,6 +236,7 @@ const DBConfig: React.FC = () => {
                 color="warning"
                 onClick={handleFileUpload}
                 style={{ marginTop: "1rem" }}
+                id="temp_button"
               >
                 Connect
               </Button>

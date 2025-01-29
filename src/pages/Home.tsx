@@ -114,6 +114,7 @@ const Login: React.FC = () => {
               variant="contained"
               color="warning"
               style={{ marginTop: "1rem" }}
+              id="temp_login_button"
             >
               Login
             </Button>

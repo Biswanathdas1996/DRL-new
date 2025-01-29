@@ -1,119 +1,139 @@
-The JSON schema describes a database structure consisting of several tables. Here is a detailed description of each table along with its columns and relationships:
+The schema describes various tables containing details about a business's operations, users, distribution network, and transactions. Below is a detailed description of each table, including their columns and relationships:
 
-1. **Stockist Table:**
+1. **Table: sku**
    - Columns:
-     - `id`: A variable-length character column serving as the unique identifier for stockists.
-     - `name`: A variable-length character column representing the name of the stockist.
+     - `code`: A variable-length character field representing the SKU code.
+     - `name`: A variable-length character field for the SKU name.
    - Relationships: None.
 
-2. **Brand Table:**
+2. **Table: usermanagermap**
    - Columns:
-     - `id`: An integer column serving as the unique identifier for brands.
-     - `name`: A variable-length character column representing the name of the brand.
-     - `category`: A variable-length character column representing the category of the brand.
-   - Relationships: None.
-
-3. **BrandSKUMap Table:**
-   - Columns:
-     - `brand_id`: An integer column linking to the `id` in the Brand table.
-     - `sku_code`: A variable-length character column linking to the `code` in the SKU table.
+     - `id`: An integer representing the map ID.
+     - `userid`: A variable-length character field for the user ID.
+     - `managerid`: A variable-length character field for the manager ID.
    - Relationships:
-     - Links `brand_id` to `id` in the Brand table.
-     - Links `sku_code` to `code` in the SKU table.
+     - `userid` links to `id` in the `userdetails` table.
+     - `managerid` links to `id` in the `userdetails` table.
 
-4. **SKU Table:**
+3. **Table: role**
    - Columns:
-     - `code`: A variable-length character column serving as the unique identifier for SKUs.
-     - `name`: A variable-length character column representing the name of the SKU.
+     - `id`: An integer representing the role ID.
+     - `name`: A variable-length character field for the role name.
    - Relationships: None.
 
-5. **Role Table:**
+4. **Table: hq (Headquarters)**
    - Columns:
-     - `id`: An integer column serving as the unique identifier for roles.
-     - `name`: A variable-length character column representing the name of the role.
+     - `id`: A variable-length character field for the headquarters ID.
+     - `name`: A variable-length character field for the headquarters name.
    - Relationships: None.
 
-6. **UserDetails Table:**
+5. **Table: stockist**
    - Columns:
-     - `roleid`: An integer column linking to the `id` in the Role table.
-     - `id`: A variable-length character column serving as the unique identifier for users.
-     - `name`: A variable-length character column representing the name of the user.
-     - `hq_id`: A variable-length character column linking to the `id` in the HQ table.
-     - `password`: A variable-length character column representing the user's password.
-     - `emp_code`: A variable-length character column representing the employee code.
+     - `id`: A variable-length character field for the stockist ID.
+     - `name`: A variable-length character field for the stockist name.
+   - Relationships: None.
+
+6. **Table: brand**
+   - Columns:
+     - `id`: An integer representing the brand ID.
+     - `name`: A variable-length character field for the brand name.
+     - `category`: A variable-length character field for the brand category.
+   - Relationships: None.
+
+7. **Table: brandskumap**
+   - Columns:
+     - `brand_id`: An integer referencing the brand.
+     - `sku_code`: A variable-length character field for the SKU code.
    - Relationships:
-     - Links `roleid` to `id` in the Role table.
-     - Links `hq_id` to `id` in the HQ table.
+     - `brand_id` links to `id` in the `brand` table.
+     - `sku_code` links to `code` in the `sku` table.
 
-7. **HQ Table:**
+8. **Table: userdetails**
    - Columns:
-     - `id`: A variable-length character column serving as the unique identifier for HQs.
-     - `name`: A variable-length character column representing the name of the HQ.
-   - Relationships: None.
-
-8. **UserManagerMap Table:**
-   - Columns:
-     - `id`: An integer column serving as the unique identifier for user-manager relationships.
-     - `userid`: A variable-length character column linking to the `id` in UserDetails, representing the user.
-     - `managerid`: A variable-length character column linking to the `id` in UserDetails, representing the manager.
+     - `roleid`: An integer linking to a user role.
+     - `id`: A variable-length character field for the user ID.
+     - `name`: A variable-length character field for the user's name.
+     - `hq_id`: A variable-length character referring to the user's headquarters.
+     - `password`: A variable-length character field for the user password.
+     - `emp_code`: A variable-length character field for the employee code.
    - Relationships:
-     - Links `userid` to `id` in UserDetails.
-     - Links `managerid` to `id` in UserDetails.
+     - `roleid` links to `id` in the `role` table.
+     - `hq_id` links to `id` in the `hq` table.
 
-9. **Division Table:**
+9. **Table: divisionhqmap**
    - Columns:
-     - `code`: A variable-length character column serving as the unique identifier for divisions.
-     - `name`: A variable-length character column representing the name of the division.
-   - Relationships: None.
+     - `id`: An integer representing the map ID.
+     - `division_code`: A variable-length character field for the division code.
+     - `hq_id`: A variable-length character referring to headquarters.
+   - Relationships:
+     - `division_code` links to `code` in the `division` table.
+     - `hq_id` links to `id` in the `hq` table.
 
-10. **DivisionHQMap Table:**
+10. **Table: division**
     - Columns:
-      - `id`: An integer column serving as the unique identifier for division-HQ mappings.
-      - `division_code`: A variable-length character column linking to the `code` in the Division table.
-      - `hq_id`: A variable-length character column linking to the `id` in the HQ table.
-    - Relationships:
-      - Links `division_code` to `code` in the Division table.
-      - Links `hq_id` to `id` in the HQ table.
+      - `code`: A variable-length character field for the division code.
+      - `name`: A variable-length character field for the division name.
+    - Relationships: None.
 
-11. **Target Table:**
+11. **Table: sales**
     - Columns:
-      - `target_date`: A date column representing the target date.
-      - `id`: An integer column serving as the unique identifier for targets.
-      - `target_units`: An integer column representing the target units.
-      - `target_value`: A numeric column representing the target value.
-      - `division_code`: A variable-length character column linking to the `code` in the Division table.
-      - `hq_id`: A variable-length character column linking to the `id` in the HQ table.
-      - `sku_code`: A variable-length character column linking to the `code` in the SKU table.
+      - `id`: An integer representing the sale ID.
+      - `transaction_date`: A date field for the transaction date.
+      - `primary_sales`: A numeric field indicating sales amount.
+      - `primary_units`: An integer for units sold.
+      - `sku_code`: A variable-length character field for SKU code.
+      - `division_code`: A variable-length character field for division code.
+      - `billing_type`: A variable-length character field for billing type.
+      - `status`: A variable-length character field for transaction status.
+      - `stockist_id`: A variable-length character field for stockist ID.
+      - `hq_id`: A variable-length character referring to headquarters.
     - Relationships:
-      - Links `sku_code` to `code` in the SKU table.
-      - Links `division_code` to `code` in the Division table.
-      - Links `hq_id` to `id` in the HQ table.
+      - `stockist_id` links to `id` in the `stockist` table.
+      - `sku_code` links to `code` in the `sku` table.
+      - `division_code` links to `code` in the `division` table.
+      - `hq_id` links to `id` in the `hq` table.
 
-12. **Sales Table:**
+12. **Table: target**
     - Columns:
-      - `id`: An integer column serving as the unique identifier for sales records.
-      - `transaction_date`: A date column representing the sales transaction date.
-      - `primary_sales`: A numeric column representing primary sales.
-      - `primary_units`: An integer column representing primary units sold.
-      - `sku_code`: A variable-length character column linking to the `code` in the SKU table.
-      - `division_code`: A variable-length character column linking to the `code` in the Division table.
-      - `billing_type`: A variable-length character column representing the billing type.
-      - `status`: A variable-length character column representing the status.
-      - `stockist_id`: A variable-length character column linking to the `id` in the Stockist table.
-      - `hq_id`: A variable-length character column linking to the `id` in the HQ table.
+      - `target_date`: A date field for the target set date.
+      - `id`: An integer representing the target ID.
+      - `target_units`: An integer for the target number of units.
+      - `target_value`: A numeric field for the target sales value.
+      - `division_code`: A variable-length character field for division code.
+      - `hq_id`: A variable-length character referring to headquarters.
+      - `sku_code`: A variable-length character field for SKU code.
     - Relationships:
-      - Links `stockist_id` to `id` in the Stockist table.
-      - Links `sku_code` to `code` in the SKU table.
-      - Links `division_code` to `code` in the Division table.
-      - Links `hq_id` to `id` in the HQ table.
+      - `division_code` links to `code` in the `division` table.
+      - `hq_id` links to `id` in the `hq` table.
+      - `sku_code` links to `code` in the `sku` table.
 
-13. **StockistHQMap Table:**
+13. **Table: stockisthqmap**
     - Columns:
-      - `id`: An integer column serving as the unique identifier for stockist-HQ mappings.
-      - `hq_id`: A variable-length character column linking to the `id` in the HQ table.
-      - `stockist_id`: A variable-length character column linking to the `id` in the Stockist table.
+      - `id`: An integer representing the map ID.
+      - `hq_id`: A variable-length character referring to headquarters.
+      - `stockist_id`: A variable-length character field for stockist ID.
     - Relationships:
-      - Links `hq_id` to `id` in the HQ table.
-      - Links `stockist_id` to `id` in the Stockist table.
+      - `hq_id` links to `id` in the `hq` table.
+      - `stockist_id` links to `id` in the `stockist` table.
 
-This schema outlines a complex relationship network among different entities such as brands, SKUs, divisions, HQs, users, and sales transactions, facilitating detailed data management in an organizational setting.
+14. **Table: target3**
+    - Columns:
+      - `target_date`: A date field for the target set date.
+      - `id`: An integer representing the target ID.
+      - `target_units`: An integer for target number of units.
+      - `target_value`: A numeric field for the target sales value.
+      - `division_code`: A variable-length character field for division code.
+      - `hq_id`: A variable-length character referring to headquarters.
+      - `sku_code`: A variable-length character field for SKU code.
+    - Relationships:
+      - `sku_code` links to `code` in the `sku` table.
+      - `division_code` links to `code` in the `division` table.
+      - `hq_id` links to `id` in the `hq` table.
+
+15. **Table: conversation_log**
+    - Columns:
+      - `id`: An integer representing the log ID.
+      - `timestamp`: A timestamp with time zone for the log time.
+      - `user_id`: A variable-length character field for the user ID.
+      - `userquery`: A text field containing the user's query.
+      - `sqlquery`: A text field

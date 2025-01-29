@@ -184,13 +184,14 @@ const Chat: React.FC = () => {
           onSubmit={(e) => onsubmitHandler(e)}
           style={{ gridColumn: "span 4", marginBottom: "20px" }}
         >
-          <div className="Input-Container">
-            <input
+          <div className="Input-Container" style={{ height: "auto" }}>
+            <textarea
               className="Input-Field"
-              type="text"
               placeholder="How can I help you today?"
               id="query"
               name="query"
+              rows={6}
+              style={{ height: "50px" }}
             />
             <button className="Send-Button" type="submit">
               <img
