@@ -38,7 +38,9 @@ const SqlUpdate: React.FC<SqlUpdateProps> = ({
 
   const dispatch = useDispatch<AppDispatch>();
   const fetchData = useFetch();
-  const [sqlQuery, setSqlQuery] = React.useState<string>(query);
+  const [sqlQuery, setSqlQuery] = React.useState<string>(
+    handleFormat(query) || ""
+  );
 
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -107,7 +109,7 @@ const SqlUpdate: React.FC<SqlUpdateProps> = ({
             showPrintMargin={true}
             showGutter={true}
             highlightActiveLine={true}
-            value={handleFormat(sqlQuery) || ""}
+            value={sqlQuery}
             onChange={(newValue) => {
               setSqlQuery(newValue);
             }}
