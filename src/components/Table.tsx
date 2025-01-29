@@ -16,6 +16,7 @@ import Chip from "@mui/material/Chip";
 import TextField from "@mui/material/TextField";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { Button } from "@mui/material";
 
 interface ChatMessage {
   id: number;
@@ -120,32 +121,70 @@ const CustomTable: React.FC<TableProps> = ({
       {loadingUi ? (
         <Loader showIcon={false} text={"Executing query"} />
       ) : (
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <>
           {table1Data ? (
             <>
               <>
-                <TextField
-                  label="Search"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => {
-                    const searchTerms = e.target.value
-                      .toLowerCase()
-                      .split(",")
-                      .map((term) => term.trim());
-                    const filteredData: ChatMessage[] = data.filter(
-                      (row: ChatMessage) =>
-                        searchTerms.some((term: string) =>
-                          Object.values(row).some((value: any) =>
-                            String(value).toLowerCase().includes(term)
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <TextField
+                    label="Search"
+                    variant="outlined"
+                    size="small"
+                    onChange={(e) => {
+                      const searchTerms = e.target.value
+                        .toLowerCase()
+                        .split(",")
+                        .map((term) => term.trim());
+                      const filteredData: ChatMessage[] = data.filter(
+                        (row: ChatMessage) =>
+                          searchTerms.some((term: string) =>
+                            Object.values(row).some((value: any) =>
+                              String(value).toLowerCase().includes(term)
+                            )
                           )
-                        )
-                    );
-                    setPaginationModel({ ...paginationModel, page: 0 });
-                    setTable1Data(filteredData);
-                  }}
-                  sx={{ marginBottom: 2 }}
-                />
+                      );
+                      setPaginationModel({ ...paginationModel, page: 0 });
+                      setTable1Data(filteredData);
+                    }}
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <button
+                    className="newConversationButton"
+                    onClick={() => {
+                      const csvContent = [
+                        Object.keys(table1Data[0]).join(","),
+                        ...table1Data.map((row) =>
+                          Object.values(row)
+                            .map((value) => `"${value}"`)
+                            .join(",")
+                        ),
+                      ].join("\n");
+
+                      const blob = new Blob([csvContent], {
+                        type: "text/csv;charset=utf-8;",
+                      });
+                      const link = document.createElement("a");
+                      const url = URL.createObjectURL(blob);
+                      link.setAttribute("href", url);
+                      link.setAttribute("download", "table_data.csv");
+                      link.style.visibility = "hidden";
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    style={{
+                      background: "#989595",
+                    }}
+                  >
+                    Export
+                    <img
+                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
+                      alt="Clear Chat"
+                    />
+                  </button>
+                </div>
                 <TableContainer sx={{ maxHeight: 440, width: "100%" }}>
                   <Table stickyHeader aria-label="sticky table">
                     <TableHead style={{ height: 10 }}>
@@ -270,7 +309,7 @@ const CustomTable: React.FC<TableProps> = ({
           ) : (
             <b>No data found</b>
           )}{" "}
-        </Paper>
+        </>
       )}
     </>
   );
