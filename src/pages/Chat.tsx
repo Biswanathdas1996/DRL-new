@@ -63,6 +63,7 @@ const Chat: React.FC = () => {
     await fetchData(QUERY, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log("======result=====>", result);
         dispatch(
           addMessage({
             id: new Date().getTime(),

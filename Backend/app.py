@@ -73,12 +73,18 @@ def query():
             query = nlq(user_question, working_table_description)
             result = execute_sql_query(query)
 
+            summery = call_gpt("You are a good data scientist", f"""
+                               Reply to the user query: {user_question} by summarizing the below Context in 100 words/n
+                               Context /n{str(result)}
+
+                    """, 1000)
+            
             try:
                 log(os.environ["X-DRL-USER"], user_question, query)
             except Exception as log_error:
                 print(f"Logging error: {log_error}")
 
-            return jsonify({"result": result, "query": query, "type": "dynamic"})
+            return jsonify({"result": result, "query": query,"summery":summery, "type": "dynamic"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -94,19 +100,6 @@ def analytics_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/analytics-mock', methods=['POST'])
-def analytics_data_mock():
-    data = request.json
-    result_json = data.get('result_json')
-    if not result_json:
-        return jsonify({"error": "No data provided"}), 400
-    try:
-        with open('data/mock/analytics.json', 'r') as file:
-            result_json = file.read()
-            print("Mock Result:", result_json)
-            return result_json
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route('/execute-raw-query', methods=['POST'])
 def execute_query():
@@ -138,18 +131,6 @@ def direct_gpt_call():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/extract-img', methods=['POST'])
-def extract_img_api():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file provided"}), 400
-    file = request.files['file']
-    file_path = os.path.join(app.config['IMG_UPLOAD_FOLDER'], file.filename)
-    file.save(file_path)
-    try:
-        img_details = extract_image(file_path)
-        return jsonify({"details": img_details}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route('/generate-erd-from-db', methods=['POST'])
 def generate_erd_from_db():

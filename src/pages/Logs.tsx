@@ -193,6 +193,7 @@ const Queries: React.FC = () => {
   return (
     <div>
       <h2>Logs</h2>
+      <b>Last 10 logs</b>
 
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>

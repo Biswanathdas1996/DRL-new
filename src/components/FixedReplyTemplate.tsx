@@ -110,19 +110,16 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
       <div data-name="message-stack-1" className="chat-msg-stack">
         <div className="chat-indv">
           <div className="bot-message">
-            <div
-              style={{ fontFamily: "Arial, sans-serif" }}
-              className="chat-msg-stack"
-            >
+            <div>
               <h3>Certainly, {user?.name}!</h3>
               {/* Display the first text dynamically */}
               <div style={{ marginBottom: "20px", fontSize: "14px" }}>
-                {data?.text1}
+                <span> {message?.summery}</span>
               </div>
 
               <div style={{ marginBottom: "20px" }}>
                 {shouldDisplayTable(data) ? (
-                  <div style={{ width: "800px", overflow: "hidden" }}>
+                  <div style={{ overflow: "hidden" }}>
                     <div
                       style={{
                         display: "flex",
@@ -375,6 +372,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
             />
           </button>
         </div>
+        {/* <span className="chat-time chat-time-usr">{time}</span> */}
       </div>
     </div>
   );

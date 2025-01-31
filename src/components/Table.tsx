@@ -89,7 +89,6 @@ const CustomTable: React.FC<TableProps> = ({
       ).result
     : null;
 
-  console.log("==============>", data);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
 

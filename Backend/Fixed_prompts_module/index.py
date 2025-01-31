@@ -99,8 +99,10 @@ def pre_process_data(query, working_table_description):
                 "questions": questions_texts,
                 "analytics": analytics
             }
-        
-        return {"query": final_query, "result": response, "type": "fixed"}
+        summery = call_gpt("You are a good data scientist", f"""
+                               Reply to the user query: {query} by summarizing the below Context in 100 words/n
+                               Context /n{str(result)}""")
+        return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")
