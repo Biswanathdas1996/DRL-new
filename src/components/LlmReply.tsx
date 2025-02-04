@@ -142,10 +142,8 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
           <div className="bot-message">
             <>
               <h3>Certainly, {user?.name}!</h3>
-              <div
-                style={{ fontSize: "14px", fontWeight: "500", marginTop: 20 }}
-              >
-                As per your query the details are as below.
+              <div style={{ marginBottom: "20px", fontSize: "14px" }}>
+                <span> {message?.summery}</span>
               </div>
               <br />
               {message && isSingleResponse ? (

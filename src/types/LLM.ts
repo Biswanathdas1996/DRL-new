@@ -26,4 +26,5 @@ export interface QueryData {
   result: Record<string, any>[] | string;
   llmReply: string;
   type: string;
+  summery: string;
 }

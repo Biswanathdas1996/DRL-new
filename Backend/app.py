@@ -75,6 +75,7 @@ def query():
 
             summery = call_gpt("You are a good data scientist", f"""
                                Reply to the user query: {user_question} by summarizing the below Context in 100 words/n
+                               if any financial data is present in the context, please use INR and make it in words Like: if  120000 the use 1 Lakh 20 thousand /n
                                Context /n{str(result)}
 
                     """, 1000)
