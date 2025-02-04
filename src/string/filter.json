@@ -1,10 +1,138 @@
 [
   {
-    "find": "priority brand",
-    "replace": "brands having sales more than 1000 INR"
+    "find": "Performance",
+    "replace": "Total Sales , Total Target, % Achievement"
   },
   {
-    "find": "what is my performance",
-    "replace": "give me total sales. % of target achieved"
+    "find": "Sales",
+    "replace": "Total Sales , Total Target, % Achievement"
+  },
+  {
+    "find": "Achievement",
+    "replace": "Total Sales , Total Target, % Achievement"
+  },
+  {
+    "find": "%Achievement",
+    "replace": "Total Sales , Total Target, % Achievement"
+  },
+  {
+    "find": "Priority Brands",
+    "replace": "Brand Category: \"Priority Brands\""
+  },
+  {
+    "find": "Focus Brands",
+    "replace": "Brand Category: \"Priority Brands\""
+  },
+  {
+    "find": "Returns",
+    "replace": "Total Sales Value, Sales Return Value , % Return"
+  },
+  {
+    "find": "% Returns",
+    "replace": "Total Sales Value, Sales Return Value , % Return"
+  },
+  {
+    "find": "Percentage Returns",
+    "replace": "Total Sales Value, Sales Return Value , % Return"
+  },
+  {
+    "find": "Month Wise",
+    "replace": "Grouped by month"
+  },
+  {
+    "find": "Each month",
+    "replace": "Grouped by month"
+  },
+  {
+    "find": "HQ",
+    "replace": "HQ name like"
+  },
+  {
+    "find": "Q1",
+    "replace": "April , May, June"
+  },
+  {
+    "find": "Q2",
+    "replace": "July, August, September"
+  },
+  {
+    "find": "Q3",
+    "replace": "October, November, December"
+  },
+  {
+    "find": "Q4",
+    "replace": "January, February, March"
+  },
+  {
+    "find": "Distributors",
+    "replace": "Stockists"
+  },
+  {
+    "find": "Distributor",
+    "replace": "Stockist"
+  },
+  {
+    "find": "Complete My Quarterly Target",
+    "replace": "brands where the sales are deficit from the target."
+  },
+  {
+    "find": "HQ Wise",
+    "replace": "Grouped by HQ"
+  },
+  {
+    "find": "Each HQ",
+    "replace": "Grouped by HQ"
+  },
+  {
+    "find": "Each Brand",
+    "replace": "Group by brand"
+  },
+  {
+    "find": "Brand wise",
+    "replace": "Group by brand"
+  },
+  {
+    "find": "Stockist wise",
+    "replace": "Group by stockist"
+  },
+  {
+    "find": "Each stockist",
+    "replace": "Group by stockist"
+  },
+  {
+    "find": "Mid-Month",
+    "replace": "Parameterize Date to be taken from 14th - 16th"
+  },
+  {
+    "find": "Mid Month",
+    "replace": "Date to be taken from 14th - 16th"
+  },
+  {
+    "find": "My area",
+    "replace": "all HQs mapped under name"
+  },
+  {
+    "find": "MTD",
+    "replace": "Month to date - All the data to reflect as of the 1st of the current month till the current date"
+  },
+  {
+    "find": "YTD",
+    "replace": "Year to date - All the data to reflect as of the 1st of April till the current date"
+  },
+  {
+    "find": "QTD",
+    "replace": "Quarter to date - All the data to reflect as of the 1st of the current quarter till the current date"
+  },
+  {
+    "find": "Month as on date",
+    "replace": "Month to date - All the data to reflect as of the 1st of the current month till the current date"
+  },
+  {
+    "find": "Quarter as on date",
+    "replace": "Quarter to date - All the data to reflect as of the 1st of the current quarter till the current date"
+  },
+  {
+    "find": "Year as on date",
+    "replace": "Year to date - All the data to reflect as of the 1st of April till the current date"
   }
 ]
