@@ -97,6 +97,8 @@ const Queries: React.FC = () => {
     fetchData(QUERY_LIST, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        result = result.filter((data: any) => !data?.hide);
+
         setMessage(result);
         setId(result.id || "");
       })
@@ -188,7 +190,7 @@ const Queries: React.FC = () => {
     }
   };
 
-  const columnsNotToShow = ["name", "query"];
+  const columnsNotToShow = ["name", "query", "show"];
 
   return (
     <div>
