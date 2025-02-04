@@ -1,0 +1,10 @@
+[
+  {
+    "find": "priority brand",
+    "replace": "brands having sales more than 1000 INR"
+  },
+  {
+    "find": "what is my performance",
+    "replace": "give me total sales. % of target achieved"
+  }
+]

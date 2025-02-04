@@ -9,11 +9,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { addMessage } from "../redux/slices/chatSlices";
 import { useFetch } from "../hook/useFetch";
+import { useQueryFilter } from "../hook/useQueryFilter";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
   const fetchData = useFetch();
   const dispatch = useDispatch<AppDispatch>();
+  const filterQuery = useQueryFilter;
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -49,7 +51,7 @@ const Chat: React.FC = () => {
     console.log("lastTwoChats", lastTwoChats);
 
     const raw = JSON.stringify({
-      question: `${query}`,
+      question: filterQuery(query),
       working_table_description: localStorage.getItem("dbJson"),
     });
 
