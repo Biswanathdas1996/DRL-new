@@ -29,7 +29,7 @@ const Chat: React.FC = () => {
     const raw = JSON.stringify({
       query: query,
       collection_name: localStorage.getItem("selected_collection"),
-      no_of_results: 5,
+      no_of_results: 15,
       fine_chunking: false,
       if_gpt_summarize: false,
     });
@@ -85,20 +85,30 @@ const Chat: React.FC = () => {
     // const effectiveContext = contextData?.results?.gpt_results;
     // const effectiveContext = contextData?.results?.fine_results;
 
-    console.log("effectiveContext", effectiveContext);
+    const contextString = contextData?.results
+      ?.map((result: any) => result.text)
+      .join(" ");
+    console.log("effectiveContext", contextString);
 
     const userStorydata = await callGpt(`
-        Generate answer/replay of : ${query}       
-        from the context of: ${effectiveContext}
+      Generate a detailed response for the query: "${query}" 
+      using the provided context: ${effectiveContext}.
 
-        Generate HTML code from <body> tag for the same
+      Requirements:
+      - Format the response in HTML starting from the <body> tag.
+      - Include a <h2> tag for the title.
+      - Use <h4> tags for paragraphs.
+      - Create bullet points with <ul> and <li> tags if necessary.
+      - Highlight key points using <b> tags.
+      - Use <table> tags for any tabular data.
 
-        If ans is not clear, please provide more context
-        If answer cant be find from the context provided, please provide more context
-        Do not answer if you not find the same on the context provided
-        `);
+      Additional Instructions:
+      - If the answer is unclear, request more context.
+      - If the answer cannot be found within the provided context, indicate that more context is needed.
+      - Do not generate a response if the context does not contain relevant information.
+    `);
 
-    return userStorydata?.replace("```html", "") as string;
+    return userStorydata?.replace("```html", "")?.replace("```", "") as string;
   };
 
   const onsubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -267,14 +277,6 @@ const Chat: React.FC = () => {
           <ContextFromMongo data={contextDataForStory?.results as any} />
         )}
       </div>
-
-      <button className="newConversationButton">
-        Clear Chat
-        <img
-          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
-          alt="Clear Chat"
-        />
-      </button>
     </>
   );
 };

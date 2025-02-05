@@ -57,7 +57,7 @@ const Chat: React.FC = () => {
       question: filterQuery(query),
       controlStatement:
         ifLoginControl === "true"
-          ? `WHERE Head Quarters (HQ) IN (${user?.hq_id})`
+          ? `WHERE Head Quarters (HQ) id IN (${user?.hq_id})`
           : "",
       working_table_description: localStorage.getItem("dbJson"),
     });
