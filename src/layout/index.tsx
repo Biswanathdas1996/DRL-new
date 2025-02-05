@@ -34,11 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       name: "Q&A to SAP Query",
       icon: () => <SpeakerNotesIcon style={iconStyle} />,
     },
-    {
-      path: "/db-config",
-      name: "Database Configuration",
-      icon: () => <DatasetLinkedIcon style={iconStyle} />,
-    },
+
     {
       path: "/data-chat",
       name: "Medico Marketing Query",

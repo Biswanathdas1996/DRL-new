@@ -160,7 +160,6 @@ const DBConfig: React.FC = () => {
   }, []);
   return (
     <div>
-      <h2>Database Configuration</h2>
       <Box sx={{ width: "100%" }}>
         <Tabs
           value={value}

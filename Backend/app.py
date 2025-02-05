@@ -55,6 +55,7 @@ def get_all_query():
 def query():
     data = request.json
     user_question = data.get('question')
+    controlStatement = data.get('controlStatement')
     working_table_description = data.get('working_table_description')
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
@@ -66,15 +67,15 @@ def query():
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
     try:
-        pre_data = pre_process_data(user_question, working_table_description)
+        pre_data = pre_process_data(user_question, working_table_description, controlStatement)
         if pre_data:
             return jsonify(pre_data)
         else:
-            query = nlq(user_question, working_table_description)
+            query = nlq(user_question, working_table_description, controlStatement)
             result = execute_sql_query(query)
 
             summery = call_gpt("You are a good data scientist", f"""
-                               Reply to the user query: {user_question} by summarizing the below Context in 100 words/n
+                               Reply to the user query: {user_question} by summarizing the below Context in 50 words/n
                                if any financial data is present in the context, please use INR and make it in words Like: if  120000 the use 1 Lakh 20 thousand /n
                                Context /n{str(result)}
 
@@ -171,20 +172,44 @@ def login():
     data = request.json
     employeecode = data.get('employeecode')
     password = data.get('password')
+    
     print(f"Employee Code: {employeecode}, Password: {password}")
+    
     if not employeecode or not password:
         return jsonify({"error": "Employee code and password are required"}), 400
-           
+    
     try:
-        query = f"SELECT * FROM userdetails WHERE emp_code = '{employeecode}' AND password = '{password}' LIMIT 1"
-        result = execute_sql_query(query)
-        print(result)         
-        if result:
-            return jsonify({"message": "Authentication Successful", "result": result}), 200
-        else:
-             return jsonify({"message": "Unauthenticated"}), 401
+        # Fetch user details including hq_ids
+        query = f"SELECT distinct emp_code, hq_id, name FROM userdetails WHERE emp_code = '{employeecode}' AND password = '{password}' AND loginenabled = true"
+        user_result = execute_sql_query(query)
+        
+        if not user_result:
+            return jsonify({"message": "Unauthenticated"}), 401
+        # Extract hq_ids from the result
+        hq_ids = [row['hq_id'] for row in user_result]
+        if not hq_ids:
+            return jsonify({
+                "message": "Authentication Successful",
+                "hq_ids": [],
+                "hq_names": []
+            }), 200
+
+        # Fetch hq_names corresponding to hq_ids
+        hq_query = f"SELECT id, name FROM hq WHERE id IN ({','.join(f"'{hq_id}'" for hq_id in hq_ids)})"
+        hq_result = execute_sql_query(hq_query)
+        # Extract hq_names
+        hq_names = [row['name'] for row in hq_result]
+
+        return jsonify({
+            "message": "Authentication Successful",
+            "hq_ids": hq_ids,
+            "hq_names": hq_names,
+            "result": user_result
+        }), 200
+
     except Exception as e:
-            return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == '__main__':

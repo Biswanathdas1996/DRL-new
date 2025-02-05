@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 
 const Login: React.FC = () => {
   const { triggerAlert } = useAlert();
-  const [email, setEmail] = useState("55541");
+  const [email, setEmail] = useState("9801");
   const [password, setPassword] = useState("drltest1234");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,10 @@ const Login: React.FC = () => {
       });
       const data = await response.json();
 
-      localStorage.setItem("user", JSON.stringify(data?.result[0]));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...data?.result[0], hq_id: data?.hq_ids })
+      );
       setUser(data?.result[0]);
       setLoading(false);
       dispatch(clearChat());

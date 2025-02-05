@@ -15,9 +15,9 @@ def similarity(a, b):
         return 0
 
 
-def call_gpt_to_refactor_query(query_text, query, working_table_description):
+def call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement=""):
     try:
-        prompt = f"""Rewrite the below SQL Query as per\n {query}.\n
+        prompt = f"""Rewrite the below SQL Query as per\n {query}, {controlStatement}.\n
                 Return only the SQL query without any additional text or explanation.\n
                 replace only the part of SQL query this is in between %%\n 
                 for example %dummy text% \n
@@ -34,7 +34,7 @@ def call_gpt_to_refactor_query(query_text, query, working_table_description):
         return None
 
 
-def pre_process_data(query, working_table_description):
+def pre_process_data(query, working_table_description, controlStatement=""):
     try:
         with open('query_storage/query.json', 'r') as file:
             queries = json.load(file)
@@ -80,7 +80,7 @@ def pre_process_data(query, working_table_description):
         else:
             if use == "Dynamic":
                 try:
-                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description)
+                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement)
                 except Exception as e:
                     print(f"Error calling GPT to refactor query: {e}")
                     return None

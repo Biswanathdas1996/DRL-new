@@ -3,10 +3,10 @@ from helper.gpt import call_gpt
 from sql.index import get_erd
 
 # Function to generate SQL query using OpenAI
-def generate_sql_query(user_question, working_table_description):
+def generate_sql_query(user_question, working_table_description, controlStatement=""):
     try:
         prompt = f"""
-        Translate the following natural language query to SQL query: {user_question}.
+        Translate the following natural language query to SQL query: {user_question} {controlStatement}.
         Return only the SQL query without any additional text or explanation.
         
         Here is the schema of the database:
@@ -20,9 +20,9 @@ def generate_sql_query(user_question, working_table_description):
         print(f"An error occurred while generating the SQL query: {e}")
         return None
 
-def nlq(user_question, working_table_description):
+def nlq(user_question, working_table_description, controlStatement=""):
     try:
-        query = generate_sql_query(user_question, working_table_description)
+        query = generate_sql_query(user_question, working_table_description, controlStatement)
         print("Generated SQL Query:", query)
         return query
     except Exception as e:

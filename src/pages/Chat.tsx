@@ -10,6 +10,7 @@ import { RootState, AppDispatch } from "../redux/store";
 import { addMessage } from "../redux/slices/chatSlices";
 import { useFetch } from "../hook/useFetch";
 import { useQueryFilter } from "../hook/useQueryFilter";
+import PreLoadedQuestions from "../components/PreLoadedQuestions";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
@@ -50,8 +51,13 @@ const Chat: React.FC = () => {
     const lastTwoChats = chatHistory.slice(-2);
     console.log("lastTwoChats", lastTwoChats);
 
+    const ifLoginControl = localStorage.getItem("loginControl");
+
     const raw = JSON.stringify({
       question: filterQuery(query),
+      controlStatement:
+        ifLoginControl === "true" &&
+        `WHERE Head Quarters (HQ) IN (${user?.hq_id})`,
       working_table_description: localStorage.getItem("dbJson"),
     });
 
@@ -154,7 +160,22 @@ const Chat: React.FC = () => {
               </p>
             </div>
           </div>
-          <WelcomeChatComp />
+          {chatHistory?.length === 0 && (
+            <>
+              <WelcomeChatComp />
+              <div
+                className="prePopulatedQuestions"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                <PreLoadedQuestions doQuery={doQuery} />
+              </div>
+            </>
+          )}
+
           <div className="chat-msg">
             {chatHistory.map((chat: any, index) => {
               return chat.type === "user" ? (

@@ -15,6 +15,7 @@ import TextField from "@mui/material/TextField";
 import SqlUpdate from "./SqlUpdate";
 import Analyse from "./DataVisualations";
 import { UserContext } from "../App";
+import { TableSortLabel } from "@mui/material";
 
 const applyDateFilter = (input: string | number): string | number => {
   if (typeof input !== "string") {
@@ -79,6 +80,8 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
     pageSize: 5,
+    sortBy: "",
+    order: "asc",
   });
   const [table1Data, setTable1Data] = React.useState(data.table1);
 
@@ -202,11 +205,62 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
                                       borderRight: "2px solid #ffffff",
                                     }}
                                   >
-                                    {applyDateFilter(
-                                      columnName
-                                        .replace(/_/g, " ")
-                                        .replace(/^\w/, (c) => c.toUpperCase())
-                                    )}
+                                    <TableSortLabel
+                                      active={
+                                        paginationModel.sortBy === columnName
+                                      }
+                                      direction={
+                                        paginationModel.order as "asc" | "desc"
+                                      }
+                                      onClick={() => {
+                                        const isAsc =
+                                          paginationModel.sortBy ===
+                                            columnName &&
+                                          paginationModel.order === "asc";
+                                        setPaginationModel({
+                                          ...paginationModel,
+                                          sortBy: columnName,
+                                          order: isAsc ? "desc" : "asc",
+                                        });
+                                        const sortedData = [...table1Data].sort(
+                                          (
+                                            a: Record<string, any>,
+                                            b: Record<string, any>
+                                          ) => {
+                                            const aValue = isNaN(
+                                              Number(a[columnName])
+                                            )
+                                              ? a[columnName]
+                                              : Number(a[columnName]);
+                                            const bValue = isNaN(
+                                              Number(b[columnName])
+                                            )
+                                              ? b[columnName]
+                                              : Number(b[columnName]);
+                                            if (aValue < bValue)
+                                              return paginationModel.order ===
+                                                "asc"
+                                                ? -1
+                                                : 1;
+                                            if (aValue > bValue)
+                                              return paginationModel.order ===
+                                                "asc"
+                                                ? 1
+                                                : -1;
+                                            return 0;
+                                          }
+                                        );
+                                        setTable1Data(sortedData);
+                                      }}
+                                    >
+                                      {applyDateFilter(
+                                        columnName
+                                          .replace(/_/g, " ")
+                                          .replace(/^\w/, (c: string) =>
+                                            c.toUpperCase()
+                                          )
+                                      )}
+                                    </TableSortLabel>
                                   </TableCell>
                                 )
                               )}

@@ -17,11 +17,11 @@
   },
   {
     "find": "Priority Brands",
-    "replace": "Brand Category: \"Priority Brands\""
+    "replace": "Brand Category Like '%BIG &INVEST%'"
   },
   {
     "find": "Focus Brands",
-    "replace": "Brand Category: \"Priority Brands\""
+    "replace": "Brand Category Like '%BIG &INVEST%'"
   },
   {
     "find": "Returns",

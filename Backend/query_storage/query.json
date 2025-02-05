@@ -5,7 +5,7 @@
     "use": "Dynamic",
     "query": "SELECT hq.name AS \"HQ Name\", SUM(s.primary_sales) AS \"Total Sales\", SUM(t.target_value) AS \"Total Target\" FROM (SELECT hq_id, sku_code, SUM(primary_sales) AS primary_sales FROM Sales WHERE transaction_date >= '2024-11-01'::DATE AND transaction_date < '2024-12-01'::DATE GROUP BY hq_id, sku_code) s JOIN (SELECT hq_id, sku_code, SUM(target_value) AS target_value FROM Target WHERE DATE_TRUNC('month', target_date) = '2024-11-01'::DATE GROUP BY hq_id, sku_code) t ON s.hq_id = t.hq_id AND s.sku_code = t.sku_code JOIN HQ hq ON s.hq_id = hq.id WHERE hq.id = '50058990' GROUP BY hq.id, hq.name;",
     "questions": [],
-    "hide": true
+    "hide": false
   },
   {
     "id": 1,

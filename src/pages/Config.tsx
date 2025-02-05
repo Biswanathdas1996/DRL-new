@@ -13,89 +13,20 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-
-interface Field {
-  id: number;
-  value: string;
-  type: string;
-}
-
-interface BasicTextFieldsProps {
-  fields: Field[];
-  setFields: React.Dispatch<React.SetStateAction<Field[]>>;
-  usedFor: string;
-}
-
-function BasicTextFields({ fields, setFields, usedFor }: BasicTextFieldsProps) {
-  const addField = (type: string) => {
-    setFields([...fields, { id: new Date().getTime(), value: "", type }]);
-  };
-
-  const onChangeField = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    field: any
-  ) => {
-    const newFields = fields.map((f) => {
-      if (f.id === field.id) {
-        return { ...f, value: e.target.value };
-      }
-      return f;
-    });
-    setFields(newFields);
-  };
-
-  return (
-    <Card
-      component="form"
-      sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-      noValidate
-      autoComplete="off"
-      style={{ padding: 20, backgroundColor: "#f1f1f1" }}
-    >
-      {fields.map((field) => (
-        <div style={{ display: "flex", width: "100%" }}>
-          <TextField
-            id={`outlined-basic-${field.id}`}
-            label={usedFor}
-            variant="outlined"
-            onChange={(e) => onChangeField(e, field)}
-            value={field.value || ""}
-            style={{ marginBottom: 10, marginTop: 10, width: 300 }}
-          />
-          <DeleteForeverIcon
-            color="error"
-            onClick={() => {
-              setFields(fields.filter((f) => f.id !== field.id));
-            }}
-            style={{ marginLeft: 10, marginTop: 30, cursor: "pointer" }}
-          />
-        </div>
-      ))}
-
-      <Button
-        variant="contained"
-        color="warning"
-        onClick={() => addField(usedFor)}
-      >
-        <AddIcon /> Add More
-      </Button>
-    </Card>
-  );
-}
+import DBConfig from "./DBConfig";
+import Switch from "@mui/material/Switch";
 
 export default function Config() {
-  const [instructionForUserStories, setInstructionForUserStories] = useState<
-    Field[]
-  >([]);
-  const [instructionForTestCases, setInstructionForTestCases] = useState<
-    Field[]
-  >([]);
-  const [instructionForTestData, setInstructionForTestData] = useState<Field[]>(
-    []
-  );
-  const [instructionForCode, setInstructionForCode] = useState<Field[]>([]);
-
   const [model, setModel] = React.useState("gpt-4o-mini");
+
+  const [loginControl, setLoginControl] = React.useState(false);
+
+  const handleChangeLoginControl = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLoginControl(event.target.checked);
+    localStorage.setItem("loginControl", event.target.checked.toString());
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
     setModel(event.target.value as string);
@@ -108,75 +39,79 @@ export default function Config() {
     if (savedModel) {
       setModel(savedModel);
     }
-  }, []);
 
-  React.useEffect(() => {
-    const savedConfig = localStorage.getItem("config");
-    if (savedConfig) {
-      const {
-        instructionForUserStories,
-        instructionForTestCases,
-        instructionForTestData,
-        instructionForCode,
-      } = JSON.parse(savedConfig);
-      setInstructionForUserStories(instructionForUserStories || []);
-      setInstructionForTestCases(instructionForTestCases || []);
-      setInstructionForTestData(instructionForTestData || []);
-      setInstructionForCode(instructionForCode || []);
+    const ifLoginControl = localStorage.getItem("loginControl");
+    if (ifLoginControl) {
+      setLoginControl(ifLoginControl === "true");
     }
   }, []);
 
-  React.useEffect(() => {
-    if (
-      instructionForUserStories.length === 0 &&
-      instructionForTestCases.length === 0 &&
-      instructionForTestData.length === 0 &&
-      instructionForCode.length === 0
-    ) {
-      return;
-    }
-    const allInstructions = {
-      instructionForUserStories,
-      instructionForTestCases,
-      instructionForTestData,
-      instructionForCode,
-    };
-    localStorage.setItem("config", JSON.stringify(allInstructions));
-  }, [
-    instructionForUserStories,
-    instructionForTestCases,
-    instructionForTestData,
-    instructionForCode,
-  ]);
   return (
     <div>
       <h2>Configuration</h2>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           <Grid size={12}>
-            <>
-              <h4>Choose a AI model</h4>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Select Model
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={model}
-                    label="Age"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={"gpt-4"}>gpt-4</MenuItem>
-                    <MenuItem value={"gpt-4o"}>gpt-4o</MenuItem>
-                    <MenuItem value={"gpt-4o-mini"}>gpt-4o-mini</MenuItem>
-                    <MenuItem value={"gpt-4-turbo"}>GPT-4-turbo</MenuItem>
-                    <MenuItem value={"gpt-3.5-turbo"}>GPT-3.5-turbo</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-            </>
+            <Card
+              style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
+            >
+              <>
+                <h4>Choose a AI model</h4>
+                <Box sx={{ minWidth: 120 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Model
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={model}
+                      label="Age"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={"gpt-4"}>gpt-4</MenuItem>
+                      <MenuItem value={"gpt-4o"}>gpt-4o</MenuItem>
+                      <MenuItem value={"gpt-4o-mini"}>gpt-4o-mini</MenuItem>
+                      <MenuItem value={"gpt-4-turbo"}>GPT-4-turbo</MenuItem>
+                      <MenuItem value={"gpt-3.5-turbo"}>GPT-3.5-turbo</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </>
+            </Card>
+          </Grid>
+          <Grid size={12}>
+            <h2>Database Configuration</h2>
+            <Card
+              style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
+            >
+              <DBConfig />
+            </Card>
+          </Grid>
+          <Grid size={12}>
+            <h2>Data Restriction</h2>
+            <Card
+              style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <h4>
+                  {loginControl
+                    ? "Data Restricted to Logged in user"
+                    : "Data is not restricted"}
+                </h4>
+                <Switch
+                  checked={loginControl}
+                  onChange={handleChangeLoginControl}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
+            </Card>
           </Grid>
         </Grid>
 

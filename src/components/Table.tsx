@@ -167,7 +167,15 @@ const CustomTable: React.FC<TableProps> = ({
                       const link = document.createElement("a");
                       const url = URL.createObjectURL(blob);
                       link.setAttribute("href", url);
-                      link.setAttribute("download", "table_data.csv");
+                      const csvName = prompt(
+                        "Enter the CSV file name:",
+                        "table_data.csv"
+                      );
+                      if (csvName) {
+                        link.setAttribute("download", `${csvName}.csv`);
+                      } else {
+                        return;
+                      }
                       link.style.visibility = "hidden";
                       document.body.appendChild(link);
                       link.click();
@@ -223,9 +231,19 @@ const CustomTable: React.FC<TableProps> = ({
                                         a: Record<string, any>,
                                         b: Record<string, any>
                                       ) => {
-                                        if (a[columnName] < b[columnName])
+                                        const aValue = isNaN(
+                                          Number(a[columnName])
+                                        )
+                                          ? a[columnName]
+                                          : Number(a[columnName]);
+                                        const bValue = isNaN(
+                                          Number(b[columnName])
+                                        )
+                                          ? b[columnName]
+                                          : Number(b[columnName]);
+                                        if (aValue < bValue)
                                           return isAsc ? -1 : 1;
-                                        if (a[columnName] > b[columnName])
+                                        if (aValue > bValue)
                                           return isAsc ? 1 : -1;
                                         return 0;
                                       }
