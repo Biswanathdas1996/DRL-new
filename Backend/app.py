@@ -74,11 +74,12 @@ def query():
             query = nlq(user_question, working_table_description, controlStatement)
             result = execute_sql_query(query)
 
-            summery = call_gpt("You are a good data scientist", f"""
-                               Reply to the user query: {user_question} by summarizing the below Context in 50 words/n
-                               if any financial data is present in the context, please use INR and make it in words Like: if  120000 the use 1 Lakh 20 thousand /n
-                               Context /n{str(result)}
-
+            summery = call_gpt("You are a skilled data analyst.", f"""
+                               Summarize the following user query and its context in 50 words or less:
+                               - User Query: {user_question}
+                               - Context: {str(result)}
+                               
+                               Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
                     """, 1000)
             
             try:

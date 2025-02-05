@@ -99,9 +99,14 @@ def pre_process_data(query, working_table_description, controlStatement=""):
                 "questions": questions_texts,
                 "analytics": analytics
             }
-        summery = call_gpt("You are a good data scientist", f"""
-                               Reply to the user query: {query} by summarizing the below Context in 100 words/n
-                               Context /n{str(result)}""")
+        summery = call_gpt("You are a skilled data analyst.", f"""
+                               Summarize the following user query and its context in 50 words or less:
+                               - User Query: {query}
+                               - Context: {str(result)}
+                               
+                               Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
+                    """, 1000)
+        
         return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
 
     except Exception as e:

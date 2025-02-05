@@ -1,39 +1,59 @@
 [
   {
     "find": "Performance",
-    "replace": "Total Sales , Total Target, % Achievement"
-  },
-  {
-    "find": "Sales",
-    "replace": "Total Sales , Total Target, % Achievement"
+    "replace": "Total Sales , Total Target, %Achievement"
   },
   {
     "find": "Achievement",
-    "replace": "Total Sales , Total Target, % Achievement"
+    "replace": "Total Sales , Total Target, %Achievement"
   },
   {
     "find": "%Achievement",
-    "replace": "Total Sales , Total Target, % Achievement"
+    "replace": "Total Sales , Total Target, %Achievement"
   },
   {
     "find": "Priority Brands",
-    "replace": "Brand Category Like '%BIG &INVEST%'"
+    "replace": "Brand Category: \"Priority\""
+  },
+  {
+    "find": "Priority Brand",
+    "replace": "Brand Category: \"Priority\""
   },
   {
     "find": "Focus Brands",
-    "replace": "Brand Category Like '%BIG &INVEST%'"
+    "replace": "Brand Category: \"Priority\""
+  },
+  {
+    "find": "Stockist-Trend",
+    "replace": "mid-month sales transactions for the given months grouped month wise, difference between the current month sales and the average of the given months, filter only those stockist where the diff is negative"
   },
   {
     "find": "Returns",
-    "replace": "Total Sales Value, Sales Return Value , % Return"
+    "replace": "Total Sales Value, Sales Return Value , %Return"
   },
   {
-    "find": "% Returns",
-    "replace": "Total Sales Value, Sales Return Value , % Return"
+    "find": "trailing",
+    "replace": "having the sales for current mid-month is less than the average of last three mid-month sales"
+  },
+  {
+    "find": "sales-trend",
+    "replace": "Stockist wise total sales for the current and past 6 months, grouped month wise"
+  },
+  {
+    "find": "stockist-trend",
+    "replace": "Stockist wise total sales for the current and past 6 months, grouped month wise"
+  },
+  {
+    "find": "%Returns",
+    "replace": "Total Sales Value, Sales Return Value , %Return"
+  },
+  {
+    "find": "billing",
+    "replace": "Stockist wise current month sales , less than the average of sales for the period given"
   },
   {
     "find": "Percentage Returns",
-    "replace": "Total Sales Value, Sales Return Value , % Return"
+    "replace": "Total Sales Value, Sales Return Value , %Return"
   },
   {
     "find": "Month Wise",
@@ -42,10 +62,6 @@
   {
     "find": "Each month",
     "replace": "Grouped by month"
-  },
-  {
-    "find": "HQ",
-    "replace": "HQ name like"
   },
   {
     "find": "Q1",
@@ -100,18 +116,6 @@
     "replace": "Group by stockist"
   },
   {
-    "find": "Mid-Month",
-    "replace": "Parameterize Date to be taken from 14th - 16th"
-  },
-  {
-    "find": "Mid Month",
-    "replace": "Date to be taken from 14th - 16th"
-  },
-  {
-    "find": "My area",
-    "replace": "all HQs mapped under name"
-  },
-  {
     "find": "MTD",
     "replace": "Month to date - All the data to reflect as of the 1st of the current month till the current date"
   },
@@ -134,5 +138,9 @@
   {
     "find": "Year as on date",
     "replace": "Year to date - All the data to reflect as of the 1st of April till the current date"
+  },
+  {
+    "find": "Quarterly",
+    "replace": "Current Quarter to be taken"
   }
 ]

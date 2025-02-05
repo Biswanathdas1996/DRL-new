@@ -56,8 +56,9 @@ const Chat: React.FC = () => {
     const raw = JSON.stringify({
       question: filterQuery(query),
       controlStatement:
-        ifLoginControl === "true" &&
-        `WHERE Head Quarters (HQ) IN (${user?.hq_id})`,
+        ifLoginControl === "true"
+          ? `WHERE Head Quarters (HQ) IN (${user?.hq_id})`
+          : "",
       working_table_description: localStorage.getItem("dbJson"),
     });
 
