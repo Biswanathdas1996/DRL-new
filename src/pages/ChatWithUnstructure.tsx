@@ -85,6 +85,8 @@ const Chat: React.FC = () => {
     // const effectiveContext = contextData?.results?.gpt_results;
     // const effectiveContext = contextData?.results?.fine_results;
 
+    console.log("effectiveContext", effectiveContext);
+
     const userStorydata = await callGpt(`
         Generate answer/replay of : ${query}       
         from the context of: ${effectiveContext}

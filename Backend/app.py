@@ -129,7 +129,7 @@ def direct_gpt_call():
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
     try:
-        result_json = call_gpt("You are a polite, helping intelligent agent", user_question, token_limit)
+        result_json = call_gpt("You are a polite, helping intelligent assistance", user_question, token_limit)
         return result_json
     except Exception as e:
         return jsonify({"error": str(e)}), 500
