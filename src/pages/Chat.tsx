@@ -52,9 +52,10 @@ const Chat: React.FC = () => {
     console.log("lastTwoChats", lastTwoChats);
 
     const ifLoginControl = localStorage.getItem("loginControl");
+    const applyFilter = localStorage.getItem("applyFilter");
 
     const raw = JSON.stringify({
-      question: filterQuery(query),
+      question: applyFilter === "true" ? filterQuery(query) : query,
       controlStatement:
         ifLoginControl === "true"
           ? `WHERE Head Quarters (HQ) id IN (${user?.hq_id})`

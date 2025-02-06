@@ -20,12 +20,20 @@ export default function Config() {
   const [model, setModel] = React.useState("gpt-4o-mini");
 
   const [loginControl, setLoginControl] = React.useState(false);
+  const [applyFilter, setApplyFilter] = React.useState(false);
 
   const handleChangeLoginControl = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setLoginControl(event.target.checked);
     localStorage.setItem("loginControl", event.target.checked.toString());
+  };
+
+  const handleChangeApplyFilter = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setApplyFilter(event.target.checked);
+    localStorage.setItem("applyFilter", event.target.checked.toString());
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -43,6 +51,11 @@ export default function Config() {
     const ifLoginControl = localStorage.getItem("loginControl");
     if (ifLoginControl) {
       setLoginControl(ifLoginControl === "true");
+    }
+
+    const ifApplyFilter = localStorage.getItem("applyFilter");
+    if (ifApplyFilter) {
+      setApplyFilter(ifApplyFilter === "true");
     }
   }, []);
 
@@ -88,7 +101,7 @@ export default function Config() {
               <DBConfig />
             </Card>
           </Grid>
-          <Grid size={12}>
+          <Grid size={6}>
             <h2>Data Restriction</h2>
             <Card
               style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
@@ -108,6 +121,27 @@ export default function Config() {
                 <Switch
                   checked={loginControl}
                   onChange={handleChangeLoginControl}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
+            </Card>
+          </Grid>
+          <Grid size={6}>
+            <h2>Query Filters for Structured data</h2>
+            <Card
+              style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <h4>{applyFilter ? "Filter applied" : "Filter disabled"}</h4>
+                <Switch
+                  checked={applyFilter}
+                  onChange={handleChangeApplyFilter}
                   inputProps={{ "aria-label": "controlled" }}
                 />
               </div>
