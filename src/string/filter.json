@@ -1,5 +1,17 @@
 [
   {
+    "find": "same",
+    "replace": "Do the above"
+  },
+  {
+    "find": "Stockiest",
+    "replace": "Give the name of stockiest"
+  },
+  {
+    "find": "returns",
+    "replace": "recorded Returns"
+  },
+  {
     "find": "Performance",
     "replace": "Total Sales , Total Target, %Achievement"
   },
@@ -141,6 +153,10 @@
   },
   {
     "find": "Quarterly",
+    "replace": "Current Quarter to be taken"
+  },
+  {
+    "find": "Last 2 months",
     "replace": "Current Quarter to be taken"
   }
 ]

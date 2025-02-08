@@ -4,6 +4,7 @@ from secretes.secrets import OPENAI_API_KEY
 from PIL import Image  # type: ignore
 import base64
 from io import BytesIO
+import json
 
 try:
     os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
@@ -51,7 +52,57 @@ def call_gpt(config, prompt, max_tokens=50):
         return result
     except Exception as e:
         return f"An error occurred: {e}"
+    
 
+def call_gpt_sql_data(config, prompt, chatContext):
+    try:
+        openai.api_key = os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        return "API key not found in environment variables."
+    
+    print("========== Original chatContext:", chatContext)
+
+    # Ensure chatContext is a list
+    if isinstance(chatContext, str):
+        try:
+            chatContext = json.loads(chatContext)  # Convert string to list
+        except json.JSONDecodeError:
+            return "Invalid chatContext format. Expected JSON string representing a list."
+    
+    if not isinstance(chatContext, list):
+        chatContext = []  # Ensure it's a list if something went wrong
+    
+    # **Fix invalid role names** - Mapping incorrect roles to valid ones
+    role_mapping = {
+        "User Question": "user",
+        "LLM Response": "assistant"
+    }
+    
+    for message in chatContext:
+        if "role" in message and message["role"] in role_mapping:
+            message["role"] = role_mapping[message["role"]]
+    
+    # Append the new user prompt
+    chatContext.append({"role": "user", "content": prompt})
+
+    print("==========================> Updated chatContext:", chatContext)
+    
+    try:
+        response = openai.ChatCompletion.create(
+            model=os.environ.get("X-Ai-Model", "gpt-4"),
+            messages=[{"role": "system", "content": config}] + chatContext,
+            temperature=0,
+            stop=None
+        )
+        result = response.choices[0].message['content'].strip()
+        
+        # Print the response for debugging
+        print("GPT Response:", response)
+        
+        return result
+    except Exception as e:
+        return f"An error occurred: {e}"
+    
 def extract_image(file_path):
     try:
         # Open the image file

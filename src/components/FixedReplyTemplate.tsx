@@ -101,7 +101,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
     setPage(0);
   };
   if (!data) return;
-  console.log(data);
+
   return (
     <div data-name="message-1" className="chat-msg-list msg-hldr-cb gap10px">
       <div className="icon-hldr">

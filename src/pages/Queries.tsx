@@ -364,6 +364,7 @@ const Queries: React.FC = () => {
             <div style={{ marginTop: 20 }}>
               {loadingUi && <Loader text="Exicuting query " showIcon={false} />}
             </div>
+            <b>*Please update variable data before execute the SQL</b>
             <div style={{ marginTop: 20 }}>
               <Button
                 onClick={() => onsubmitHandler(String(selectedQuery))}

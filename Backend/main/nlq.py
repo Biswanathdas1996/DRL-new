@@ -1,9 +1,9 @@
 from helper.utils import get_config
-from helper.gpt import call_gpt
+from helper.gpt import call_gpt_sql_data
 from sql.index import get_erd
 
 # Function to generate SQL query using OpenAI
-def generate_sql_query(user_question, working_table_description, controlStatement=""):
+def generate_sql_query(user_question, working_table_description, controlStatement="", chatContext={}):
     try:
         prompt = f"""
         Translate the following natural language query to SQL query: {user_question} {controlStatement}.
@@ -14,15 +14,15 @@ def generate_sql_query(user_question, working_table_description, controlStatemen
         """
         config = get_config()
         sql_query_string = config.get('gpt').get('generate_sql_query')
-        query = call_gpt(sql_query_string, prompt, 500)
+        query = call_gpt_sql_data(sql_query_string, prompt, chatContext)
         return query.replace('\n', ' ').replace('\t', ' ').replace('```sql', '').replace('```', '')
     except Exception as e:
         print(f"An error occurred while generating the SQL query: {e}")
-        return None
+        return None 
 
-def nlq(user_question, working_table_description, controlStatement=""):
+def nlq(user_question, working_table_description, controlStatement="", chatContext={}):
     try:
-        query = generate_sql_query(user_question, working_table_description, controlStatement)
+        query = generate_sql_query(user_question, working_table_description, controlStatement, chatContext)
         print("Generated SQL Query:", query)
         return query
     except Exception as e:

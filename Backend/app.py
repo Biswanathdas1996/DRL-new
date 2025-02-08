@@ -56,6 +56,7 @@ def query():
     data = request.json
     user_question = data.get('question')
     controlStatement = data.get('controlStatement')
+    chatContext = data.get('chatContext')
     working_table_description = data.get('working_table_description')
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
@@ -67,21 +68,21 @@ def query():
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
     try:
-        pre_data = pre_process_data(user_question, working_table_description, controlStatement)
+        pre_data = pre_process_data(user_question, working_table_description, controlStatement, chatContext)
         if pre_data:
             return jsonify(pre_data)
         else:
-            query = nlq(user_question, working_table_description, controlStatement)
+            query = nlq(user_question, working_table_description, controlStatement, chatContext)
             result = execute_sql_query(query)
 
-            summery = call_gpt("You are a skilled data analyst.", f"""
-                               Summarize the following user query and its context in 50 words or less:
-                               - User Query: {user_question}
-                               - Context: {str(result)}
+            # summery = call_gpt("You are a skilled data analyst.", f"""
+            #                    Summarize the following user query and its context in 50 words or less:
+            #                    - User Query: {user_question}
+            #                    - Context: {str(result)}
                                
-                               Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
-                    """, 1000)
-            
+            #                    Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
+            #         """, 1000)
+            summery = ""
             try:
                 log(os.environ["X-DRL-USER"], user_question, query)
             except Exception as log_error:

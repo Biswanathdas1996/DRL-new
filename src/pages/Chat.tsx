@@ -48,9 +48,15 @@ const Chat: React.FC = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const lastTwoChats = chatHistory.slice(-2);
-    console.log("lastTwoChats", lastTwoChats);
+    let chatContext: any = chatHistory.slice(-8);
+    chatContext = chatContext.map((chat: any) => ({
+      role: chat.type === "user" ? "user" : "system",
+      content:
+        chat.type === "user" ? chat.message ?? "" : chat?.message?.query ?? "",
+    }));
 
+    console.log("lastTwoChats==========>", chatContext);
+    // return;
     const ifLoginControl = localStorage.getItem("loginControl");
     const applyFilter = localStorage.getItem("applyFilter");
 
@@ -58,9 +64,12 @@ const Chat: React.FC = () => {
       question: applyFilter === "true" ? filterQuery(query) : query,
       controlStatement:
         ifLoginControl === "true"
-          ? `WHERE Head Quarters (HQ) id IN (${user?.hq_id})`
+          ? `WHERE Head Quarters (HQ) id IN (${
+              user?.hq_id as string[]
+            }),Make all hq_id as String`
           : "",
       working_table_description: localStorage.getItem("dbJson"),
+      chatContext: JSON.stringify(chatContext),
     });
 
     const requestOptions: RequestInit = {

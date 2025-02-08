@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sql.db import execute_sql_query
 from gpt.analiticts import call_gpt
-
+from helper.gpt import call_gpt_sql_data
 
 def similarity(a, b):
     try:
@@ -15,7 +15,7 @@ def similarity(a, b):
         return 0
 
 
-def call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement=""):
+def call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement="", chatContext={}):
     try:
         prompt = f"""Rewrite the below SQL Query as per\n {query}, {controlStatement}.\n
                 Return only the SQL query without any additional text or explanation.\n
@@ -27,14 +27,14 @@ def call_gpt_to_refactor_query(query_text, query, working_table_description, con
                     Schema of the database:\n
                     {working_table_description}`
                     """
-        result_json = call_gpt("you are a best SQL coder", prompt)
+        result_json = call_gpt_sql_data("you are a best SQL coder", prompt, chatContext)
         return result_json
     except Exception as e:
         print(f"Error calling GPT: {e}")
         return None
 
 
-def pre_process_data(query, working_table_description, controlStatement=""):
+def pre_process_data(query, working_table_description, controlStatement="", chatContext={}):
     try:
         with open('query_storage/query.json', 'r') as file:
             queries = json.load(file)
@@ -80,7 +80,7 @@ def pre_process_data(query, working_table_description, controlStatement=""):
         else:
             if use == "Dynamic":
                 try:
-                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement)
+                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement, chatContext)
                 except Exception as e:
                     print(f"Error calling GPT to refactor query: {e}")
                     return None
@@ -99,14 +99,14 @@ def pre_process_data(query, working_table_description, controlStatement=""):
                 "questions": questions_texts,
                 "analytics": analytics
             }
-        summery = call_gpt("You are a skilled data analyst.", f"""
-                               Summarize the following user query and its context in 50 words or less:
-                               - User Query: {query}
-                               - Context: {str(result)}
+        # summery = call_gpt("You are a skilled data analyst.", f"""
+        #                        Summarize the following user query and its context in 50 words or less:
+        #                        - User Query: {query}
+        #                        - Context: {str(result)}
                                
-                               Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
-                    """, 1000)
-        
+        #                        Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
+        #             """, 1000)
+        summery = ""
         return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
 
     except Exception as e:

@@ -43,7 +43,7 @@ def log(user_id, userquery, sqlquery):
 
 def get_logs():
     user_id = request.args.get('user_id')
-    limit = request.args.get('limit', 10, type=int)  # Default limit to 10
+    limit = request.args.get('limit', 100, type=int)  # Default limit to 10
    
     conn =  create_connection(DB_CONFIG)
     cursor = conn.cursor(cursor_factory=RealDictCursor)
