@@ -10,12 +10,14 @@ from sql.db import generate_erd_from, execute_sql_query
 from mongodb.rag import render_mongo_pack
 from Fixed_prompts_module.index import pre_process_data
 from Log.index import log, render_logs_pack
+from AI_Agent.index import render_agents
 
 app = Flask(__name__)
 Compress(app)
 CORS(app)
 app = render_mongo_pack(app)
 app = render_logs_pack(app)
+app = render_agents(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
 @app.before_request

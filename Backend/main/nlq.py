@@ -8,7 +8,7 @@ def generate_sql_query(user_question, working_table_description, controlStatemen
         prompt = f"""
         Translate the following natural language query to SQL query: {user_question} {controlStatement}.
         Return only the SQL query without any additional text or explanation.
-        
+        Make sure to return only the SQL query without any additional text or explanation.
         Here is the schema of the database:
             {working_table_description}
         """

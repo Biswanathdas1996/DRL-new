@@ -32,15 +32,8 @@ def query_database(nlq: str):
     yield "data: SQL Agent created\n\n"
     
     response = sql_agent.run(nlq)
-    print("=======response======>",response)
-    # Stream each step properly
-    if isinstance(response, list):  # If the response is a list of steps
-        for step in response:
-            yield f"data: {step}\n\n"
-    else:  # Otherwise, stream the response as a whole
-        yield f"data: {response}\n\n"
-
-    yield "data: Query execution completed\n\n"
+    
+    yield f"data: Query executed, response: {response}\n\n"
     return response
 
 def stream_query(nlq):

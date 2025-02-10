@@ -16,8 +16,110 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import DBConfig from "./DBConfig";
 import Switch from "@mui/material/Switch";
 
+interface Field {
+  id: number;
+  value: string;
+  type: string;
+  status: boolean;
+}
+
+interface BasicTextFieldsProps {
+  fields: Field[];
+  setFields: React.Dispatch<React.SetStateAction<Field[]>>;
+  usedFor: string;
+}
+
+function BasicTextFields({ fields, setFields, usedFor }: BasicTextFieldsProps) {
+  const addField = (type: string) => {
+    setFields([
+      ...fields,
+      { id: new Date().getTime(), value: "", status: true, type },
+    ]);
+  };
+
+  const onChangeField = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    field: any
+  ) => {
+    const newFields = fields.map((f) => {
+      if (f.id === field.id) {
+        return { ...f, value: e.target.value };
+      }
+      return f;
+    });
+    setFields(newFields);
+  };
+
+  return (
+    <Card
+      component="form"
+      sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+      noValidate
+      autoComplete="off"
+      style={{ padding: 20, backgroundColor: "#f1f1f1" }}
+    >
+      {fields.map((field) => (
+        <div style={{ display: "flex", width: "100%", alignItems: "center" }}>
+          <TextField
+            id={`outlined-basic-${field.id}`}
+            // label={usedFor}
+            variant="outlined"
+            onChange={(e) => onChangeField(e, field)}
+            value={field.value || ""}
+            style={{ marginBottom: 10, marginTop: 10, width: "100%" }}
+          />
+          <Switch
+            checked={field.status}
+            onChange={(e) => {
+              const newFields = fields.map((f) => {
+                if (f.id === field.id) {
+                  return { ...f, status: e.target.checked };
+                }
+                return f;
+              });
+              setFields(newFields);
+            }}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+          <DeleteForeverIcon
+            color="error"
+            onClick={() => {
+              setFields(fields.filter((f) => f.id !== field.id));
+            }}
+            style={{ marginLeft: 10, cursor: "pointer", fontSize: 30 }}
+          />
+        </div>
+      ))}
+
+      <Button
+        variant="contained"
+        color="warning"
+        id="temp_button"
+        onClick={() => addField(usedFor)}
+      >
+        <AddIcon /> Add More
+      </Button>
+    </Card>
+  );
+}
+
+interface Field {
+  id: number;
+  value: string;
+  type: string;
+}
+
+interface BasicTextFieldsProps {
+  fields: Field[];
+  setFields: React.Dispatch<React.SetStateAction<Field[]>>;
+  usedFor: string;
+}
+
 export default function Config() {
   const [model, setModel] = React.useState("gpt-4o-mini");
+  const [instructionForTestCases, setInstructionForTestCases] = useState<
+    Field[]
+  >([]);
 
   const [loginControl, setLoginControl] = React.useState(false);
   const [applyFilter, setApplyFilter] = React.useState(false);
@@ -59,11 +161,38 @@ export default function Config() {
     }
   }, []);
 
+  React.useEffect(() => {
+    const savedConfig = localStorage.getItem("drl_config");
+    if (savedConfig) {
+      const { instructionForTestCases } = JSON.parse(savedConfig);
+
+      setInstructionForTestCases(instructionForTestCases || []);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (instructionForTestCases.length === 0) {
+      return;
+    }
+    const allInstructions = {
+      instructionForTestCases,
+    };
+    localStorage.setItem("drl_config", JSON.stringify(allInstructions));
+  }, [instructionForTestCases]);
+
   return (
     <div>
       <h2>Configuration</h2>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
+          <Grid size={12}>
+            <h4>Format instructions</h4>
+            <BasicTextFields
+              fields={instructionForTestCases}
+              setFields={setInstructionForTestCases}
+              usedFor="instructionForTestCases"
+            />
+          </Grid>
           <Grid size={12}>
             <Card
               style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}

@@ -60,8 +60,6 @@ def call_gpt_sql_data(config, prompt, chatContext):
     except KeyError:
         return "API key not found in environment variables."
     
-    print("========== Original chatContext:", chatContext)
-
     # Ensure chatContext is a list
     if isinstance(chatContext, str):
         try:
@@ -75,7 +73,7 @@ def call_gpt_sql_data(config, prompt, chatContext):
     # **Fix invalid role names** - Mapping incorrect roles to valid ones
     role_mapping = {
         "User Question": "user",
-        "LLM Response": "assistant"
+        "LLM Response": "system"
     }
     
     for message in chatContext:
@@ -87,12 +85,13 @@ def call_gpt_sql_data(config, prompt, chatContext):
 
     print("==========================> Updated chatContext:", chatContext)
     
+
     try:
         response = openai.ChatCompletion.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
             messages=[{"role": "system", "content": config}] + chatContext,
             temperature=0,
-            stop=None
+            stop=[";"]
         )
         result = response.choices[0].message['content'].strip()
         

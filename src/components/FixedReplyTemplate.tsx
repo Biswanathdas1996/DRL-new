@@ -83,6 +83,20 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
     sortBy: "",
     order: "asc",
   });
+
+  useEffect(() => {
+    const sortedTable1 = data.table1.map((row) => {
+      const stringColumns = Object.entries(row)
+        .filter(([_, value]) => isNaN(Number(value)))
+        .sort(([a], [b]) => a.localeCompare(b));
+      const numericColumns = Object.entries(row)
+        .filter(([_, value]) => !isNaN(Number(value)))
+        .sort(([a], [b]) => a.localeCompare(b));
+      return Object.fromEntries([...stringColumns, ...numericColumns]);
+    });
+    setTable1Data(sortedTable1);
+  }, [data.table1]);
+
   const [table1Data, setTable1Data] = React.useState(data.table1);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

@@ -12,6 +12,7 @@ import SimpleAlert from "./components/Alert";
 import Upload from "./pages/Upload";
 import Config from "./pages/Config";
 import Logs from "./pages/Logs";
+import AgentChat from "./pages/AgentChat";
 
 export const UserContext = createContext<any>(null);
 
@@ -38,6 +39,7 @@ function App() {
           {user ? (
             <>
               <Route path="/sql-chat" element={<Chat />} />
+              <Route path="/agent-sql-chat" element={<AgentChat />} />
               <Route path="/data-chat" element={<ChatWithUnstructure />} />
               <Route path="/query" element={<Queries />} />
               <Route path="/upload" element={<Upload />} />

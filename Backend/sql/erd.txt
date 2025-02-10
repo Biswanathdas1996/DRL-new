@@ -1,140 +1,138 @@
-The provided schema describes a database structure with multiple tables, each containing specific columns and relationships. Here is a detailed description of each table:
+The JSON schema describes a database structure that encompasses several tables, each with its own set of columns and defined relationships where applicable. Below is a detailed description of each table:
 
-### SKU Table
-- **Columns:**
-  - `code`: A string field used to store the SKU code.
-  - `name`: A string field for the SKU name.
-- **Relationships:** None
+1. **SKU Table**
+   - **Columns**:
+     - `code`: A character varying field representing the SKU code.
+     - `name`: A character varying field representing the SKU name.
+   - **Relationships**: None.
 
-### User Manager Map Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `userid`: A string field referencing a user ID.
-  - `managerid`: A string field referencing a manager ID.
-- **Relationships:**
-  - `userid` links to the `id` column in the `UserDetails` table.
-  - `managerid` links to the `id` column in the `UserDetails` table.
+2. **User Manager Map Table**
+   - **Columns**:
+     - `id`: An integer representing a unique identifier.
+     - `userid`: A character varying field for user ID.
+     - `managerid`: A character varying field for manager ID.
+   - **Relationships**:
+     - `userid` references the `id` column in the `userdetails` table.
+     - `managerid` references the `id` column in the `userdetails` table.
 
-### Role Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `name`: A string field for the role name.
-- **Relationships:** None
+3. **Role Table**
+   - **Columns**:
+     - `id`: An integer serving as the unique identifier.
+     - `name`: A character varying field representing the role name.
+   - **Relationships**: None.
 
-### HQ Table
-- **Columns:**
-  - `id`: A string field used as the unique identifier.
-  - `name`: A string field for the HQ name.
-- **Relationships:** None
+4. **Headquarters (HQ) Table**
+   - **Columns**:
+     - `id`: A character varying field representing the HQ ID.
+     - `name`: A character varying field representing the HQ name.
+   - **Relationships**: None.
 
-### Stockist Table
-- **Columns:**
-  - `id`: A string field used as the unique identifier.
-  - `name`: A string field for the stockist name.
-- **Relationships:** None
+5. **Stockist Table**
+   - **Columns**:
+     - `id`: A character varying field representing the stockist ID.
+     - `name`: A character varying field representing the stockist name.
+   - **Relationships**: None.
 
-### Brand Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `name`: A string field for the brand name.
-  - `category`: A string field for the brand category.
-- **Relationships:** None
+6. **Brand Table**
+   - **Columns**:
+     - `id`: An integer representing the brand ID.
+     - `name`: A character varying field for the brand name.
+     - `category`: A character varying field representing the brand's category.
+   - **Relationships**: None.
 
-### Brand SKU Map Table
-- **Columns:**
-  - `brand_id`: An integer referencing the brand ID.
-  - `sku_code`: A string field linking to an SKU code.
-- **Relationships:**
-  - `brand_id` connects to the `id` column in the `Brand` table.
-  - `sku_code` links to the `code` column in the `SKU` table.
+7. **Brand SKU Map Table**
+   - **Columns**:
+     - `brand_id`: An integer refereeing to a brand's unique ID.
+     - `sku_code`: A character varying field referring to an SKU's code.
+   - **Relationships**:
+     - `brand_id` ties to the `id` column in the `brand` table.
+     - `sku_code` connects to the `code` column in the `sku` table.
 
-### UserDetails Table
-- **Columns:**
-  - `roleid`: An integer for role identification.
-  - `loginenabled`: A boolean indicating if login is enabled.
-  - `hq_id`: A string referencing the HQ ID.
-  - `id`: A string field serving as the unique user identifier.
-  - `password`: A string field for storing passwords.
-  - `emp_code`: A string for employee code.
-  - `name`: A string for the user's name.
-- **Relationships:**
-  - `roleid` links to the `id` column in the `Role` table.
-  - `hq_id` links to the `id` column in the `HQ` table.
+8. **User Details Table**
+   - **Columns**:
+     - `roleid`: An integer linking to a role's ID.
+     - `loginenabled`: A boolean indicating if login is enabled.
+     - `hq_id`: A character varying field referencing an HQ ID.
+     - `id`: A character varying field as the user's unique identifier.
+     - `password`: A character varying field for the user's password.
+     - `emp_code`: A character varying code for employee identification.
+     - `name`: A character varying field representing the user's name.
+   - **Relationships**:
+     - `roleid` connects to the `id` column in the `role` table.
+     - `hq_id` relates to the `id` column in the `hq` table.
 
-### Division HQ Map Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `division_code`: A string field linking to a division.
-  - `hq_id`: A string referencing an HQ ID.
-- **Relationships:**
-  - `division_code` links to the `code` column in the `Division` table.
-  - `hq_id` links to the `id` column in the `HQ` table.
+9. **Division HQ Map Table**
+   - **Columns**:
+     - `id`: An integer serving as a unique identifier.
+     - `division_code`: A character varying field for division code.
+     - `hq_id`: A character varying field that references an HQ ID.
+   - **Relationships**:
+     - `division_code` references the `code` in the `division` table.
+     - `hq_id` connects to the `id` column in the `hq` table.
 
-### Division Table
-- **Columns:**
-  - `code`: A string field for the division code.
-  - `name`: A string field for the division name.
-- **Relationships:** None
+10. **Division Table**
+    - **Columns**:
+      - `code`: A character varying field for division codes.
+      - `name`: A character varying field representing division names.
+    - **Relationships**: None.
 
-### Sales Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `transaction_date`: A date for transaction.
-  - `primary_sales`: A numeric field for sales value.
-  - `primary_units`: An integer for units sold.
-  - `sku_code`: A string field linking to an SKU code.
-  - `division_code`: A string referencing a division code.
-  - `billing_type`: A string indicating billing type.
-  - `status`: A string indicating the status of the transaction.
-  - `stockist_id`: A string linking to a stockist.
-  - `hq_id`: A string referencing an HQ ID.
-- **Relationships:**
-  - `stockist_id` links to the `id` column in the `Stockist` table.
-  - `sku_code` links to the `code` column in the `SKU` table.
-  - `division_code` links to the `code` column in the `Division` table.
-  - `hq_id` links to the `id` column in the `HQ` table.
+11. **Sales Table**
+    - **Columns**:
+      - `id`: An integer representing a unique sales ID.
+      - `transaction_date`: A date field for the sales date.
+      - `primary_sales`: A numeric field for sales amount.
+      - `primary_units`: An integer showing units sold.
+      - `sku_code`: A character varying field for SKU code.
+      - `division_code`: A character varying field for division code.
+      - `billing_type`: A character varying field for billing type.
+      - `status`: A character varying field denoting sales status.
+      - `stockist_id`: A character varying field for stockist ID.
+      - `hq_id`: A character varying field for HQ ID.
+    - **Relationships**:
+      - `stockist_id` links to the `id` in the `stockist` table.
+      - `sku_code` associates with `code` in the `sku` table.
+      - `division_code` connects to the `code` in the `division` table.
+      - `hq_id` corresponds to `id` in the `hq` table.
 
-### Target Table
-- **Columns:**
-  - `target_date`: A date for the target date.
-  - `id`: An integer serving as the unique identifier.
-  - `target_units`: An integer indicating target units.
-  - `target_value`: A numeric field for target value.
-  - `division_code`: A string linking to a division.
-  - `hq_id`: A string referencing an HQ ID.  
-  - `sku_code`: A string linking to an SKU code.
-- **Relationships:**
-  - `division_code` links to the `code` column in the `Division` table.
-  - `hq_id` links to the `id` column in the `HQ` table.
-  - `sku_code` links to the `code` column in the `SKU` table.
+12. **Target Table**
+    - **Columns**:
+      - `target_date`: A date field for target date.
+      - `id`: An integer serving as a unique target identifier.
+      - `target_units`: An integer field for target units.
+      - `target_value`: A numeric field for the target's value.
+      - `division_code`: A character varying field for division code.
+      - `hq_id`: A character varying field for HQ ID.
+      - `sku_code`: A character varying field for SKU code.
+    - **Relationships**:
+      - `division_code` associates with the `code` in the `division` table.
+      - `hq_id` connects to the `id` in the `hq` table.
+      - `sku_code` maps to the `code` in the `sku` table.
 
-### Stockist HQ Map Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `hq_id`: A string referencing an HQ ID.
-  - `stockist_id`: A string linking to a stockist.
-- **Relationships:**
-  - `hq_id` links to the `id` column in the `HQ` table.
-  - `stockist_id` links to the `id` column in the `Stockist` table.
+13. **Stockist HQ Map Table**
+    - **Columns**:
+      - `id`: An integer for unique mapping identification.
+      - `hq_id`: A character varying field for HQ ID.
+      - `stockist_id`: A character varying field for stockist ID.
+    - **Relationships**:
+      - `hq_id` relates to `id` in the `hq` table.
+      - `stockist_id` links to `id` in the `stockist` table.
 
-### Target 3 Table
-- **Columns:**
-  - `target_date`: A date for the target.
-  - `id`: An integer serving as the unique identifier.
-  - `target_units`: An integer indicating target units.
-  - `target_value`: A numeric field for the target value.
-  - `division_code`: A string linking to a division.
-  - `hq_id`: A string referencing an HQ ID.
-  - `sku_code`: A string linking to an SKU code.
-- **Relationships:** None
+14. **Target3 Table**
+    - **Columns**:
+      - `target_date`: A date field for target date.
+      - `id`: An integer serving as a unique target identifier.
+      - `target_units`: An integer for target units.
+      - `target_value`: A numeric field indicating the target value.
+      - `division_code`: A character varying field for division code.
+      - `hq_id`: A character varying field for HQ ID.
+      - `sku_code`: A character varying field for SKU code.
+    - **Relationships**: None.
 
-### Conversation Log Table
-- **Columns:**
-  - `id`: An integer serving as the unique identifier.
-  - `timestamp`: A timestamp with time zone for logging.
-  - `user_id`: A string field for the user's ID.
-  - `userquery`: A text field for the user's query.
-  - `sqlquery`: A text field for the SQL query generated.
-- **Relationships:** None
-
-This schema illustrates a structured database designed to maintain records related to products, organizational roles, sales, targets, and conversational logs within an organization, with specific relationships connecting various data points across the tables.
+15. **Conversation Log Table**
+    - **Columns**:
+      - `id`: An integer representing a unique log ID.
+      - `timestamp`: A timestamp with time zone for logging time.
+      - `user_id`: A character varying field for user ID.
+      - `userquery`: A text field for storing user queries.
+      - `sqlquery`: A text field for corresponding SQL queries.
+    - **Relationships

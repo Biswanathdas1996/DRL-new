@@ -60,14 +60,29 @@ const Chat: React.FC = () => {
     const ifLoginControl = localStorage.getItem("loginControl");
     const applyFilter = localStorage.getItem("applyFilter");
 
+    const savedConfig = localStorage.getItem("drl_config");
+    let formatInstructions = [];
+
+    if (savedConfig) {
+      const parsedConfig = JSON.parse(savedConfig);
+      formatInstructions = parsedConfig.instructionForTestCases.filter(
+        (item: any) => item.status
+      );
+    }
+    const formatInstructionsText = formatInstructions
+      .map((instruction: any) => instruction.value)
+      .join("\n");
+    console.log("=============formatInstructions", formatInstructionsText);
+
     const raw = JSON.stringify({
       question: applyFilter === "true" ? filterQuery(query) : query,
-      controlStatement:
+      controlStatement: `${
         ifLoginControl === "true"
           ? `WHERE Head Quarters (HQ) id IN (${
               user?.hq_id as string[]
             }),Make all hq_id as String`
-          : "",
+          : ""
+      }  \n ${formatInstructionsText}`,
       working_table_description: localStorage.getItem("dbJson"),
       chatContext: JSON.stringify(chatContext),
     });

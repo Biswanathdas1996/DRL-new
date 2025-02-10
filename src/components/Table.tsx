@@ -109,11 +109,30 @@ const CustomTable: React.FC<TableProps> = ({
   });
   const [table1Data, setTable1Data] = React.useState<ChatMessage[]>([]);
 
+  // React.useEffect(() => {
+  //   if (data) {
+  //     setTable1Data(data);
+  //   }
+  // }, [data]);
+
   React.useEffect(() => {
     if (data) {
-      setTable1Data(data);
+      const sortedTable1 = data.map((row: ChatMessage) => {
+        const stringColumns = Object.entries(row)
+          .filter(([_, value]) => isNaN(Number(value)))
+          .sort(([a], [b]) => a.localeCompare(b));
+        const numericColumns = Object.entries(row)
+          .filter(([_, value]) => !isNaN(Number(value)))
+          .sort(([a], [b]) => a.localeCompare(b));
+        return Object.fromEntries([...stringColumns, ...numericColumns]);
+      });
+      setTable1Data(sortedTable1);
     }
   }, [data]);
+
+  const formatValues = (value: any) => {
+    return isNaN(Number(value)) ? value : Number(value).toFixed(2);
+  };
 
   return (
     <>
@@ -291,9 +310,10 @@ const CustomTable: React.FC<TableProps> = ({
                                     padding: 5,
                                   }}
                                 >
-                                  {isNaN(Number(value))
+                                  {/* {isNaN(Number(value))
                                     ? value
-                                    : Number(value).toFixed(2)}
+                                    : Number(value).toFixed(2)} */}
+                                  {formatValues(value)}
                                 </TableCell>
                               )
                             )}

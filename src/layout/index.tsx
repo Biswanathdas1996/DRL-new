@@ -28,6 +28,9 @@ const iconStyle = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("window.location.pathname", window.location.href);
+
+  const [showSideBar, setShowSideBar] = React.useState(true);
+
   const userRoutes = [
     {
       path: "/sql-chat",
@@ -83,6 +86,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 Intelligent{" "}
                 <b style={{ color: "#5f4ba0", fontWeight: 700 }}>Assistant</b>
               </h2>
+              <button
+                className="mobileNavOpen-btn"
+                onClick={() => setShowSideBar(!showSideBar)}
+              >
+                open
+              </button>
             </div>
             <div className="userDiv">
               <span style={{ marginRight: 15, fontSize: 12 }}>
@@ -103,47 +112,50 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </div>
           </div>
           <div className="main-container">
-            <div className="sidenav">
-              {routes.map((route) => {
-                return (
-                  <a
-                    className={`nav-link ${
-                      window.location.href.includes(`${route.path}`)
-                        ? "active-link"
-                        : ""
-                    }`}
-                    href={`#${route.path}`}
-                    onClick={(e) => {
-                      document
-                        .querySelectorAll(".nav-link")
-                        .forEach((link) =>
-                          link.classList.remove("active-link")
-                        );
-                      e.currentTarget.classList.add("active-link");
-                    }}
-                  >
-                    <button className="sidenav-button">
-                      {route.icon()}
-                      <b style={{ fontSize: 14 }}>{route.name}</b>
+            {showSideBar && (
+              <div className="sidenav">
+                {routes.map((route) => {
+                  return (
+                    <a
+                      className={`nav-link ${
+                        window.location.href.includes(`${route.path}`)
+                          ? "active-link"
+                          : ""
+                      }`}
+                      href={`#${route.path}`}
+                      onClick={(e) => {
+                        document
+                          .querySelectorAll(".nav-link")
+                          .forEach((link) =>
+                            link.classList.remove("active-link")
+                          );
+                        e.currentTarget.classList.add("active-link");
+                      }}
+                    >
+                      <button className="sidenav-button">
+                        {route.icon()}
+                        <b style={{ fontSize: 14 }}>{route.name}</b>
+                      </button>
+                    </a>
+                  );
+                })}
+                {isUser && (
+                  <a className={`nav-link`}>
+                    <button
+                      className="sidenav-button"
+                      onClick={() => {
+                        localStorage.removeItem("user");
+                        window.location.reload();
+                      }}
+                    >
+                      <LogoutIcon style={iconStyle} />
+                      <span style={{ fontSize: 14 }}>Logout</span>
                     </button>
                   </a>
-                );
-              })}
-              {isUser && (
-                <a className={`nav-link`}>
-                  <button
-                    className="sidenav-button"
-                    onClick={() => {
-                      localStorage.removeItem("user");
-                      window.location.reload();
-                    }}
-                  >
-                    <LogoutIcon style={iconStyle} />
-                    <span style={{ fontSize: 14 }}>Logout</span>
-                  </button>
-                </a>
-              )}
-            </div>
+                )}
+              </div>
+            )}
+
             <div className="content-container">
               <div>
                 <Breadcrumbs routes={routes} />
