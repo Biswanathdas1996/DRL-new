@@ -53,6 +53,12 @@ const Login: React.FC = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (user) {
+      window.location.replace("/#/sql-chat");
+    }
+  }, [user]);
+
   return (
     <>
       <div

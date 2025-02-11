@@ -240,6 +240,7 @@ const Chat: React.FC = () => {
                       doQuery={doQuery}
                       chartId={chat.id}
                       chat={chat}
+                      userQuestion={chatHistory[index - 1]}
                       Delete={() => (
                         <CloseIcon
                           style={{

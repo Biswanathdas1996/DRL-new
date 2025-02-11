@@ -98,15 +98,17 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
   //   generateGPTResponse();
   // }, []);
 
-  const saveQuery = () => {
+  const saveQuery = (questionLabel: string) => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
       data: {
         id: new Date().getTime(),
-        name: userQuestion?.message,
+        name: questionLabel,
         query: message?.query,
+        use: "Static",
+        questions: [],
       },
     });
 
@@ -216,7 +218,15 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
                   display: showAnaliticsSection ? "none" : undefined,
                   background: "#989595",
                 }}
-                onClick={() => saveQuery()}
+                onClick={() => {
+                  const questionLabel = prompt(
+                    "Enter your label",
+                    "Question 1"
+                  );
+                  if (questionLabel) {
+                    saveQuery(questionLabel);
+                  }
+                }}
               >
                 Save
                 <img

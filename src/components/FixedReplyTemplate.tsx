@@ -16,6 +16,9 @@ import SqlUpdate from "./SqlUpdate";
 import Analyse from "./DataVisualations";
 import { UserContext } from "../App";
 import { TableSortLabel } from "@mui/material";
+import { useFetch } from "../hook/useFetch";
+import { SAVE_QUERY } from "../config";
+import { useAlert } from "../hook/useAlert";
 
 const applyDateFilter = (input: string | number): string | number => {
   if (typeof input !== "string") {
@@ -69,6 +72,7 @@ interface Props {
   chartId?: number;
   chat: any;
   Delete: any;
+  userQuestion: any;
 }
 
 const DynamicDisplay: React.FC<Props> = ({
@@ -77,8 +81,11 @@ const DynamicDisplay: React.FC<Props> = ({
   chartId,
   chat,
   Delete,
+  userQuestion,
 }) => {
   const { message, time, id } = chat;
+  const fetchData = useFetch();
+  const { triggerAlert } = useAlert();
   const { user } = useContext(UserContext);
   const [page, setPage] = React.useState(0);
   const [loadingUi, setLoadingUi] = React.useState<boolean>(false);
@@ -122,6 +129,36 @@ const DynamicDisplay: React.FC<Props> = ({
     setPage(0);
   };
   if (!data) return;
+
+  const saveQuery = (questionLabel: string) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      data: {
+        id: new Date().getTime(),
+        name: questionLabel,
+        query: message?.query,
+        use: "Static",
+        questions: [],
+      },
+    });
+
+    const requestOptions: RequestInit = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow" as RequestRedirect,
+    };
+
+    fetchData(SAVE_QUERY, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        triggerAlert("Query Saved Successfully!", "success");
+      })
+      .catch((error) => console.error(error));
+  };
 
   return (
     <div data-name="message-1" className="chat-msg-list msg-hldr-cb gap10px">
@@ -442,6 +479,24 @@ const DynamicDisplay: React.FC<Props> = ({
             style={{ background: "#989595" }}
           >
             {showQueryEditSection ? "Hide" : "SQL"}
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
+              alt="Clear Chat"
+            />
+          </button>
+          <button
+            className="newConversationButton"
+            style={{
+              background: "#989595",
+            }}
+            onClick={() => {
+              const questionLabel = prompt("Enter your label", "Question 1");
+              if (questionLabel) {
+                saveQuery(questionLabel);
+              }
+            }}
+          >
+            Save
             <img
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
               alt="Clear Chat"

@@ -36,7 +36,7 @@ def pre_process_data(query, controlStatement="", chatContext={}):
             queries = json.load(file)
         
         most_similar_query = max(queries, key=lambda q: similarity(q['name'], query))
-        if similarity(most_similar_query['name'], query) < 0.5:
+        if similarity(most_similar_query['name'], query) < 0.7:
             return None
 
         query_id = most_similar_query.get('id')
@@ -47,17 +47,17 @@ def pre_process_data(query, controlStatement="", chatContext={}):
         print("query_id===============>", query_id) 
 
         final_query = query_text
-        if(query_id == 3.1):
-            result1 = execute_sql_query(most_similar_query.get('query'))
-            result2 = execute_sql_query(most_similar_query.get('query2'))
-            response = {
-                "text1": "As per your query the Distributor wise details are as below.",
-                "table1": result1,
-                "table2": result2,
-                "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts,
-                "analytics": analytics
-            }
+        # if(query_id == 3.1):
+        #     result1 = execute_sql_query(most_similar_query.get('query'))
+        #     result2 = execute_sql_query(most_similar_query.get('query2'))
+        #     response = {
+        #         "text1": "As per your query the Distributor wise details are as below.",
+        #         "table1": result1,
+        #         "table2": result2,
+        #         "text2": "If you would like additional followup information, please type in the chat box below",
+        #         "questions": questions_texts,
+        #         "analytics": analytics
+        #     }
         # if(query_id == 8):
             
         #     result = execute_sql_query(query_text)
@@ -73,28 +73,28 @@ def pre_process_data(query, controlStatement="", chatContext={}):
         #     }
         
         #     return {"query": query_text, "result": response, "type": "fixed"}
+        # else:
+        if use == "Dynamic":
+            try:
+                result_query = call_gpt_to_refactor_query(query_text, query, controlStatement, chatContext)
+            except Exception as e:
+                print(f"Error calling GPT to refactor query: {e}")
+                return None
+            if result_query is None:
+                return None
+            final_query = result_query
+            result = execute_sql_query(result_query)
         else:
-            if use == "Dynamic":
-                try:
-                    result_query = call_gpt_to_refactor_query(query_text, query, controlStatement, chatContext)
-                except Exception as e:
-                    print(f"Error calling GPT to refactor query: {e}")
-                    return None
-                if result_query is None:
-                    return None
-                final_query = result_query
-                result = execute_sql_query(result_query)
-            else:
-                print("Static run===============>") 
-                final_query = query_text
-                result = execute_sql_query(query_text)
-            response = {
-                "text1": "As per your query the Distributor wise details are as below.",
-                "table1": result,
-                "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts,
-                "analytics": analytics
-            }
+            print("Static run===============>") 
+            final_query = query_text
+            result = execute_sql_query(query_text)
+        response = {
+            "text1": "As per your query the Distributor wise details are as below.",
+            "table1": result,
+            "text2": "If you would like additional followup information, please type in the chat box below",
+            "questions": questions_texts,
+            "analytics": analytics
+        }
         # summery = call_gpt("You are a skilled data analyst.", f"""
         #                        Summarize the following user query and its context in 50 words or less:
         #                        - User Query: {query}
