@@ -54,7 +54,7 @@ def call_gpt(config, prompt, max_tokens=50):
         return f"An error occurred: {e}"
     
 
-def call_gpt_sql_data(config, prompt, chatContext):
+def call_gpt_sql_data(prompt, chatContext):
     try:
         openai.api_key = os.environ["OPENAI_API_KEY"]
     except KeyError:
@@ -73,7 +73,7 @@ def call_gpt_sql_data(config, prompt, chatContext):
     # **Fix invalid role names** - Mapping incorrect roles to valid ones
     role_mapping = {
         "User Question": "user",
-        "LLM Response": "system"
+        "LLM Response": "assistant"
     }
     
     for message in chatContext:
@@ -83,13 +83,13 @@ def call_gpt_sql_data(config, prompt, chatContext):
     # Append the new user prompt
     chatContext.append({"role": "user", "content": prompt})
 
-    print("==========================> Updated chatContext:", chatContext)
-    
+    print("Chat Context:==============>", chatContext)
+    print("Chat Context end:==============>")
 
     try:
         response = openai.ChatCompletion.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
-            messages=[{"role": "system", "content": config}] + chatContext,
+            messages=chatContext,
             temperature=0,
             stop=[";"]
         )
@@ -101,30 +101,30 @@ def call_gpt_sql_data(config, prompt, chatContext):
         return result
     except Exception as e:
         return f"An error occurred: {e}"
-    
-def extract_image(file_path):
+
+    """Call the GPT model with the given configuration and prompt."""
     try:
-        # Open the image file
-        img = Image.open(file_path)
-    except Exception as e:
-        return f"Error opening image file: {e}"
+        openai.api_key = os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        return "API key not found in environment variables."
 
     try:
-        # Convert the image to base64
-        buffered = BytesIO()
-        img.save(buffered, format="PNG")
-        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        response = openai.ChatCompletion.create(
+            model=os.environ.get("X-Ai-Model", "gpt-4"),
+            messages=[
+                {"role": "system", "content": config},
+                {"role": "user", "content": f"""
+                    {prompt}\n
+
+                    Where the previous chat history was:\n
+                    {chatContext}
+                    """}
+            ],
+            temperature=0,
+            stop=[";"]
+        )
+        result = response.choices[0].message['content'].strip()
+        print("GPT Response:", response)
+        return result
     except Exception as e:
-        return f"Error processing image file: {e}"
-
-    # Create the request payload
-    content = [
-        {
-            "type": "image_url",
-            "image_url": {
-                "url": f"data:image/png;base64,{img_base64}"
-            }
-        }
-    ]
-
-    return call_gpt("You are good image reader", content, max_tokens=2048)
+        return f"An error occurred: {e}"

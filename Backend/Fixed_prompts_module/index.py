@@ -15,26 +15,22 @@ def similarity(a, b):
         return 0
 
 
-def call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement="", chatContext={}):
+def call_gpt_to_refactor_query(query_text, query,  controlStatement="", chatContext={}):
     try:
         prompt = f"""Rewrite the below SQL Query as per\n {query}, {controlStatement}.\n
-                Return only the SQL query without any additional text or explanation.\n
-                replace only the part of SQL query this is in between %%\n 
-                for example %dummy text% \n
-                do no change anything that is related to DATE_PART
-                    SQL Query:\n
+                
+                    Refer SQL Query and generate a new SQL Query as per user prompt:\n
                     {query_text}\n
-                    Schema of the database:\n
-                    {working_table_description}`
+                    
                     """
-        result_json = call_gpt_sql_data("you are a best SQL coder", prompt, chatContext)
+        result_json = call_gpt_sql_data(prompt, chatContext)
         return result_json
     except Exception as e:
         print(f"Error calling GPT: {e}")
         return None
 
 
-def pre_process_data(query, working_table_description, controlStatement="", chatContext={}):
+def pre_process_data(query, controlStatement="", chatContext={}):
     try:
         with open('query_storage/query.json', 'r') as file:
             queries = json.load(file)
@@ -62,25 +58,25 @@ def pre_process_data(query, working_table_description, controlStatement="", chat
                 "questions": questions_texts,
                 "analytics": analytics
             }
-        if(query_id == 8):
+        # if(query_id == 8):
             
-            result = execute_sql_query(query_text)
+        #     result = execute_sql_query(query_text)
 
-            for row in result:
-                row['action'] = 'button'
-            response = {
-                "text1": "As per your query the Distributor wise details are as below.",
-                "table1": result,
-                "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts,
-                "analytics": analytics
-            }
+        #     for row in result:
+        #         row['action'] = 'button'
+        #     response = {
+        #         "text1": "As per your query the Distributor wise details are as below.",
+        #         "table1": result,
+        #         "text2": "If you would like additional followup information, please type in the chat box below",
+        #         "questions": questions_texts,
+        #         "analytics": analytics
+        #     }
         
-            return {"query": query_text, "result": response, "type": "fixed"}
+        #     return {"query": query_text, "result": response, "type": "fixed"}
         else:
             if use == "Dynamic":
                 try:
-                    result_query = call_gpt_to_refactor_query(query_text, query, working_table_description, controlStatement, chatContext)
+                    result_query = call_gpt_to_refactor_query(query_text, query, controlStatement, chatContext)
                 except Exception as e:
                     print(f"Error calling GPT to refactor query: {e}")
                     return None

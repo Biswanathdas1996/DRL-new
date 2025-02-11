@@ -5,7 +5,6 @@ import os
 from main.nlq import nlq
 from helper.utils import add_query_to_json
 from gpt.analiticts import getAnalytics, call_gpt
-from helper.gpt import extract_image
 from sql.db import generate_erd_from, execute_sql_query
 from mongodb.rag import render_mongo_pack
 from Fixed_prompts_module.index import pre_process_data
@@ -59,7 +58,6 @@ def query():
     user_question = data.get('question')
     controlStatement = data.get('controlStatement')
     chatContext = data.get('chatContext')
-    working_table_description = data.get('working_table_description')
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
@@ -70,11 +68,11 @@ def query():
     # except Exception as e:
     #     return jsonify({"error": str(e)}), 500
     try:
-        pre_data = pre_process_data(user_question, working_table_description, controlStatement, chatContext)
+        pre_data = pre_process_data(user_question,  controlStatement, chatContext)
         if pre_data:
             return jsonify(pre_data)
         else:
-            query = nlq(user_question, working_table_description, controlStatement, chatContext)
+            query = nlq(user_question,  controlStatement, chatContext)
             result = execute_sql_query(query)
 
             # summery = call_gpt("You are a skilled data analyst.", f"""

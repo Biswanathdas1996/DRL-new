@@ -25,6 +25,11 @@ const chatSlice = createSlice({
   name: "chat",
   initialState: initialChatState,
   reducers: {
+    deleteMessage: (state, action: PayloadAction<number>) => {
+      const chatId = action.payload;
+      state.value = state.value.filter((item) => item.id !== chatId);
+      localStorage.setItem("chatData", JSON.stringify(state.value));
+    },
     addMessage: (state, action: PayloadAction<ChatMessage>) => {
       state.value.push(action.payload);
       localStorage.setItem("chatData", JSON.stringify(state.value));
@@ -155,5 +160,6 @@ export const {
   addLLMReply,
   getMessageById,
   clearChat,
+  deleteMessage,
 } = chatSlice.actions;
 export default chatSlice.reducer;

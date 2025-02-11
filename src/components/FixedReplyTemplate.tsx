@@ -68,9 +68,16 @@ interface Props {
   doQuery?: any;
   chartId?: number;
   chat: any;
+  Delete: any;
 }
 
-const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
+const DynamicDisplay: React.FC<Props> = ({
+  data,
+  doQuery,
+  chartId,
+  chat,
+  Delete,
+}) => {
   const { message, time, id } = chat;
   const { user } = useContext(UserContext);
   const [page, setPage] = React.useState(0);
@@ -85,7 +92,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
   });
 
   useEffect(() => {
-    const sortedTable1 = data.table1.map((row) => {
+    const sortedTable1 = data?.table1?.map((row) => {
       const stringColumns = Object.entries(row)
         .filter(([_, value]) => isNaN(Number(value)))
         .sort(([a], [b]) => a.localeCompare(b));
@@ -127,6 +134,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
       <div data-name="message-stack-1" className="chat-msg-stack">
         <div className="chat-indv">
           <div className="bot-message">
+            <Delete />
             <div>
               <h3>Certainly, {user?.name}!</h3>
               {/* Display the first text dynamically */}
@@ -376,7 +384,7 @@ const DynamicDisplay: React.FC<Props> = ({ data, doQuery, chartId, chat }) => {
                 )}
               </div>
 
-              {shouldDisplayTable(data) && data?.questions.length > 0 && (
+              {shouldDisplayTable(data) && data?.questions?.length > 0 && (
                 <>
                   {/* Display the second text dynamically */}
                   <div style={{ fontSize: "14px", fontWeight: "bold" }}>

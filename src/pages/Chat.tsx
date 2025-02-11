@@ -7,13 +7,17 @@ import { QUERY, CALL_GPT } from "../config";
 import Loader from "../components/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
-import { addMessage } from "../redux/slices/chatSlices";
+import { addMessage, deleteMessage } from "../redux/slices/chatSlices";
 import { useFetch } from "../hook/useFetch";
 import { useQueryFilter } from "../hook/useQueryFilter";
 import PreLoadedQuestions from "../components/PreLoadedQuestions";
+import useChatContext from "../hook/useChatContext";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
+  const getContext = useChatContext(chatHistory);
+
   const fetchData = useFetch();
   const dispatch = useDispatch<AppDispatch>();
   const filterQuery = useQueryFilter;
@@ -49,7 +53,7 @@ const Chat: React.FC = () => {
     myHeaders.append("Content-Type", "application/json");
 
     let chatContext: any = chatHistory.slice(-8);
-    chatContext = chatContext.map((chat: any) => ({
+    chatContext = chatHistory.map((chat: any) => ({
       role: chat.type === "user" ? "user" : "system",
       content:
         chat.type === "user" ? chat.message ?? "" : chat?.message?.query ?? "",
@@ -84,7 +88,7 @@ const Chat: React.FC = () => {
           : ""
       }  \n ${formatInstructionsText}`,
       working_table_description: localStorage.getItem("dbJson"),
-      chatContext: JSON.stringify(chatContext),
+      chatContext: JSON.stringify(getContext),
     });
 
     const requestOptions: RequestInit = {
@@ -97,7 +101,6 @@ const Chat: React.FC = () => {
     await fetchData(QUERY, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log("======result=====>", result);
         dispatch(
           addMessage({
             id: new Date().getTime(),
@@ -161,14 +164,7 @@ const Chat: React.FC = () => {
               </p>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                width: "100%",
-              }}
-            >
+            <div className="chat-scrollhldr-db">
               <button
                 className="newConversationButton"
                 style={{ width: "150px", height: 20 }}
@@ -205,15 +201,38 @@ const Chat: React.FC = () => {
           <div className="chat-msg">
             {chatHistory.map((chat: any, index) => {
               return chat.type === "user" ? (
-                <UserChat chat={chat} key={chat.id} />
+                <div key={chat.id} style={{ position: "relative" }}>
+                  <UserChat chat={chat} />
+
+                  {/* <CloseIcon
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      right: 0,
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => dispatch(deleteMessage(chat.id))}
+                  /> */}
+                </div>
               ) : (
-                <>
+                <div key={chat.id} style={{ position: "relative" }}>
                   {chat.message.type !== "fixed" ? (
                     <LlmReply
                       chat={chat}
                       loading={loading}
-                      key={chat.id}
                       userQuestion={chatHistory[index - 1]}
+                      Delete={() => (
+                        <CloseIcon
+                          style={{
+                            cursor: "pointer",
+                            float: "right",
+                          }}
+                          onClick={() => dispatch(deleteMessage(chat.id))}
+                        />
+                      )}
                     />
                   ) : (
                     <FixedReplyTemplate
@@ -221,9 +240,18 @@ const Chat: React.FC = () => {
                       doQuery={doQuery}
                       chartId={chat.id}
                       chat={chat}
+                      Delete={() => (
+                        <CloseIcon
+                          style={{
+                            cursor: "pointer",
+                            float: "right",
+                          }}
+                          onClick={() => dispatch(deleteMessage(chat.id))}
+                        />
+                      )}
                     />
                   )}
-                </>
+                </div>
               );
             })}
             {loading && <Loader />}

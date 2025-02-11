@@ -21,9 +21,10 @@ interface LlmReplyProps {
     time: string;
   };
   userQuestion: any;
+  Delete: any;
 }
 
-const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
+const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -141,6 +142,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion }) => {
         <div className="chat-indv">
           <div className="bot-message">
             <>
+              <Delete />
               <h3>Certainly, {user?.name}!</h3>
               <div style={{ marginBottom: "20px", fontSize: "14px" }}>
                 <span> {message?.summery}</span>

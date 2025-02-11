@@ -28,9 +28,7 @@ const iconStyle = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("window.location.pathname", window.location.href);
-
-  const [showSideBar, setShowSideBar] = React.useState(true);
-
+  const [showSideBar, setShowSideBar] = React.useState(false);
   const userRoutes = [
     {
       path: "/sql-chat",
@@ -74,24 +72,44 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const isUser = localStorage.getItem("user");
-  const routes = isUser ? userRoutes : publicRoutes;
+  // const routes = isUser ? userRoutes : publicRoutes;
+  const routes = userRoutes;
   const user = JSON.parse(isUser || "{}");
-  if (isUser) {
+  if (true) {
     return (
       <div>
         <div className="chatbot-page">
           <div className="header-container">
             <div className="logoDiv">
-              <h2 style={{ color: "black", fontWeight: 500, fontSize: 20 }}>
+              <h2
+                style={{ color: "black", fontWeight: 500, fontSize: 20 }}
+                className="logo-text"
+              >
                 Intelligent{" "}
                 <b style={{ color: "#5f4ba0", fontWeight: 700 }}>Assistant</b>
               </h2>
-              <button
+              <label className="lnav-burgermenu">
+                <input
+                  type="checkbox"
+                  id="check"
+                  onClick={() => setShowSideBar(!showSideBar)}
+                />
+                <span></span>
+                <span></span>
+                <span></span>
+              </label>
+
+              {/* <button
                 className="mobileNavOpen-btn"
                 onClick={() => setShowSideBar(!showSideBar)}
+              ><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
+              </button> */}
+              <span
+                className="nav-menu-text"
+                onClick={() => setShowSideBar(!showSideBar)}
               >
-                open
-              </button>
+                Menu
+              </span>
             </div>
             <div className="userDiv">
               <span style={{ marginRight: 15, fontSize: 12 }}>

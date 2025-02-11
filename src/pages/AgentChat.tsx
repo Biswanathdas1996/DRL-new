@@ -46,24 +46,16 @@ const Chat: React.FC = () => {
       "http://localhost:5000/get-agent-response",
       requestOptions
     );
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let done = false;
+    const data = await response.json();
+    dispatch(
+      addMessage({
+        id: new Date().getTime(),
+        type: "llm",
+        message: data.response,
+        time: new Date().toLocaleTimeString(),
+      })
+    );
 
-    while (!done) {
-      const { value, done: doneReading } = await reader?.read()!;
-      done = doneReading;
-      const chunk = decoder.decode(value, { stream: true });
-      setContextDataForStory((prev: any) => (prev ? prev + chunk : chunk));
-    }
-    const { value, done: doneReading } = await reader?.read()!;
-    done = doneReading;
-    const chunk = decoder.decode(value, { stream: true });
-    setContextDataForStory((prev: any) => (prev ? prev + chunk : chunk));
-    if (done) {
-      setLoading(false);
-      return contextDataForStory;
-    }
     setLoading(false);
 
     return contextDataForStory;
@@ -93,17 +85,7 @@ const Chat: React.FC = () => {
     );
 
     const result = await generateLLmResponse(query as string);
-    if (result)
-      dispatch(
-        addMessage({
-          id: new Date().getTime(),
-          type: "llm",
-          message: result,
-          time: new Date().toLocaleTimeString(),
-        })
-      );
-
-    setLoading(false);
+    if (result) setLoading(false);
 
     (e.target as HTMLFormElement).query.value = "";
   };
@@ -153,21 +135,6 @@ const Chat: React.FC = () => {
               </button>
               <p style={{ fontSize: 10, marginTop: 0 }}>
                 * Old data will be cleared on starting new
-              </p>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                width: "100%",
-              }}
-            >
-              <SelectCollection />
-
-              <p style={{ fontSize: 10 }}>
-                * generated data will be base on selected collection only
               </p>
             </div>
           </div>

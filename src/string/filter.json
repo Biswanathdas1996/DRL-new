@@ -129,7 +129,7 @@
   },
   {
     "find": "MTD",
-    "replace": "Month to date - All the data to reflect as of the 1st of the current month till the current date"
+    "replace": "Till current date"
   },
   {
     "find": "YTD",
@@ -153,10 +153,6 @@
   },
   {
     "find": "Quarterly",
-    "replace": "Current Quarter to be taken"
-  },
-  {
-    "find": "Last 2 months",
     "replace": "Current Quarter to be taken"
   }
 ]
