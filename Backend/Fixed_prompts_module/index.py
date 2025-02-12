@@ -36,7 +36,7 @@ def pre_process_data(query, controlStatement="", chatContext={}):
             queries = json.load(file)
         
         most_similar_query = max(queries, key=lambda q: similarity(q['name'], query))
-        if similarity(most_similar_query['name'], query) < 0.7:
+        if similarity(most_similar_query['name'], query) < 0.5:
             return None
 
         query_id = most_similar_query.get('id')
