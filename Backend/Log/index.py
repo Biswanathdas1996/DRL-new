@@ -26,8 +26,8 @@ def log(user_id, userquery, sqlquery):
    
     try:
         cursor.execute("""
-            INSERT INTO conversation_log (user_id, userquery, sqlquery)
-            VALUES (%s, %s, %s)
+            INSERT INTO conversation_log (user_id, userquery, sqlquery, timestamp)
+            VALUES (%s, %s, %s, timezone('Asia/Kolkata', now()))
             RETURNING id, timestamp;
         """, (user_id, userquery, sqlquery))
         connection.commit()

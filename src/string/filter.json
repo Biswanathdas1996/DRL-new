@@ -8,6 +8,10 @@
     "replace": "Give the name of stockiest"
   },
   {
+    "find": "channel",
+    "replace": "sale type"
+  },
+  {
     "find": "returns",
     "replace": "recorded Returns"
   },
@@ -26,6 +30,10 @@
   {
     "find": "Priority Brands",
     "replace": "Brand Category: \"Priority\""
+  },
+  {
+    "find": "Medovol",
+    "replace": " \"MEDOVOL\""
   },
   {
     "find": "Priority Brand",
@@ -58,10 +66,6 @@
   {
     "find": "%Returns",
     "replace": "Total Sales Value, Sales Return Value , %Return"
-  },
-  {
-    "find": "billing",
-    "replace": "Stockist wise current month sales , less than the average of sales for the period given"
   },
   {
     "find": "Percentage Returns",
@@ -129,7 +133,7 @@
   },
   {
     "find": "MTD",
-    "replace": "Till current date"
+    "replace": "Till current date of the current date"
   },
   {
     "find": "YTD",
