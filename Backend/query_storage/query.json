@@ -1,5 +1,13 @@
 [
   {
+    "id": 0.1,
+    "questions": [],
+    "hide": true,
+    "name": "Give me my total sales and total target for ***** ",
+    "use": "Dynamic",
+    "query": "SELECT TO_CHAR(COALESCE(sales_data.month, target_data.month), 'Month') AS \"Month\", hq.name AS \"HQ Name\", COALESCE(SUM(sales_data.primary_sales), 0) AS \"Total Sales\", COALESCE(SUM(target_data.target_value), 0) AS \"Total Target\" FROM (SELECT hq_id, sku_code, DATE_TRUNC('month', transaction_date) AS MONTH, SUM(primary_sales) AS primary_sales FROM Sales WHERE transaction_date >= 'Enter start date'::DATE AND transaction_date < 'Enter end date'::DATE AND hq_id IN ('Hq_ids') GROUP BY hq_id, sku_code, MONTH) sales_data FULL OUTER JOIN (SELECT hq_id, sku_code, DATE_TRUNC('month', target_date) AS MONTH, SUM(target_value) AS target_value FROM Target WHERE target_date >= 'Enter start date'::DATE AND target_date < 'Enter start date'::DATE AND hq_id IN ('Hq_ids') GROUP BY hq_id, sku_code, MONTH) target_data ON sales_data.hq_id = target_data.hq_id AND sales_data.sku_code = target_data.sku_code AND sales_data.month = target_data.month JOIN HQ hq ON COALESCE(sales_data.hq_id, target_data.hq_id) = hq.id GROUP BY COALESCE(sales_data.month, target_data.month), hq.id, hq.name HAVING SUM(sales_data.primary_sales) IS NOT NULL OR SUM(target_data.target_value) IS NOT NULL ORDER BY COALESCE(sales_data.month, target_data.month), hq.name;"
+  },
+  {
     "id": 1,
     "questions": [],
     "hide": true,
@@ -15,7 +23,6 @@
     "name": "What is the %Total Sales Value, Sales Return Value , % Returns for brand **Name*** for ****** and **** for HQ",
     "query": "SELECT TO_CHAR(DATE_TRUNC('month', s.TRANSACTION_DATE), 'Month') AS month, SUM(s.PRIMARY_SALES) AS primary_sales, SUM(CASE WHEN s.status = 'Returns' THEN s.PRIMARY_SALES ELSE 0 END) AS sales_return_value, ROUND((SUM(CASE WHEN s.status = 'Returns' THEN s.PRIMARY_SALES ELSE 0 END) / NULLIF(SUM(s.PRIMARY_SALES), 0)) * 100, 2) AS sales_return_percentage FROM Sales s JOIN HQ h ON s.HQ_ID = h.ID JOIN BrandSKUMap bsku ON s.SKU_CODE = bsku.SKU_Code JOIN Brand b ON bsku.Brand_ID = b.ID WHERE h.Name LIKE '%Enter hq name%' AND b.Name = '******' AND s.TRANSACTION_DATE >= DATE_TRUNC('month', CURRENT_DATE) - INTERVAL 'enter number of months' GROUP BY DATE_TRUNC('month', s.TRANSACTION_DATE) ORDER BY DATE_TRUNC('month', s.TRANSACTION_DATE);"
   },
-
   {
     "id": 2.1,
     "use": "Dynamic",
@@ -40,7 +47,6 @@
     "name": "what was my Total Sales , Total Target, %Achievement for ***** month",
     "query": "SELECT TO_CHAR(COALESCE(sales_data.month, target_data.month), 'Month') AS \"Month\", hq.name AS \"HQ Name\", COALESCE(SUM(sales_data.primary_sales), 0) AS \"Total Sales\", COALESCE(SUM(target_data.target_value), 0) AS \"Total Target\", ROUND((COALESCE(SUM(sales_data.primary_sales), 0) / NULLIF(SUM(target_data.target_value), 0)) * 100, 2) AS \"Sales Achievement %\" FROM (SELECT hq_id, sku_code, DATE_TRUNC('month', transaction_date) AS MONTH, SUM(primary_sales) AS primary_sales FROM Sales WHERE transaction_date >= 'Enter date in format of YYYY-MM-DD'::DATE AND transaction_date < 'Enter date in format of YYYY-MM-DD'::DATE AND hq_id IN ('enter hq_ids') GROUP BY hq_id, sku_code, MONTH) sales_data FULL OUTER JOIN (SELECT hq_id, sku_code, DATE_TRUNC('month', target_date) AS MONTH, SUM(target_value) AS target_value FROM Target WHERE target_date >= 'Enter date in format of YYYY-MM-DD'::DATE AND target_date < 'Enter date in format of YYYY-MM-DD'::DATE AND hq_id IN ('enter hq_ids') GROUP BY hq_id, sku_code, MONTH) target_data ON sales_data.hq_id = target_data.hq_id AND sales_data.sku_code = target_data.sku_code AND sales_data.month = target_data.month JOIN HQ hq ON COALESCE(sales_data.hq_id, target_data.hq_id) = hq.id GROUP BY COALESCE(sales_data.month, target_data.month), hq.id, hq.name HAVING SUM(sales_data.primary_sales) IS NOT NULL OR SUM(target_data.target_value) IS NOT NULL ORDER BY COALESCE(sales_data.month, target_data.month), hq.name;"
   },
-
   {
     "id": 5,
     "use": "Dynamic",
@@ -127,7 +133,7 @@
     "hide": true,
     "questions": [],
     "name": "List of Stockist for HQ ****** who has zero sales for Brand ****** for ******",
-    "query": "SELECT s.Name AS StockistName FROM Stockist s JOIN StockistHQMap shm ON s.ID = shm.Stockist_ID JOIN HQ h ON shm.HQ_ID = h.ID LEFT JOIN Sales sa ON s.ID = sa.Stockist_ID AND sa.TRANSACTION_DATE >= date_trunc('month', current_date) AND sa.TRANSACTION_DATE < date_trunc('month', current_date) + interval '1 month' AND sa.SKU_CODE = (SELECT bs.SKU_Code FROM Brand b JOIN BrandSKUMap bs ON b.ID = bs.Brand_ID WHERE b.Name = 'enter brand name') WHERE h.Name LIKE '%enter hq name%' AND s.Name IS NOT NULL;"
+    "query": "SELECT s.Name AS StockistName FROM Stockist s JOIN StockistHQMap shm ON s.ID = shm.Stockist_ID JOIN HQ h ON shm.HQ_ID = h.ID WHERE LOWER(h.Name) LIKE LOWER('%Enter hq name%') AND s.Name IS NOT NULL AND s.Name <> 'unknown' AND NOT EXISTS (SELECT 1 FROM Sales sa JOIN BrandSKUMap bs ON sa.SKU_CODE = bs.SKU_Code JOIN Brand b ON bs.Brand_ID = b.ID WHERE sa.Stockist_ID = s.ID AND sa.hq_id = 'hq_ids' AND EXTRACT(MONTH FROM sa.TRANSACTION_DATE) = 12 AND EXTRACT(YEAR FROM sa.TRANSACTION_DATE) = EXTRACT(YEAR FROM current_date) - 1 AND LOWER(b.Name) = LOWER('Enter brand name') AND sa.primary_sales > 0) ORDER BY s.Name;"
   },
   {
     "id": 13,

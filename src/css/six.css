@@ -541,6 +541,11 @@ html {
   width: 100%;
 }
 
+tbody tr:first-child {
+  background: #5f4ba0;
+  color: white;
+}
+
 .nav-menu-text {
   margin-left: 2rem;
   cursor: pointer;

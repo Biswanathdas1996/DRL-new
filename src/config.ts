@@ -17,6 +17,7 @@ export const GENERATE_ERD_FROM_DB = `${BASE_URL}/generate-erd-from-db`;
 export const GET_ERD_IMG = `${BASE_URL}/get-erd-image`;
 export const SEARCH = `${BASE_URL}/get-context-mongo`;
 export const LOGIN = `${BASE_URL}/login`;
+export const GET_AGENT_RESPONSE = `${BASE_URL}/get-agent-response`;
 export const ANALITICS = USE_MOCK
   ? `${BASE_URL}/analytics-mock`
   : `${BASE_URL}/analytics`;

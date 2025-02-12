@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 # Query Execution Function
-def query_database(nlq: str):
+def query_database(nlq: str, controlStatement: str):
     """Takes a natural language query (NLQ) and executes it using the SQL agent."""
     # Create a connection string
     db_uri = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}"
@@ -24,16 +24,17 @@ def query_database(nlq: str):
         verbose=True
     )
     
-    response = sql_agent.run(nlq)
+    response = sql_agent.run(f"{nlq} given {controlStatement}")
     return response
 
 def query():
     data = request.json
     nlq = data.get('nlq')
+    controlStatement = data.get('controlStatement')
     if not nlq:
         return jsonify({"error": "No NLQ provided"}), 400
     try:
-        response = query_database(nlq)
+        response = query_database(nlq, controlStatement)
         return jsonify({"response": response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

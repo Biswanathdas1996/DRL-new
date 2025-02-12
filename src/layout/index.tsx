@@ -18,6 +18,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import HistoryIcon from "@mui/icons-material/History";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 
 const iconStyle = {
   //  color: "#5f4ba0",
@@ -30,6 +31,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("window.location.pathname", window.location.href);
   const [showSideBar, setShowSideBar] = React.useState(false);
   const userRoutes = [
+    {
+      path: "/agent-sql-chat",
+      name: "Argentic Q&A SQL",
+      icon: () => <SupportAgentIcon style={iconStyle} />,
+    },
     {
       path: "/sql-chat",
       name: "Q&A to SAP Query",

@@ -2,7 +2,7 @@ import React from "react";
 import WelcomeChatComp from "../components/WelcomeChatComp";
 import UserChat from "../components/UserChat";
 import LlmReply from "../components/LlmReply";
-import { QUERY, SEARCH, CALL_GPT } from "../config";
+import { QUERY, GET_AGENT_RESPONSE, CALL_GPT } from "../config";
 import Loader from "../components/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
@@ -25,15 +25,61 @@ const Chat: React.FC = () => {
 
   const callGpt = async (query: string): Promise<string | null> => {
     setLoading(true);
+    const response = await fetchData(CALL_GPT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: query,
+      }),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        setLoading(false);
+        return data;
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setLoading(false);
+        return error;
+      });
+    return response;
+  };
+
+  const callAgent = async (query: string): Promise<string | null> => {
+    setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append(
       "Cookie",
       "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzBmYzk0MmFmMjUzOGEyZWI0Zjg5NDIiLCJlbWFpbCI6IjQ0NmhpaUBnbWFpbC5jb20iLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzI5MDk0MTU5LCJleHAiOjE3MjkwOTc3NTl9.erRyF3fH52Islq5z5Bf0zJLWjrbszs_m5vObPomw1kw"
     );
     myHeaders.append("Content-Type", "application/json");
+    const ifLoginControl = localStorage.getItem("loginControl");
+    const isUser = localStorage.getItem("user");
+    const user = JSON.parse(isUser || "{}");
+    const savedConfig = localStorage.getItem("drl_config");
+    let formatInstructions = [];
+
+    if (savedConfig) {
+      const parsedConfig = JSON.parse(savedConfig);
+      formatInstructions = parsedConfig.instructionForTestCases.filter(
+        (item: any) => item.status
+      );
+    }
+    const formatInstructionsText = formatInstructions
+      .map((instruction: any) => instruction.value)
+      .join("\n");
 
     const raw = JSON.stringify({
       nlq: query,
+      controlStatement: `${
+        ifLoginControl === "true"
+          ? `WHERE Head Quarters (HQ) id IN (${
+              user?.hq_id as string[]
+            }),Make all hq_id as String`
+          : ""
+      }  \n ${formatInstructionsText}`,
     });
     const requestOptions = {
       method: "POST",
@@ -42,16 +88,21 @@ const Chat: React.FC = () => {
       redirect: "follow" as RequestRedirect,
     };
 
-    const response = await fetch(
-      "http://localhost:5000/get-agent-response",
-      requestOptions
-    );
+    const response = await fetch(GET_AGENT_RESPONSE, requestOptions);
     const data = await response.json();
+
+    const prompt = `
+          Given the following response data:
+          ${JSON.stringify(data.response)},
+          generate an HTML code that represents this data in a descriptive and tabular view.
+        `;
+    const gptFormatedResponse = await callGpt(prompt);
+
     dispatch(
       addMessage({
         id: new Date().getTime(),
         type: "llm",
-        message: data.response,
+        message: gptFormatedResponse as string,
         time: new Date().toLocaleTimeString(),
       })
     );
@@ -64,7 +115,7 @@ const Chat: React.FC = () => {
   const generateLLmResponse = async (query: string) => {
     if (query.length === 0) return;
 
-    const userStorydata = await callGpt(query);
+    const userStorydata = await callAgent(query);
     console.log("userStorydata", userStorydata);
     return userStorydata;
   };
@@ -102,9 +153,14 @@ const Chat: React.FC = () => {
     window.location.reload();
   };
 
+  const formatHtml = (text: string) => {
+    const match = text.match(/```html([\s\S]*?)```/);
+    return match ? match[1].trim() : null;
+  };
+
   return (
     <>
-      <h2>Q&A (Unstructure)</h2>
+      <h2>Argentic Q&A (SQL)</h2>
       <div className="chat-hldr">
         <div className="chat-scrollhldr">
           <div
@@ -172,7 +228,9 @@ const Chat: React.FC = () => {
                       <div className="chat-indv" style={{ all: "unset" }}>
                         <div
                           style={{ all: "unset" }}
-                          dangerouslySetInnerHTML={{ __html: chat?.message }}
+                          dangerouslySetInnerHTML={{
+                            __html: formatHtml(chat?.message) || "",
+                          }}
                         />
                         {/* {JSON.stringify(chat?.message)} */}
                       </div>
