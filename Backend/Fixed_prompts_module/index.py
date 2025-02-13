@@ -4,6 +4,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sql.db import execute_sql_query
 from gpt.analiticts import call_gpt
 from helper.gpt import call_gpt_sql_data
+from .static_questions import generate_static_sql
+
 
 def similarity(a, b):
     try:
@@ -47,63 +49,48 @@ def pre_process_data(query, controlStatement="", chatContext={}):
         print("query_id===============>", query_id) 
 
         final_query = query_text
-        # if(query_id == 3.1):
-        #     result1 = execute_sql_query(most_similar_query.get('query'))
-        #     result2 = execute_sql_query(most_similar_query.get('query2'))
-        #     response = {
-        #         "text1": "As per your query the Distributor wise details are as below.",
-        #         "table1": result1,
-        #         "table2": result2,
-        #         "text2": "If you would like additional followup information, please type in the chat box below",
-        #         "questions": questions_texts,
-        #         "analytics": analytics
-        #     }
-        # if(query_id == 8):
-            
-        #     result = execute_sql_query(query_text)
-
-        #     for row in result:
-        #         row['action'] = 'button'
-        #     response = {
-        #         "text1": "As per your query the Distributor wise details are as below.",
-        #         "table1": result,
-        #         "text2": "If you would like additional followup information, please type in the chat box below",
-        #         "questions": questions_texts,
-        #         "analytics": analytics
-        #     }
-        
-        #     return {"query": query_text, "result": response, "type": "fixed"}
-        # else:
-        if use == "Dynamic":
-            try:
-                result_query = call_gpt_to_refactor_query(query_text, query, controlStatement, chatContext)
-            except Exception as e:
-                print(f"Error calling GPT to refactor query: {e}")
-                return None
-            if result_query is None:
-                return None
-            final_query = result_query
-            result = execute_sql_query(result_query)
+        if(query_id == 12):
+            sql_text = generate_static_sql(query + controlStatement)
+            print("sql_text===============>", sql_text) 
+            result1 = execute_sql_query(sql_text)
+            print("result1===============>", result1)
+            response = {
+                "table1": result1,
+                "questions": "",
+                "analytics": ""
+            } 
+            return {"query": sql_text, "result": response,"summery":"", "type": "fixed"}
         else:
-            print("Static run===============>") 
-            final_query = query_text
-            result = execute_sql_query(query_text)
-        response = {
-            "text1": "As per your query the Distributor wise details are as below.",
-            "table1": result,
-            "text2": "If you would like additional followup information, please type in the chat box below",
-            "questions": questions_texts,
-            "analytics": analytics
-        }
-        # summery = call_gpt("You are a skilled data analyst.", f"""
-        #                        Summarize the following user query and its context in 50 words or less:
-        #                        - User Query: {query}
-        #                        - Context: {str(result)}
-                               
-        #                        Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
-        #             """, 1000)
-        summery = ""
-        return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
+            if use == "Dynamic":
+                try:
+                    result_query = call_gpt_to_refactor_query(query_text, query, controlStatement, chatContext)
+                except Exception as e:
+                    print(f"Error calling GPT to refactor query: {e}")
+                    return None
+                if result_query is None:
+                    return None
+                final_query = result_query
+                result = execute_sql_query(result_query)
+            else:
+                print("Static run===============>") 
+                final_query = query_text
+                result = execute_sql_query(query_text)
+            response = {
+                "text1": "As per your query the Distributor wise details are as below.",
+                "table1": result,
+                "text2": "If you would like additional followup information, please type in the chat box below",
+                "questions": questions_texts,
+                "analytics": analytics
+            }
+            # summery = call_gpt("You are a skilled data analyst.", f"""
+            #                        Summarize the following user query and its context in 50 words or less:
+            #                        - User Query: {query}
+            #                        - Context: {str(result)}
+                                
+            #                        Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
+            #             """, 1000)
+            summery = ""
+            return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")
