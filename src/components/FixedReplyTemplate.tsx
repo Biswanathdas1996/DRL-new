@@ -160,6 +160,33 @@ const DynamicDisplay: React.FC<Props> = ({
       .catch((error) => console.error(error));
   };
 
+  function convertMidMonthString(input: string): string {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const match = input.match(/Mid-month CurrentMonth-(\d+)/);
+    if (!match) return input; // Return input if format is incorrect
+
+    const monthsToSubtract = parseInt(match[1], 10);
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - monthsToSubtract);
+    const newMonth = monthNames[currentDate.getMonth()];
+
+    return `Mid-month ${newMonth}`;
+  }
+
   return (
     <div data-name="message-1" className="chat-msg-list msg-hldr-cb gap10px">
       <div className="icon-hldr">
@@ -312,7 +339,7 @@ const DynamicDisplay: React.FC<Props> = ({
                                         setTable1Data(sortedData);
                                       }}
                                     >
-                                      {applyDateFilter(
+                                      {convertMidMonthString(
                                         columnName
                                           .replace(/_/g, " ")
                                           .replace(/^\w/, (c: string) =>

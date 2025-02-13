@@ -134,6 +134,33 @@ const CustomTable: React.FC<TableProps> = ({
     return isNaN(Number(value)) ? value : Number(value).toFixed(2);
   };
 
+  function convertMidMonthString(input: string): string {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const match = input.match(/Mid-month CurrentMonth-(\d+)/);
+    if (!match) return input; // Return input if format is incorrect
+
+    const monthsToSubtract = parseInt(match[1], 10);
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() - monthsToSubtract);
+    const newMonth = monthNames[currentDate.getMonth()];
+
+    return `Mid-month ${newMonth}`;
+  }
+
   return (
     <>
       {loadingUi ? (
@@ -270,7 +297,7 @@ const CustomTable: React.FC<TableProps> = ({
                                     setTable1Data(sortedData);
                                   }}
                                 >
-                                  {applyDateFilter(
+                                  {convertMidMonthString(
                                     columnName
                                       .replace(/_/g, " ")
                                       .replace(/^\w/, (c: string) =>
