@@ -117,7 +117,7 @@
     "use": "Dynamic",
     "hide": true,
     "questions": [],
-    "name": "Which strockist have zero billing for brand ****** for hq ****** for ******",
+    "name": "Which strockist have zero billing for brand ****** for hq ****** from current month beginning to MTD?",
     "query": "SELECT s.Name AS StockistName FROM Stockist s JOIN StockistHQMap shm ON s.ID = shm.Stockist_ID JOIN HQ h ON shm.HQ_ID = h.ID WHERE LOWER(h.Name) LIKE LOWER('%{hq_name}%') AND s.Name IS NOT NULL AND s.Name <> 'unknown' AND NOT EXISTS (SELECT 1 FROM Sales sa JOIN BrandSKUMap bs ON sa.SKU_CODE = bs.SKU_Code JOIN Brand b ON bs.Brand_ID = b.ID WHERE sa.Stockist_ID = s.ID AND sa.hq_id = '{hq_id}' AND sa.TRANSACTION_DATE >= date_trunc('month', current_date) - interval '{months_offset} months' AND sa.TRANSACTION_DATE < date_trunc('month', current_date) - interval '{months_offset - 1} months' AND LOWER(b.Name) = LOWER('{brand_name}') AND sa.primary_sales > 0) ORDER BY s.Name;"
   },
   {
