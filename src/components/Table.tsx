@@ -28,6 +28,7 @@ interface TableProps {
   chatId?: number;
   setData?: any;
   customData?: any;
+  userQuestion?: any;
 }
 
 const CustomTable: React.FC<TableProps> = ({
@@ -35,6 +36,7 @@ const CustomTable: React.FC<TableProps> = ({
   chatId,
   setData,
   customData,
+  userQuestion,
 }) => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
 
@@ -125,6 +127,11 @@ const CustomTable: React.FC<TableProps> = ({
     return `Mid-month ${newMonth}`;
   }
 
+  console.log(
+    "===========================>",
+    chatHistory.filter((chat) => chat.id === chatId)[0]
+  );
+
   return (
     <>
       {loadingUi ? (
@@ -164,6 +171,8 @@ const CustomTable: React.FC<TableProps> = ({
                       className="newConversationButton"
                       onClick={() => {
                         const csvContent = [
+                          "Query",
+                          userQuestion?.message,
                           Object.keys(table1Data[0]).join(","),
                           ...table1Data.map((row) =>
                             Object.values(row)

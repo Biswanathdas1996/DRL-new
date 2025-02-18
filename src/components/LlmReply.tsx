@@ -188,7 +188,11 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                     </div>
                   ) : (
                     <div style={{ width: "100%" }}>
-                      <Table loadingUi={loadingUi} chatId={id} />
+                      <Table
+                        loadingUi={loadingUi}
+                        chatId={id}
+                        userQuestion={userQuestion}
+                      />
                     </div>
                   )}
                 </div>
