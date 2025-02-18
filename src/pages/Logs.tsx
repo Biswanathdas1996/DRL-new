@@ -285,6 +285,8 @@ const Queries: React.FC = () => {
                               >
                                 Run Query
                               </Button>
+                            ) : key === "timestamp" ? (
+                              new Date(String(value)).toLocaleString()
                             ) : (
                               <>
                                 {isNaN(Number(value))
