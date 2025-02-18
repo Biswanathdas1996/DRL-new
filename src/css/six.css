@@ -542,14 +542,14 @@ html {
 }
 
 tbody tr:first-child {
-  background: #5f4ba0;
+  background: #4b2a91;
   color: white;
 }
 
 .nav-menu-text {
   margin-left: 2rem;
   cursor: pointer;
-  background: #5f4ba0;
+  background: #4b2a91;
   color: white;
   padding: 8px;
   border-radius: 5px;

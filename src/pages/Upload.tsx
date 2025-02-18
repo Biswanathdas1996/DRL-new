@@ -244,7 +244,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "#5f4ba0",
+                    background: "#4b2a91",
                     color: "white",
                     height: 10,
                     padding: "5px",
@@ -259,7 +259,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "#5f4ba0",
+                    background: "#4b2a91",
                     color: "white",
                     height: 10,
                     padding: "5px",
@@ -274,7 +274,7 @@ const Upload: React.FC = () => {
                   key={123}
                   style={{
                     minWidth: 170,
-                    background: "#5f4ba0",
+                    background: "#4b2a91",
                     color: "white",
                     height: 10,
                     padding: "5px",

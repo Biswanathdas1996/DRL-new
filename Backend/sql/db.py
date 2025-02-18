@@ -78,7 +78,7 @@ def save_erd_as_png(input_data, filename="sql/erd.png"):
         pos = nx.spring_layout(G)
         plt.figure(figsize=(12, 9))
         pos = nx.spring_layout(G, k=1, iterations=50)  # Adjust k for spacing between nodes
-        nx.draw(G, pos, with_labels=True, node_size=3000, node_color="#5f4ba075", font_size=10, font_weight="bold", arrows=True, node_shape='s')
+        nx.draw(G, pos, with_labels=True, node_size=3000, node_color="#4b2a9175", font_size=10, font_weight="bold", arrows=True, node_shape='s')
         edge_labels = nx.get_edge_attributes(G, 'label')
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
         plt.title("Entity Relationship Diagram")

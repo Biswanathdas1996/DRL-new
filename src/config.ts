@@ -23,7 +23,7 @@ export const ANALITICS = USE_MOCK
   : `${BASE_URL}/analytics`;
 
 export const colors = [
-  // "#5f4ba0cf",
+  // "#4b2a91cf",
 
   "rgb(75, 192, 192)",
   "rgb(255, 99, 132)",

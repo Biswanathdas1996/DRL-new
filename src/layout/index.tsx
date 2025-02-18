@@ -21,7 +21,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 
 const iconStyle = {
-  //  color: "#5f4ba0",
+  //  color: "#4b2a91",
   color: "black",
   fontSize: 25,
   marginRight: 5,
@@ -91,7 +91,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 style={{ color: "black", fontWeight: 500, fontSize: 20 }}
                 className="logo-text"
               >
-                <b style={{ color: "#5f4ba0", fontWeight: 700 }}>DIA</b>
+                <b style={{ color: "#4b2a91", fontWeight: 700 }}>DIA</b>
               </h2>
               <label className="lnav-burgermenu">
                 <input

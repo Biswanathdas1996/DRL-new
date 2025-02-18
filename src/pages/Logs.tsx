@@ -226,7 +226,7 @@ const Queries: React.FC = () => {
                         key={index}
                         style={{
                           minWidth: 170,
-                          background: "#5f4ba0",
+                          background: "#4b2a91",
                           color: "white",
                           height: 10,
                           padding: 10,

@@ -226,7 +226,7 @@ const Chat: React.FC = () => {
             <button className="Send-Button" type="submit">
               <div
                 style={{
-                  background: "#5f4ba0",
+                  background: "#4b2a91",
                   padding: 11,
                   borderRadius: "50%",
                   color: "white",

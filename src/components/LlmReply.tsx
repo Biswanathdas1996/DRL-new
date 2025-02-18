@@ -215,7 +215,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({
               onClick={() => setShowQueryEditSection(!showQueryEditSection)}
               style={{
                 display: showAnaliticsSection ? "none" : undefined,
-                background: showQueryEditSection ? "#5f4ba0" : "#989595",
+                background: showQueryEditSection ? "#4b2a91" : "#989595",
               }}
             >
               {showQueryEditSection ? "Hide" : "SQL"}
