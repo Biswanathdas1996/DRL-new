@@ -15,6 +15,7 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import DRL_ICON from "../assets/images/icon.png";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 interface LlmReplyProps {
   loading: boolean;
@@ -158,11 +159,12 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                 As per your query{" "}
                 <b>
                   {userQuestion?.message
+                    .toLowerCase()
                     .replace("?", "")
-                    .replace("What is", "")
-                    .replace("What", "")
+                    .replace("what is", "")
+                    .replace("what", "")
                     .replace("give me", "")
-                    .replace("Which", "")}
+                    .replace("which", "")}
                   :
                 </b>
               </div>
@@ -170,26 +172,28 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                 <span> {message?.summery}</span>
               </div>
               <br />
-              {message && isSingleResponse ? (
-                <div style={{ gridColumn: "span 4" }}>
-                  {typeof message?.result === "string" ||
-                  typeof message?.result === "number"
-                    ? message.result
-                    : null}
+
+              <>
+                <div>
+                  {message?.query.includes("error") ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: 10,
+                      }}
+                    >
+                      <WarningAmberIcon style={{ color: "#e0786e" }} />{" "}
+                      <span style={{ marginLeft: 5 }}>{message?.query}</span>
+                    </div>
+                  ) : (
+                    <div style={{ width: "100%" }}>
+                      <Table loadingUi={loadingUi} chatId={id} />
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <>
-                  <div style={{ width: "100%" }}>
-                    <Table loadingUi={loadingUi} chatId={id} />
-                  </div>
-                </>
-              )}
-              {/* <div
-                style={{ fontSize: "14px", fontWeight: "600", marginTop: 20 }}
-              >
-                If you would like additional followup information, please type
-                in the chat box below
-              </div> */}
+              </>
+
               <div
                 style={{ fontSize: "14px", fontWeight: "400", marginTop: 20 }}
               >

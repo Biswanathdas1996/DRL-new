@@ -60,7 +60,6 @@ const Chat: React.FC = () => {
         chat.type === "user" ? chat.message ?? "" : chat?.message?.query ?? "",
     }));
 
-    console.log("lastTwoChats==========>", chatContext);
     // return;
     const ifLoginControl = localStorage.getItem("loginControl");
     const applyFilter = localStorage.getItem("applyFilter");

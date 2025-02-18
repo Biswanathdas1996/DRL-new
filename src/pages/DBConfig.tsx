@@ -183,52 +183,7 @@ const DBConfig: React.FC = () => {
                 marginTop: "3rem",
               }}
             >
-              <TextField
-                label="Database Name"
-                name="dbname"
-                value={dbConfig.dbname}
-                onChange={(e) => handleChange(e)}
-                fullWidth
-                margin="normal"
-                size="small"
-              />
-              <TextField
-                label="User"
-                name="user"
-                value={dbConfig.user}
-                onChange={(e) => handleChange(e)}
-                fullWidth
-                margin="normal"
-                size="small"
-              />
-              <TextField
-                label="Password"
-                name="password"
-                type="password"
-                value={dbConfig.password}
-                onChange={(e) => handleChange(e)}
-                fullWidth
-                margin="normal"
-                size="small"
-              />
-              <TextField
-                label="Host"
-                name="host"
-                value={dbConfig.host}
-                onChange={(e) => handleChange(e)}
-                fullWidth
-                margin="normal"
-                size="small"
-              />
-              <TextField
-                label="Port"
-                name="port"
-                value={dbConfig.port}
-                onChange={(e) => handleChange(e)}
-                fullWidth
-                margin="normal"
-                size="small"
-              />
+              <h2>Check Connection and Generate ERD</h2>
 
               <Button
                 variant="contained"

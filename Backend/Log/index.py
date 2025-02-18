@@ -1,4 +1,4 @@
-from secretes.secrets import DB_CONFIG, OPENAI_API_KEY
+from secretes.secrets import DB_CONFIG
 import psycopg2
 from psycopg2 import sql, OperationalError
 import json

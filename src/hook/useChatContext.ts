@@ -34,8 +34,6 @@ const useChatContext = (chatHistory: Chat[]) => {
       (chat) => chat.role === "user"
     );
 
-    const dbSchema = ``;
-
     const systemMessages = {
       role: "system",
       content: `

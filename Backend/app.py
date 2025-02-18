@@ -10,7 +10,7 @@ from mongodb.rag import render_mongo_pack
 from Fixed_prompts_module.index import pre_process_data
 from Log.index import log, render_logs_pack
 # from AI_Agent.index import render_agents
-
+from secretes.secrets import DB_CONFIG
 
 
 
@@ -141,23 +141,6 @@ def direct_gpt_call():
 
 @app.route('/generate-erd-from-db', methods=['POST'])
 def generate_erd_from_db():
-    dbname = request.form.get('dbname')
-    user = request.form.get('user')
-    password = request.form.get('password')
-    host = request.form.get('host')
-    port = request.form.get('port')
-
-    if not all([dbname, user, password, host, port]):
-        return jsonify({"error": "Missing database configuration parameters"}), 400
-
-    DB_CONFIG = {
-        'dbname': dbname,
-        'user': user,
-        'password': password,
-        'host': host,
-        'port': port
-    }
-    
     try:
         json_result = generate_erd_from(DB_CONFIG)
         return json_result, 200
