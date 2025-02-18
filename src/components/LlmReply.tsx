@@ -26,14 +26,15 @@ interface LlmReplyProps {
   };
   userQuestion: any;
   Delete: any;
+  index?: number;
 }
 
-const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
-  const [value, setValue] = React.useState(1);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
+const LlmReply: React.FC<LlmReplyProps> = ({
+  chat,
+  userQuestion,
+  Delete,
+  index,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { message, time, id } = chat;
   const fetchData = useFetch();
@@ -150,7 +151,21 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
           <div className="bot-message">
             <>
               <Delete />
-              <h3>Certainly, {user?.name}!</h3>
+              {index === 1 && <h3>Certainly, {user?.name}!</h3>}
+              <div
+                style={{ fontSize: "14px", fontWeight: "400", marginTop: 10 }}
+              >
+                As per your query{" "}
+                <b>
+                  {userQuestion?.message
+                    .replace("?", "")
+                    .replace("What is", "")
+                    .replace("What", "")
+                    .replace("give me", "")
+                    .replace("Which", "")}
+                  :
+                </b>
+              </div>
               <div style={{ marginBottom: "20px", fontSize: "14px" }}>
                 <span> {message?.summery}</span>
               </div>
@@ -224,8 +239,8 @@ const LlmReply: React.FC<LlmReplyProps> = ({ chat, userQuestion, Delete }) => {
                 alt="Clear Chat"
               />
             </button>
-            <ThumbUpIcon style={{ margin: 4 }} />
-            <ThumbDownOffAltIcon style={{ margin: 4 }} />
+            <ThumbUpIcon style={{ margin: 4, fontSize: 22 }} />
+            <ThumbDownOffAltIcon style={{ margin: 4, fontSize: 22 }} />
           </div>
 
           <span className="chat-time chat-time-usr">{time}</span>

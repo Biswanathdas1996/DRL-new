@@ -223,13 +223,18 @@ const CustomTable: React.FC<TableProps> = ({
                                       height: 10,
                                       padding: "5px",
                                       margin: 0,
-                                      textAlign: "center",
+                                      // textAlign: "center",
                                       borderRight: "2px solid #ffffff",
                                       // position:
                                       //   index === 0 ? "sticky" : "static",
                                       // left: index === 0 ? 0 : "auto",
                                       // zIndex: index === 0 ? 1 : "auto",
                                     }}
+                                    align={
+                                      isNaN(Number(table1Data[0][columnName]))
+                                        ? "left"
+                                        : "right"
+                                    }
                                   >
                                     <TableSortLabel
                                       active={
@@ -342,30 +347,35 @@ const CustomTable: React.FC<TableProps> = ({
                                   );
                                 }, 0);
                                 return (
-                                  <TableCell
-                                    key={index}
-                                    align={
-                                      isNaN(Number(table1Data[0][columnName]))
-                                        ? "left"
-                                        : "right"
-                                    }
-                                    style={{
-                                      borderRight: "2px solid #ffffff",
-                                      backgroundColor: "rgb(46 46 46 / 19%)",
-                                      padding: 5,
-                                      fontWeight: "bold",
-                                      // position:
-                                      //   index === 0 ? "sticky" : "static",
-                                      // left: index === 0 ? 0 : "auto",
-                                      // zIndex: index === 0 ? 1 : "auto",
-                                    }}
-                                  >
-                                    {index === 0
-                                      ? "Total"
-                                      : isNaN(Number(table1Data[0][columnName]))
-                                      ? ""
-                                      : formatValues(total)}
-                                  </TableCell>
+                                  <>
+                                    {table1Data.length > 1 && (
+                                      <TableCell
+                                        key={index}
+                                        align={
+                                          isNaN(
+                                            Number(table1Data[0][columnName])
+                                          )
+                                            ? "left"
+                                            : "right"
+                                        }
+                                        style={{
+                                          borderRight: "2px solid #ffffff",
+                                          backgroundColor:
+                                            "rgb(46 46 46 / 19%)",
+                                          padding: 5,
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        {index === 0
+                                          ? "Total"
+                                          : isNaN(
+                                              Number(table1Data[0][columnName])
+                                            )
+                                          ? ""
+                                          : formatValues(total)}
+                                      </TableCell>
+                                    )}
+                                  </>
                                 );
                               }
                             )}

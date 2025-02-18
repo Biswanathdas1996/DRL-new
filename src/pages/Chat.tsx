@@ -190,6 +190,7 @@ const Chat: React.FC = () => {
               ) : (
                 <div key={chat.id} style={{ position: "relative" }}>
                   <LlmReply
+                    index={index}
                     chat={chat}
                     loading={loading}
                     userQuestion={chatHistory[index - 1]}
