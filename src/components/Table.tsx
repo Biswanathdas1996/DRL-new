@@ -52,7 +52,7 @@ const CustomTable: React.FC<TableProps> = ({
       ).result
     : null;
 
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [page, setPage] = React.useState(0);
 
   const handleChangeRowsPerPage = (
@@ -66,7 +66,7 @@ const CustomTable: React.FC<TableProps> = ({
   };
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
-    pageSize: 5,
+    pageSize: 10,
     sortBy: "",
     order: "asc",
   });
@@ -223,6 +223,10 @@ const CustomTable: React.FC<TableProps> = ({
                                       margin: 0,
                                       textAlign: "center",
                                       borderRight: "2px solid #ffffff",
+                                      // position:
+                                      //   index === 0 ? "sticky" : "static",
+                                      // left: index === 0 ? 0 : "auto",
+                                      // zIndex: index === 0 ? 1 : "auto",
                                     }}
                                   >
                                     <TableSortLabel
@@ -309,6 +313,14 @@ const CustomTable: React.FC<TableProps> = ({
                                       style={{
                                         borderRight: "2px solid #ffffff",
                                         padding: 5,
+                                        // position:
+                                        //   cellIndex === 0 ? "sticky" : "static",
+                                        // left: cellIndex === 0 ? 0 : "auto",
+                                        // zIndex: cellIndex === 0 ? 1 : "auto",
+                                        // backgroundColor:
+                                        //   cellIndex === 0
+                                        //     ? "#ffffff"
+                                        //     : "inherit",
                                       }}
                                     >
                                       {formatValues(value)}
@@ -317,27 +329,68 @@ const CustomTable: React.FC<TableProps> = ({
                                 )}
                               </TableRow>
                             ))}
+                          <TableRow>
+                            {Object.keys(table1Data[0]).map(
+                              (columnName, index) => {
+                                const total = table1Data.reduce((sum, row) => {
+                                  const value = row[columnName];
+                                  return (
+                                    sum +
+                                    (isNaN(Number(value)) ? 0 : Number(value))
+                                  );
+                                }, 0);
+                                return (
+                                  <TableCell
+                                    key={index}
+                                    align={
+                                      isNaN(Number(table1Data[0][columnName]))
+                                        ? "left"
+                                        : "right"
+                                    }
+                                    style={{
+                                      borderRight: "2px solid #ffffff",
+                                      backgroundColor: "rgb(46 46 46 / 19%)",
+                                      padding: 5,
+                                      fontWeight: "bold",
+                                      position:
+                                        index === 0 ? "sticky" : "static",
+                                      left: index === 0 ? 0 : "auto",
+                                      zIndex: index === 0 ? 1 : "auto",
+                                    }}
+                                  >
+                                    {index === 0
+                                      ? "Total"
+                                      : isNaN(Number(table1Data[0][columnName]))
+                                      ? ""
+                                      : formatValues(total)}
+                                  </TableCell>
+                                );
+                              }
+                            )}
+                          </TableRow>
                         </TableBody>
                       </Table>
                     </TableContainer>
                     <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          rowsPerPageOptions={[5, 10, 25]}
-                          colSpan={3}
-                          count={table1Data.length}
-                          rowsPerPage={rowsPerPage}
-                          page={page}
-                          SelectProps={{
-                            inputProps: {
-                              "aria-label": "rows per page",
-                            },
-                            native: true,
-                          }}
-                          onPageChange={handleChangePage}
-                          onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                      </TableRow>
+                      {table1Data.length > rowsPerPage && (
+                        <TableRow>
+                          <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            colSpan={3}
+                            count={table1Data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            SelectProps={{
+                              inputProps: {
+                                "aria-label": "rows per page",
+                              },
+                              native: true,
+                            }}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                          />
+                        </TableRow>
+                      )}
                     </TableFooter>
                   </>
                 ) : (
