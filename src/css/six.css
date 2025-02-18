@@ -555,6 +555,20 @@ tbody tr:first-child {
   border-radius: 5px;
 }
 
+.css-7x9vt0-MuiButtonBase-root-MuiTableSortLabel-root:hover {
+  color: white !important;
+}
+
+.css-7x9vt0-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active
+  .MuiTableSortLabel-icon {
+  opacity: 1;
+  color: white !important;
+}
+
+.css-7x9vt0-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active {
+  color: white !important;
+}
+
 @media (max-width: 768px) {
   .icon-hldr,
   .logo-text,

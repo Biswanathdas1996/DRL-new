@@ -226,7 +226,8 @@ const CustomTable: React.FC<TableProps> = ({
                                   <TableCell
                                     key={index}
                                     style={{
-                                      minWidth: 170,
+                                      // minWidth: 170,
+                                      whiteSpace: "nowrap",
                                       background: "#4b2a91",
                                       color: "white",
                                       height: 10,
