@@ -30,43 +30,6 @@ interface TableProps {
   customData?: any;
 }
 
-const applyDateFilter = (input: string | number): string | number => {
-  if (typeof input !== "string") {
-    return input;
-  }
-
-  const date = new Date();
-  let month = date.getMonth();
-  let year = date.getFullYear();
-
-  const match = input.match(/Current Month-(\d+)/);
-  if (match) {
-    const monthsToSubtract = parseInt(match[1], 10);
-    month -= monthsToSubtract;
-    while (month < 0) {
-      month += 12;
-      year -= 1;
-    }
-    const monthNames = [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
-    ];
-    return `${monthNames[month]}-${year.toString().slice(-2)}`;
-  } else {
-    return input;
-  }
-};
-
 const CustomTable: React.FC<TableProps> = ({
   loadingUi,
   chatId,
@@ -109,12 +72,6 @@ const CustomTable: React.FC<TableProps> = ({
   });
   const [table1Data, setTable1Data] = React.useState<ChatMessage[]>([]);
 
-  // React.useEffect(() => {
-  //   if (data) {
-  //     setTable1Data(data);
-  //   }
-  // }, [data]);
-
   React.useEffect(() => {
     if (data) {
       const sortedTable1 = data.map((row: ChatMessage) => {
@@ -131,7 +88,14 @@ const CustomTable: React.FC<TableProps> = ({
   }, [data]);
 
   const formatValues = (value: any) => {
-    return isNaN(Number(value)) ? value : Number(value).toFixed(2);
+    const roundOff = localStorage.getItem("roundOff") === "true";
+
+    return isNaN(Number(value))
+      ? value
+      : Number(value).toLocaleString("en-IN", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: roundOff ? 0 : 2,
+        });
   };
 
   function convertMidMonthString(input: string): string {
@@ -238,136 +202,147 @@ const CustomTable: React.FC<TableProps> = ({
                     />
                   </button>
                 </div>
-                <TableContainer sx={{ maxHeight: 440, width: "100%" }}>
-                  <Table stickyHeader aria-label="sticky table">
-                    <TableHead style={{ height: 10 }}>
-                      <TableRow style={{ height: 10 }}>
-                        {table1Data?.length > 0 &&
-                          Object.keys(table1Data[0]).map(
-                            (columnName: string, index: number) => (
-                              <TableCell
-                                key={index}
+
+                {table1Data?.length > 0 ? (
+                  <>
+                    <TableContainer sx={{ maxHeight: 440, width: "100%" }}>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead style={{ height: 10 }}>
+                          <TableRow style={{ height: 10 }}>
+                            {table1Data?.length > 0 &&
+                              Object.keys(table1Data[0]).map(
+                                (columnName: string, index: number) => (
+                                  <TableCell
+                                    key={index}
+                                    style={{
+                                      minWidth: 170,
+                                      background: "#5f4ba0",
+                                      color: "white",
+                                      height: 10,
+                                      padding: "5px",
+                                      margin: 0,
+                                      textAlign: "center",
+                                      borderRight: "2px solid #ffffff",
+                                    }}
+                                  >
+                                    <TableSortLabel
+                                      active={
+                                        paginationModel.sortBy === columnName
+                                      }
+                                      direction={
+                                        paginationModel.order as "asc" | "desc"
+                                      }
+                                      onClick={() => {
+                                        const isAsc =
+                                          paginationModel.sortBy ===
+                                            columnName &&
+                                          paginationModel.order === "asc";
+                                        setPaginationModel({
+                                          ...paginationModel,
+                                          sortBy: columnName,
+                                          order: isAsc ? "desc" : "asc",
+                                        });
+                                        const sortedData = [...table1Data].sort(
+                                          (
+                                            a: Record<string, any>,
+                                            b: Record<string, any>
+                                          ) => {
+                                            const aValue = isNaN(
+                                              Number(a[columnName])
+                                            )
+                                              ? a[columnName]
+                                              : Number(a[columnName]);
+                                            const bValue = isNaN(
+                                              Number(b[columnName])
+                                            )
+                                              ? b[columnName]
+                                              : Number(b[columnName]);
+                                            if (aValue < bValue)
+                                              return isAsc ? -1 : 1;
+                                            if (aValue > bValue)
+                                              return isAsc ? 1 : -1;
+                                            return 0;
+                                          }
+                                        );
+                                        setTable1Data(sortedData);
+                                      }}
+                                    >
+                                      {convertMidMonthString(
+                                        columnName
+                                          .replace(/_/g, " ")
+                                          .replace(/^\w/, (c: string) =>
+                                            c.toUpperCase()
+                                          )
+                                      )}
+                                    </TableSortLabel>
+                                  </TableCell>
+                                )
+                              )}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {table1Data
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((row: ChatMessage, rowIndex: number) => (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={rowIndex}
                                 style={{
-                                  minWidth: 170,
-                                  background: "#5f4ba0",
-                                  color: "white",
-                                  height: 10,
-                                  padding: "5px",
-                                  margin: 0,
-                                  textAlign: "center",
-                                  borderRight: "2px solid #ffffff",
+                                  backgroundColor:
+                                    rowIndex % 2 === 0
+                                      ? "#a8a8a866"
+                                      : "#f1f1f1",
                                 }}
                               >
-                                <TableSortLabel
-                                  active={paginationModel.sortBy === columnName}
-                                  direction={
-                                    paginationModel.order as "asc" | "desc"
-                                  }
-                                  onClick={() => {
-                                    const isAsc =
-                                      paginationModel.sortBy === columnName &&
-                                      paginationModel.order === "asc";
-                                    setPaginationModel({
-                                      ...paginationModel,
-                                      sortBy: columnName,
-                                      order: isAsc ? "desc" : "asc",
-                                    });
-                                    const sortedData = [...table1Data].sort(
-                                      (
-                                        a: Record<string, any>,
-                                        b: Record<string, any>
-                                      ) => {
-                                        const aValue = isNaN(
-                                          Number(a[columnName])
-                                        )
-                                          ? a[columnName]
-                                          : Number(a[columnName]);
-                                        const bValue = isNaN(
-                                          Number(b[columnName])
-                                        )
-                                          ? b[columnName]
-                                          : Number(b[columnName]);
-                                        if (aValue < bValue)
-                                          return isAsc ? -1 : 1;
-                                        if (aValue > bValue)
-                                          return isAsc ? 1 : -1;
-                                        return 0;
+                                {Object.values(row).map(
+                                  (value: any, cellIndex: number) => (
+                                    <TableCell
+                                      key={cellIndex}
+                                      align={
+                                        isNaN(Number(value)) ? "left" : "right"
                                       }
-                                    );
-                                    setTable1Data(sortedData);
-                                  }}
-                                >
-                                  {convertMidMonthString(
-                                    columnName
-                                      .replace(/_/g, " ")
-                                      .replace(/^\w/, (c: string) =>
-                                        c.toUpperCase()
-                                      )
-                                  )}
-                                </TableSortLabel>
-                              </TableCell>
-                            )
-                          )}
+                                      style={{
+                                        borderRight: "2px solid #ffffff",
+                                        padding: 5,
+                                      }}
+                                    >
+                                      {formatValues(value)}
+                                    </TableCell>
+                                  )
+                                )}
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                    <TableFooter>
+                      <TableRow>
+                        <TablePagination
+                          rowsPerPageOptions={[5, 10, 25]}
+                          colSpan={3}
+                          count={table1Data.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            inputProps: {
+                              "aria-label": "rows per page",
+                            },
+                            native: true,
+                          }}
+                          onPageChange={handleChangePage}
+                          onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {table1Data
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row: ChatMessage, rowIndex: number) => (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={rowIndex}
-                            style={{
-                              backgroundColor:
-                                rowIndex % 2 === 0 ? "#a8a8a866" : "#f1f1f1",
-                            }}
-                          >
-                            {Object.values(row).map(
-                              (value: any, cellIndex: number) => (
-                                <TableCell
-                                  key={cellIndex}
-                                  align="center"
-                                  style={{
-                                    borderRight: "2px solid #ffffff",
-                                    padding: 5,
-                                  }}
-                                >
-                                  {/* {isNaN(Number(value))
-                                    ? value
-                                    : Number(value).toFixed(2)} */}
-                                  {formatValues(value)}
-                                </TableCell>
-                              )
-                            )}
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 25]}
-                      colSpan={3}
-                      count={table1Data.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: {
-                          "aria-label": "rows per page",
-                        },
-                        native: true,
-                      }}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                  </TableRow>
-                </TableFooter>
+                    </TableFooter>
+                  </>
+                ) : (
+                  <b>No data found</b>
+                )}
               </>
             </>
           ) : (

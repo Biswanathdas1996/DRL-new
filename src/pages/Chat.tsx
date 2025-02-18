@@ -202,56 +202,27 @@ const Chat: React.FC = () => {
             {chatHistory.map((chat: any, index) => {
               return chat.type === "user" ? (
                 <div key={chat.id} style={{ position: "relative" }}>
-                  <UserChat chat={chat} />
-
-                  {/* <CloseIcon
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      background: "red",
-                      color: "white",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => dispatch(deleteMessage(chat.id))}
-                  /> */}
+                  <UserChat
+                    chat={chat}
+                    onDelete={() => dispatch(deleteMessage(chat.id))}
+                  />
                 </div>
               ) : (
                 <div key={chat.id} style={{ position: "relative" }}>
-                  {chat.message.type !== "fixed" ? (
-                    <LlmReply
-                      chat={chat}
-                      loading={loading}
-                      userQuestion={chatHistory[index - 1]}
-                      Delete={() => (
-                        <CloseIcon
-                          style={{
-                            cursor: "pointer",
-                            float: "right",
-                          }}
-                          onClick={() => dispatch(deleteMessage(chat.id))}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <FixedReplyTemplate
-                      data={chat.message?.result}
-                      doQuery={doQuery}
-                      chartId={chat.id}
-                      chat={chat}
-                      userQuestion={chatHistory[index - 1]}
-                      Delete={() => (
-                        <CloseIcon
-                          style={{
-                            cursor: "pointer",
-                            float: "right",
-                          }}
-                          onClick={() => dispatch(deleteMessage(chat.id))}
-                        />
-                      )}
-                    />
-                  )}
+                  <LlmReply
+                    chat={chat}
+                    loading={loading}
+                    userQuestion={chatHistory[index - 1]}
+                    Delete={() => (
+                      <CloseIcon
+                        style={{
+                          cursor: "pointer",
+                          float: "right",
+                        }}
+                        onClick={() => dispatch(deleteMessage(chat.id))}
+                      />
+                    )}
+                  />
                 </div>
               );
             })}

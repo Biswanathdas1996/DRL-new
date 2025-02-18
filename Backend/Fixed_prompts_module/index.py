@@ -54,12 +54,12 @@ def pre_process_data(query, controlStatement="", chatContext={}):
             print("sql_text===============>", sql_text) 
             result1 = execute_sql_query(sql_text)
             print("result1===============>", result1)
-            response = {
-                "table1": result1,
-                "questions": "",
-                "analytics": ""
-            } 
-            return {"query": sql_text, "result": response,"summery":"", "type": "fixed"}
+            # response = {
+            #     "table1": result1,
+            #     "questions": "",
+            #     "analytics": ""
+            # } 
+            return {"query": sql_text, "result": result1,"summery":"", "type": "fixed"}
         else:
             if use == "Dynamic":
                 try:
@@ -75,22 +75,16 @@ def pre_process_data(query, controlStatement="", chatContext={}):
                 print("Static run===============>") 
                 final_query = query_text
                 result = execute_sql_query(query_text)
-            response = {
-                "text1": "As per your query the Distributor wise details are as below.",
-                "table1": result,
-                "text2": "If you would like additional followup information, please type in the chat box below",
-                "questions": questions_texts,
-                "analytics": analytics
-            }
-            # summery = call_gpt("You are a skilled data analyst.", f"""
-            #                        Summarize the following user query and its context in 50 words or less:
-            #                        - User Query: {query}
-            #                        - Context: {str(result)}
-                                
-            #                        Highlight key insights and numbers. If financial data is present, convert it to words using INR (e.g., 120000 should be 1 Lakh 20 thousand).
-            #             """, 1000)
+            # response = {
+            #     "text1": "As per your query the Distributor wise details are as below.",
+            #     "table1": result,
+            #     "text2": "If you would like additional followup information, please type in the chat box below",
+            #     "questions": questions_texts,
+            #     "analytics": analytics
+            # }
+            
             summery = ""
-            return {"query": final_query, "result": response,"summery":summery, "type": "fixed"}
+            return {"query": final_query, "result": result,"summery":summery, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")

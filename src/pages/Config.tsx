@@ -121,6 +121,7 @@ export default function Config() {
     Field[]
   >([]);
 
+  const [roundOff, setRoundOff] = React.useState(false);
   const [loginControl, setLoginControl] = React.useState(false);
   const [applyFilter, setApplyFilter] = React.useState(false);
 
@@ -129,6 +130,11 @@ export default function Config() {
   ) => {
     setLoginControl(event.target.checked);
     localStorage.setItem("loginControl", event.target.checked.toString());
+  };
+
+  const handleChangeRoundOff = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRoundOff(event.target.checked);
+    localStorage.setItem("roundOff", event.target.checked.toString());
   };
 
   const handleChangeApplyFilter = (
@@ -158,6 +164,11 @@ export default function Config() {
     const ifApplyFilter = localStorage.getItem("applyFilter");
     if (ifApplyFilter) {
       setApplyFilter(ifApplyFilter === "true");
+    }
+
+    const ifRoundingOff = localStorage.getItem("roundOff");
+    if (ifRoundingOff) {
+      setRoundOff(ifRoundingOff === "true");
     }
   }, []);
 
@@ -228,6 +239,31 @@ export default function Config() {
               style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
             >
               <DBConfig />
+            </Card>
+          </Grid>
+          <Grid size={6}>
+            <h2>Round Off Numeric Values</h2>
+            <Card
+              style={{ padding: "20px", backgroundColor: "rgb(241 241 241)" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <h4>
+                  {roundOff
+                    ? "Enabled rounding off numbers"
+                    : "Disabled rounding off numbers"}
+                </h4>
+                <Switch
+                  checked={roundOff}
+                  onChange={handleChangeRoundOff}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
             </Card>
           </Grid>
           <Grid size={6}>

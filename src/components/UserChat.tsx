@@ -1,14 +1,7 @@
 import React from "react";
-import { QueryData } from "../types/LLM";
+import CloseIcon from "@mui/icons-material/Close";
 
-interface ChartProps {
-  id: number;
-  type: string;
-  message: string;
-  time: string;
-}
-
-const UserChat: React.FC<any> = ({ chat }) => {
+const UserChat: React.FC<any> = ({ chat, onDelete }) => {
   return (
     <div key={chat.id}>
       <div className="chat-msg-list msg-hldr-usr">
@@ -21,7 +14,20 @@ const UserChat: React.FC<any> = ({ chat }) => {
         <div data-name="message-stack-0" className="chat-msg-stack">
           <div className="chat-indv">
             <div className="user-message" style={{ height: "auto" }}>
-              {chat.message}
+              <span style={{ marginRight: 10 }}>{chat.message}</span>{" "}
+              <CloseIcon
+                style={{
+                  position: "absolute",
+                  top: 3,
+                  right: 4,
+                  fontSize: 12,
+
+                  color: "white",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={() => onDelete()}
+              />
             </div>
             <span className="chat-time chat-time-usr">{chat.time}</span>
           </div>
