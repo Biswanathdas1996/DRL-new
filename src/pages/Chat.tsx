@@ -13,6 +13,7 @@ import { useQueryFilter } from "../hook/useQueryFilter";
 import PreLoadedQuestions from "../components/PreLoadedQuestions";
 import useChatContext from "../hook/useChatContext";
 import CloseIcon from "@mui/icons-material/Close";
+import SendIcon from "@mui/icons-material/Send";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
@@ -223,11 +224,16 @@ const Chat: React.FC = () => {
               style={{ height: "50px" }}
             />
             <button className="Send-Button" type="submit">
-              <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAddJREFUaAXtmOFtwjAQRhmhI+RnFO47ZYSO0BEYgREYgQ3aTdoN2g3oBozQ9ipOOqwkOPjsGClIyHYI8Xtnn+Nks1k/awTWCFxFgIieAZwB/AB4bdu2uTqh9gaA0wVeBPT7OCIm+gpvy/pFiOhgIm/hbb1ekUsOWNipep0iAN4jRsGK1SWy3W73MwVUpg6Rvu+fbiSzAo+Vy4vcMY2GZJYTmZnMQ/D22DIiidPICmi9rEjkPUHh5pRlRJyn0ZBgfhGnZB6Ct8fyiSTcEyxgbN1f5HJPiAXwOs9XRHKBmfdEdATwwcz6vOAFPHYdXxH7LCMjU1Asn4iVknpOMcnHsL9ibSexczHgsKOmaf6nnERRcomIZMs+K5eY+RRe173tATq0lRd4yTk34FygIbyAA9glgYt5ytCHUDFtF3CxlvdCMR16neMGrkPWdd3OC27qOu7gKkBEn1Mdp/6WDTz39MkKrtEH8JYa4fD/RcCNwNB70rGN1+TxouAiAOAljN497eLgJvpJ00e23Mx8kD2QXrNYmbL2LwquEbpn7a8CXAXmrP1VgYtA7PSpDlyjf2vtrxZcBcamT/XgKhC+yHoYcBXouq7/u4l9MfP3Yuu4wqzlGoE1Ajcj8AvY+lHSUC3vMgAAAABJRU5ErkJggg=="
-                alt="Send"
-                className="Send-Icon"
-              />
+              <div
+                style={{
+                  background: "#5f4ba0",
+                  padding: 11,
+                  borderRadius: "50%",
+                  color: "white",
+                }}
+              >
+                <SendIcon style={{ fontSize: 23 }} />
+              </div>
             </button>
           </div>
         </form>
