@@ -87,11 +87,11 @@ def query():
             #         """, 1000)
             summery = ""
             try:
-                log(os.environ["X-DRL-USER"], user_question, query)
+                log_id = log(os.environ["X-DRL-USER"], user_question, query)
             except Exception as log_error:
                 print(f"Logging error: {log_error}")
 
-            return jsonify({"result": result, "query": query,"summery":summery, "type": "dynamic"})
+            return jsonify({"result": result, "query": query,"summery":summery,"log_id":log_id, "type": "dynamic"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

@@ -20,7 +20,6 @@ def create_connection(DB_CONFIG):
         return None
 
 def log(user_id, userquery, sqlquery):
-
     connection = create_connection(DB_CONFIG)
     cursor = connection.cursor()
    
@@ -31,10 +30,14 @@ def log(user_id, userquery, sqlquery):
             RETURNING id, timestamp;
         """, (user_id, userquery, sqlquery))
         connection.commit()
+        result = cursor.fetchone()
+        print("==========================================>>>>>>>",result)
+        return result[0]
        
     except Exception as e:
         connection.rollback()
         print(e)
+        return None
    
     finally:
         cursor.close()

@@ -5,7 +5,8 @@ from sql.db import execute_sql_query
 from gpt.analiticts import call_gpt
 from helper.gpt import call_gpt_sql_data
 from .static_questions import generate_static_sql
-
+from Log.index import log
+import os
 
 def similarity(a, b):
     try:
@@ -84,7 +85,11 @@ def pre_process_data(query, controlStatement="", chatContext={}):
             # }
             
             summery = ""
-            return {"query": final_query, "result": result,"summery":summery, "type": "fixed"}
+            try:
+                log_id = log(os.environ["X-DRL-USER"], query, final_query)
+            except Exception as log_error:
+                print(f"Logging error: {log_error}")
+            return {"query": final_query, "result": result,"summery":summery,"log_id":log_id, "type": "fixed"}
 
     except Exception as e:
         print(f"Error processing data: {e}")
