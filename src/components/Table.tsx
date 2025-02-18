@@ -352,10 +352,10 @@ const CustomTable: React.FC<TableProps> = ({
                                       backgroundColor: "rgb(46 46 46 / 19%)",
                                       padding: 5,
                                       fontWeight: "bold",
-                                      position:
-                                        index === 0 ? "sticky" : "static",
-                                      left: index === 0 ? 0 : "auto",
-                                      zIndex: index === 0 ? 1 : "auto",
+                                      // position:
+                                      //   index === 0 ? "sticky" : "static",
+                                      // left: index === 0 ? 0 : "auto",
+                                      // zIndex: index === 0 ? 1 : "auto",
                                     }}
                                   >
                                     {index === 0

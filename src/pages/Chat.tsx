@@ -150,7 +150,7 @@ const Chat: React.FC = () => {
             >
               <button
                 className="newConversationButton"
-                style={{ width: "100px", height: 20 }}
+                style={{ width: 150, height: 30, fontSize: 14 }}
                 onClick={() => startNewProcess()}
               >
                 Start new
@@ -159,27 +159,6 @@ const Chat: React.FC = () => {
                   alt="Clear Chat"
                 />
               </button>
-              <p style={{ fontSize: 10, marginTop: 0 }}>
-                * Old data will be cleared on starting new
-              </p>
-            </div>
-
-            <div className="chat-scrollhldr-db">
-              <button
-                className="newConversationButton"
-                style={{ width: "150px", height: 20 }}
-                onClick={() => (window.location.href = "#/db-config")}
-              >
-                Database settings
-                <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAAAXNSR0IArs4c6QAAAqBJREFUWAm1WLuRAjEMpQRKuAYogIyIAiiAuRgSIghhhgIoAGaOkOwIyKEDLoQcYlk0sHdvx1qMd621ObgZj9a29PQsyR+u0Uj4I6ImEY2Y+csYc2RmYubMNsKYMeabiD6J6CMBOk6ViDrGmL3jVJyr0pLqxHlRtLCqZwj4hC2h5yJkU+CGXl2977yiT8BU1l2e+gOZVgD9l4jYT8seK0beTCKOjE2HKKvyfD5n4/H4oV2vV9XGjXIwTShMbzuqoIfDIWu1Wlm3283a7Xb+jTHXWc03aqZcwKjsGsMHJ0IE0v1OwbjdbvuH6sA5kQIAXde5+52KA98FGSLaagCn0ynz2263K9IhRDabTUkPdhp2ERVbG0FlAKEWQg0khEhIp44Mro4G7gWNsRDBDsGK/YZ57BZ/HH3YgFwEkRGI1KYFYADWCFfNwSaGCC7RBjPjFg06kYhMJpPKVVdFQsZgE0nkCCLqfSJEAPhsizjoCESC0ZA52SHL5TIvTClQTUIXxGNTGkVEQCNWVixKIglbWZAma1MD4/l8nh/jAoQIDYfDkoPBYJBhTvRw9MNW+orMU6MWK4z7/X7eBGixWOR3jPRF+qmAXa/XiyFyxPZdC1BI+iuLJeJHMoTPzFsQwWM4yBp1gZXCOfKOBge4daUvEnqr1aoYhw3GMK/5wKEKIk1Nqe74hqO6BgzNR/EcwMUTUkREUIBySD0jL5eLRmTr3r7Jz4AQ8dTxh2cAGGlRSQVP0L9HQ8JinwPqcZ/gQEuFzFU/FUGobge9mIj+G4eZZy92KBFw5Uwyoco3k4kjIQxtml5ZM8DS0yHOfWkLWH3BxaTRGHMoDi3fSUrf/txIJmQJ3H8upDjVdLEq+9jeGmN+vNcd/lGDsTXSmr/MNTBv7hffBPEsHKEseQAAAABJRU5ErkJggg=="
-                  alt="Clear Chat"
-                />
-              </button>
-
-              <p style={{ fontSize: 10 }}>
-                * generated data will be base on selected collection only
-              </p>
             </div>
           </div>
           {chatHistory?.length === 0 && (
