@@ -1,9 +1,11 @@
 from pymongo import MongoClient
+from secretes.secrets import MONGO_DB_CONNECTION
+
 
 
 
 def get_Client():
-    client = MongoClient("mongodb+srv://bd1:Papun$1996@cluster0.mehhr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&readPreference=primary",
+    client = MongoClient(MONGO_DB_CONNECTION,
                           tls=True,
     tlsAllowInvalidCertificates=True) 
     return client
