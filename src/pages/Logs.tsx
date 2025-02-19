@@ -1,7 +1,7 @@
 import React from "react";
 import Paper from "@mui/material/Paper";
 import { useFetch } from "../hook/useFetch";
-import { QUERY_LIST, EXICUTE_QUERY } from "../config";
+import { GET_ALL_LOGS, EXICUTE_QUERY } from "../config";
 import MuiTable from "@mui/material/Table";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -21,7 +21,8 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/mode-mysql";
 // import "ace-builds/src-noconflict/worker-mysql";
-
+import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import FixedReplyTemplate from "../components/Table";
 import TextField from "@mui/material/TextField";
 const style = {
@@ -94,13 +95,23 @@ const Queries: React.FC = () => {
       redirect: "follow" as RequestRedirect,
     };
 
-    fetchData("http://localhost:5000/get-all-logs", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
+    const fetchLogs = async () => {
+      try {
+        const response = await fetchData(
+          `${GET_ALL_LOGS}?limit=${paginationModel.pageSize}&offset=${
+            paginationModel.page * paginationModel.pageSize
+          }`,
+          requestOptions
+        );
+        const result = await response.json();
         setMessage(result);
         setId(result.id || "");
-      })
-      .catch((error) => console.error(error));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchLogs();
   }, []);
 
   console.log(message);
@@ -188,7 +199,14 @@ const Queries: React.FC = () => {
     }
   };
 
-  const columnsNotToShow = ["user_id", "userquery", "sqlquery", "timestamp"];
+  const columnsNotToShow = [
+    "feedback",
+    "user_id",
+    "name",
+    "userquery",
+    "sqlquery",
+    "timestamp",
+  ];
 
   return (
     <div>
@@ -225,7 +243,7 @@ const Queries: React.FC = () => {
                       <TableCell
                         key={index}
                         style={{
-                          minWidth: 170,
+                          whiteSpace: "nowrap",
                           background: "#4b2a91",
                           color: "white",
                           height: 10,
@@ -287,11 +305,17 @@ const Queries: React.FC = () => {
                               </Button>
                             ) : key === "timestamp" ? (
                               new Date(String(value)).toLocaleString()
+                            ) : key === "feedback" ? (
+                              value == 1 ? (
+                                <ThumbUpIcon />
+                              ) : (
+                                value == 0 && <ThumbDownOffAltIcon />
+                              )
                             ) : (
                               <>
                                 {isNaN(Number(value))
                                   ? value
-                                  : Number(value).toFixed(1)}
+                                  : Number(value).toFixed(0)}
                               </>
                             )}
                           </TableCell>

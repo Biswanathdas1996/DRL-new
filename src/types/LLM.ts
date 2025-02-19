@@ -27,4 +27,5 @@ export interface QueryData {
   llmReply: string;
   type: string;
   summery: string;
+  log_id?: string;
 }

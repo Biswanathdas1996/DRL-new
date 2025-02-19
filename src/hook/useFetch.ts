@@ -24,7 +24,7 @@ export const useFetch = (): ((
     const userData = userDataStr ? JSON.parse(userDataStr) : null;
 
     headers.append("X-Ai-Model", selectedMode || "gpt-4");
-    headers.append("X-DRL-USER", userData?.name + "-" + userData?.emp_code);
+    headers.append("X-DRL-USER", userData?.emp_code);
     // Update requestOptions with the new headers
     requestOptions.headers = headers;
 

@@ -3,7 +3,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import create_sql_agent
 from langchain_community.utilities import SQLDatabase
 from secretes.secrets import OPENAI_API_KEY, DB_CONFIG
-from flask import Flask, request, jsonify
+from flask import  request, jsonify
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 

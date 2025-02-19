@@ -2,7 +2,6 @@ import json
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sql.db import execute_sql_query
-from gpt.analiticts import call_gpt
 from helper.gpt import call_gpt_sql_data
 from .static_questions import generate_static_sql
 from Log.index import log

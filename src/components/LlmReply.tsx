@@ -6,7 +6,7 @@ import { QueryData } from "../types/LLM";
 import Table from "./Table";
 import Analyse from "./Analyse";
 import SqlUpdate from "./SqlUpdate";
-import { SAVE_QUERY, CALL_GPT } from "../config";
+import { SAVE_QUERY, CALL_GPT, FEEDBACK } from "../config";
 import { useAlert } from "../hook/useAlert";
 import { useFetch } from "../hook/useFetch";
 import Loader from "./Loader";
@@ -78,27 +78,27 @@ const LlmReply: React.FC<LlmReplyProps> = ({
     return response;
   };
 
-  const generateGPTResponse = async () => {
-    if (!message.result || message.llmReply) return;
-    const effectiveContext = JSON.stringify(message.result);
+  // const generateGPTResponse = async () => {
+  //   if (!message.result || message.llmReply) return;
+  //   const effectiveContext = JSON.stringify(message.result);
 
-    const userStorydata = await callGpt(`
-          Generate a summarized and structured response for the data: ${effectiveContext}      
-  
-          Response should be intaractive and user friendly
-          Response should be discreptive and easy to understand
-          Generate HTML code from <body> tag for the same
-          Use <h2> tag for heading and <p> tag for paragraph
-          do not include texts like "This HTML code presents..." or "This is a structured response..." etc
-          `);
-    dispatch(
-      addLLMReply({
-        chatId: id,
-        llmReply: userStorydata?.replace("```html", "").replace("```", ""),
-      })
-    );
-    return userStorydata?.replace("```html", "") as string;
-  };
+  //   const userStorydata = await callGpt(`
+  //         Generate a summarized and structured response for the data: ${effectiveContext}
+
+  //         Response should be intaractive and user friendly
+  //         Response should be discreptive and easy to understand
+  //         Generate HTML code from <body> tag for the same
+  //         Use <h2> tag for heading and <p> tag for paragraph
+  //         do not include texts like "This HTML code presents..." or "This is a structured response..." etc
+  //         `);
+  //   dispatch(
+  //     addLLMReply({
+  //       chatId: id,
+  //       llmReply: userStorydata?.replace("```html", "").replace("```", ""),
+  //     })
+  //   );
+  //   return userStorydata?.replace("```html", "") as string;
+  // };
 
   // useEffect(() => {
   //   generateGPTResponse();
@@ -133,6 +133,30 @@ const LlmReply: React.FC<LlmReplyProps> = ({
       })
       .catch((error) => console.error(error));
   };
+
+  const feedback = (feedback: number) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      id: message?.log_id,
+      feedback: feedback,
+    });
+
+    var requestOptions: RequestInit = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow" as RequestRedirect,
+    };
+
+    fetch(FEEDBACK, requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  console.log("message===============================>>>>>>>>>>>>>>", message);
 
   return (
     <div
@@ -247,8 +271,14 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                 alt="Clear Chat"
               />
             </button>
-            <ThumbUpIcon style={{ margin: 4, fontSize: 22 }} />
-            <ThumbDownOffAltIcon style={{ margin: 4, fontSize: 22 }} />
+            <ThumbUpIcon
+              style={{ margin: 4, fontSize: 22, cursor: "pointer" }}
+              onClick={() => feedback(1)}
+            />
+            <ThumbDownOffAltIcon
+              style={{ margin: 4, fontSize: 22, cursor: "pointer" }}
+              onClick={() => feedback(0)}
+            />
           </div>
 
           <span className="chat-time chat-time-usr">{time}</span>

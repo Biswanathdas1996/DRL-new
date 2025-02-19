@@ -4,6 +4,8 @@ export const USE_MOCK = false;
 
 export const QUERY = USE_MOCK ? `${BASE_URL}/query-mock` : `${BASE_URL}/query`;
 export const EXICUTE_QUERY = `${BASE_URL}/execute-raw-query`;
+export const FEEDBACK = `${BASE_URL}/feedback`;
+export const GET_ALL_LOGS = `${BASE_URL}/get-all-logs`;
 export const SAVE_QUERY = `${BASE_URL}/save-query`;
 export const CALL_GPT = `${BASE_URL}/call-gpt`;
 export const UPLOAD_DOC = `${BASE_URL}/upload-collection-doc-mongo`;
