@@ -31,11 +31,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   console.log("window.location.pathname", window.location.href);
   const [showSideBar, setShowSideBar] = React.useState(false);
   const userRoutes = [
-    // {
-    //   path: "/agent-sql-chat",
-    //   name: "Argentic Q&A SQL",
-    //   icon: () => <SupportAgentIcon style={iconStyle} />,
-    // },
+    {
+      path: "/agent-sql-chat",
+      name: "Argentic Q&A SQL",
+      icon: () => <SupportAgentIcon style={iconStyle} />,
+    },
     {
       path: "/sql-chat",
       name: "Q&A to SAP Query",

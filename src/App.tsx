@@ -13,6 +13,7 @@ import Upload from "./pages/Upload";
 import Config from "./pages/Config";
 import Logs from "./pages/Logs";
 import AgentChat from "./pages/AgentChat";
+import BUSINESS_INSIDE from "./pages/Agents/index";
 
 export const UserContext = createContext<any>(null);
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="/config" element={<Config />} />
               <Route path="/db-config" element={<DBConfig />} />
               <Route path="/logs" element={<Logs />} />
+              <Route path="/business-inside" element={<BUSINESS_INSIDE />} />
             </>
           ) : null}
         </Routes>
