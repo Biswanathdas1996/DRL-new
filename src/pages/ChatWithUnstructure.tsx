@@ -176,7 +176,7 @@ const Chat: React.FC = () => {
             >
               <button
                 className="newConversationButton"
-                style={{ width: "100px", height: 20 }}
+                style={{ width: 150, height: 30, fontSize: 14 }}
                 onClick={() => startNewProcess()}
               >
                 Start new
@@ -185,9 +185,9 @@ const Chat: React.FC = () => {
                   alt="Clear Chat"
                 />
               </button>
-              <p style={{ fontSize: 10, marginTop: 0 }}>
+              {/* <p style={{ fontSize: 10, marginTop: 0 }}>
                 * Old data will be cleared on starting new
-              </p>
+              </p> */}
             </div>
 
             <div

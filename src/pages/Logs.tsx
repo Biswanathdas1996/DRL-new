@@ -261,7 +261,7 @@ const Queries: React.FC = () => {
                       >
                         {applyDateFilter(
                           columnName === "sqlquery"
-                            ? "Response"
+                            ? "AI Response"
                             : columnName === "userquery"
                             ? "Question asked"
                             : columnName
