@@ -21,6 +21,17 @@ function App() {
   const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
+    if (localStorage.getItem("loginControl") === null) {
+      localStorage.setItem("loginControl", "true");
+    }
+
+    if (localStorage.getItem("applyFilter") === null) {
+      localStorage.setItem("applyFilter", "true");
+    }
+    if (localStorage.getItem("model") === null) {
+      localStorage.setItem("model", "gpt-4");
+    }
+
     const user = localStorage.getItem("user");
     if (user) {
       setUser(JSON.parse(user));
