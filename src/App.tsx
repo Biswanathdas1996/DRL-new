@@ -14,6 +14,7 @@ import Config from "./pages/Config";
 import Logs from "./pages/Logs";
 import AgentChat from "./pages/AgentChat";
 import BUSINESS_INSIDE from "./pages/Agents/index";
+import Documentation from "./pages/Documentation";
 
 export const UserContext = createContext<any>(null);
 
@@ -21,6 +22,17 @@ function App() {
   const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
+    if (localStorage.getItem("loginControl") === null) {
+      localStorage.setItem("loginControl", "true");
+    }
+
+    if (localStorage.getItem("applyFilter") === null) {
+      localStorage.setItem("applyFilter", "true");
+    }
+    if (localStorage.getItem("model") === null) {
+      localStorage.setItem("model", "gpt-4");
+    }
+
     const user = localStorage.getItem("user");
     if (user) {
       setUser(JSON.parse(user));
@@ -48,6 +60,7 @@ function App() {
               <Route path="/db-config" element={<DBConfig />} />
               <Route path="/logs" element={<Logs />} />
               <Route path="/business-inside" element={<BUSINESS_INSIDE />} />
+              <Route path="/documentation" element={<Documentation />} />
             </>
           ) : null}
         </Routes>

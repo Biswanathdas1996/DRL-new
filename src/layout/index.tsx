@@ -19,6 +19,7 @@ import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import HistoryIcon from "@mui/icons-material/History";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const iconStyle = {
   //  color: "#4b2a91",
@@ -35,6 +36,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       path: "/agent-sql-chat",
       name: "Argentic Q&A SQL",
       icon: () => <SupportAgentIcon style={iconStyle} />,
+    },
+    {
+      path: "/documentation",
+      name: "Documentation",
+      icon: () => <DescriptionIcon style={iconStyle} />,
     },
     {
       path: "/sql-chat",
@@ -78,10 +84,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const isUser = localStorage.getItem("user");
-  // const routes = isUser ? userRoutes : publicRoutes;
-  const routes = userRoutes;
-  const user = JSON.parse(isUser || "{}");
-  if (true) {
+  const routes = isUser ? userRoutes : publicRoutes;
+  // const routes = userRoutes;
+  const user = isUser && JSON.parse(isUser);
+  if (user) {
     return (
       <div>
         <div className="chatbot-page">

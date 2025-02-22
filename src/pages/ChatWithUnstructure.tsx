@@ -114,10 +114,11 @@ const Chat: React.FC = () => {
 
   const onsubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
+
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const query = formData.get("query");
-
+    (e.target as HTMLFormElement).query.value = "";
     dispatch(
       addMessage({
         id: new Date().getTime(),
@@ -139,8 +140,6 @@ const Chat: React.FC = () => {
       );
 
     setLoading(false);
-
-    (e.target as HTMLFormElement).query.value = "";
   };
 
   //   React.useEffect(() => {
@@ -177,7 +176,7 @@ const Chat: React.FC = () => {
             >
               <button
                 className="newConversationButton"
-                style={{ width: "100px", height: 20 }}
+                style={{ width: 150, height: 30, fontSize: 14 }}
                 onClick={() => startNewProcess()}
               >
                 Start new
@@ -186,9 +185,9 @@ const Chat: React.FC = () => {
                   alt="Clear Chat"
                 />
               </button>
-              <p style={{ fontSize: 10, marginTop: 0 }}>
+              {/* <p style={{ fontSize: 10, marginTop: 0 }}>
                 * Old data will be cleared on starting new
-              </p>
+              </p> */}
             </div>
 
             <div
@@ -208,7 +207,7 @@ const Chat: React.FC = () => {
           </div>
           <br />
           <br />
-          {!chatHistory && <WelcomeChatComp />}
+          {chatHistory?.length === 0 && <WelcomeChatComp />}
           <div className="chat-msg">
             {chatHistory.map((chat: any, index) => {
               return chat.type === "user" ? (

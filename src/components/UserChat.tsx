@@ -15,19 +15,21 @@ const UserChat: React.FC<any> = ({ chat, onDelete }) => {
           <div className="chat-indv">
             <div className="user-message" style={{ height: "auto" }}>
               <span style={{ marginRight: 10 }}>{chat.message}</span>{" "}
-              <CloseIcon
-                style={{
-                  position: "absolute",
-                  top: 3,
-                  right: 4,
-                  fontSize: 12,
+              {onDelete && (
+                <CloseIcon
+                  style={{
+                    position: "absolute",
+                    top: 3,
+                    right: 4,
+                    fontSize: 12,
 
-                  color: "white",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-                onClick={() => onDelete()}
-              />
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => onDelete()}
+                />
+              )}
             </div>
             <span className="chat-time chat-time-usr">{chat.time}</span>
           </div>
