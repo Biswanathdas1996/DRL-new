@@ -63,7 +63,7 @@ const Documentation: React.FC = () => {
 
         {prompts && (
           <p>
-            Prompt: <b>{prompts}</b>
+            Your prompt should be: <b>{prompts}</b>
           </p>
         )}
         {loading && <Loader showIcon={false} />}

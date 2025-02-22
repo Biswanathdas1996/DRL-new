@@ -260,9 +260,13 @@ const Queries: React.FC = () => {
                         }}
                       >
                         {applyDateFilter(
-                          columnName
-                            .replace(/_/g, " ")
-                            .replace(/^\w/, (c) => c.toUpperCase())
+                          columnName === "sqlquery"
+                            ? "Response"
+                            : columnName === "userquery"
+                            ? "Question asked"
+                            : columnName
+                                .replace(/_/g, " ")
+                                .replace(/^\w/, (c) => c.toUpperCase())
                         )}
                       </TableCell>
                     ))}
