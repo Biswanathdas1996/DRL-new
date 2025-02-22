@@ -84,10 +84,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const isUser = localStorage.getItem("user");
-  // const routes = isUser ? userRoutes : publicRoutes;
-  const routes = userRoutes;
-  const user = JSON.parse(isUser || "{}");
-  if (true) {
+  const routes = isUser ? userRoutes : publicRoutes;
+  // const routes = userRoutes;
+  const user = isUser && JSON.parse(isUser);
+  if (user) {
     return (
       <div>
         <div className="chatbot-page">
