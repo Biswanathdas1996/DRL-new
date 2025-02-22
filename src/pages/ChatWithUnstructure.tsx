@@ -114,10 +114,11 @@ const Chat: React.FC = () => {
 
   const onsubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
+
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const query = formData.get("query");
-
+    (e.target as HTMLFormElement).query.value = "";
     dispatch(
       addMessage({
         id: new Date().getTime(),
@@ -139,8 +140,6 @@ const Chat: React.FC = () => {
       );
 
     setLoading(false);
-
-    (e.target as HTMLFormElement).query.value = "";
   };
 
   //   React.useEffect(() => {
