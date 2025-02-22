@@ -25,6 +25,8 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import FixedReplyTemplate from "../components/Table";
 import TextField from "@mui/material/TextField";
+import { isSqlQuery } from "../helper/sql";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -81,7 +83,11 @@ const Queries: React.FC = () => {
 
   const handleOpen = (value: string): void => {
     setOpen(true);
-    setSelectedQuery(handleFormat(value) as string);
+    if (isSqlQuery(value)) {
+      setSelectedQuery(handleFormat(value) as string);
+    } else {
+      setSelectedQuery(value);
+    }
   };
   const handleClose = () => {
     setOpen(false);
@@ -201,7 +207,7 @@ const Queries: React.FC = () => {
 
   const columnsNotToShow = [
     "feedback",
-    "user_id",
+    // "user_id",
     "name",
     "userquery",
     "sqlquery",
@@ -211,7 +217,7 @@ const Queries: React.FC = () => {
   return (
     <div>
       <h2>Logs</h2>
-      <b>Last 10 logs</b>
+      <b>Last {paginationModel.pageSize} logs</b>
 
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
@@ -301,7 +307,9 @@ const Queries: React.FC = () => {
                                 variant="contained"
                                 id="temp_button"
                               >
-                                Run Query
+                                {value && isSqlQuery(String(value))
+                                  ? "View SQL"
+                                  : "View Response"}
                               </Button>
                             ) : key === "timestamp" ? (
                               new Date(String(value)).toLocaleString()
@@ -361,62 +369,73 @@ const Queries: React.FC = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <AceEditor
-              key="testScript"
-              placeholder="Placeholder Text"
-              mode="mysql"
-              theme="monokai"
-              name="blah2"
-              fontSize={12}
-              lineHeight={15}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
-              value={selectedQuery || ""}
-              onChange={(newValue) => {
-                setSelectedQuery(newValue);
-              }}
-              setOptions={{
-                useWorker: false,
-              }}
-              editorProps={{ $blockScrolling: true }}
-              //   height="400px"
-              width="100%"
-              style={{ padding: 10, borderRadius: 15 }}
-            />
-
-            <div style={{ marginTop: 20 }}>
-              {loadingUi && <Loader text="Exicuting query " showIcon={false} />}
-            </div>
-            <div style={{ marginTop: 20 }}>
-              <Button
-                onClick={() => onsubmitHandler(String(selectedQuery))}
-                size="small"
-                variant="contained"
-                id="temp_button"
-              >
-                Execute
-              </Button>
-            </div>
-            <div style={{ marginTop: 20 }}>
-              {data && (
-                <FixedReplyTemplate
-                  customData={Array.isArray(data) ? data : []}
-                  setData={setData}
-                />
-              )}
-              {error && (
-                <pre
-                  style={{
-                    background: "#f7012c24",
-                    padding: 12,
-                    borderRadius: 12,
+            {selectedQuery && isSqlQuery(selectedQuery) ? (
+              <>
+                <AceEditor
+                  key="testScript"
+                  placeholder="Placeholder Text"
+                  mode="mysql"
+                  theme="monokai"
+                  name="blah2"
+                  fontSize={12}
+                  lineHeight={15}
+                  showPrintMargin={true}
+                  showGutter={true}
+                  highlightActiveLine={true}
+                  value={selectedQuery || ""}
+                  onChange={(newValue) => {
+                    setSelectedQuery(newValue);
                   }}
-                >
-                  {error}
-                </pre>
-              )}
-            </div>
+                  setOptions={{
+                    useWorker: false,
+                  }}
+                  editorProps={{ $blockScrolling: true }}
+                  //   height="400px"
+                  width="100%"
+                  style={{ padding: 10, borderRadius: 15 }}
+                />
+
+                <div style={{ marginTop: 20 }}>
+                  {loadingUi && (
+                    <Loader text="Exicuting query " showIcon={false} />
+                  )}
+                </div>
+                <div style={{ marginTop: 20 }}>
+                  <Button
+                    onClick={() => onsubmitHandler(String(selectedQuery))}
+                    size="small"
+                    variant="contained"
+                    id="temp_button"
+                  >
+                    Execute
+                  </Button>
+                </div>
+                <div style={{ marginTop: 20 }}>
+                  {data && (
+                    <FixedReplyTemplate
+                      customData={Array.isArray(data) ? data : []}
+                      setData={setData}
+                    />
+                  )}
+                  {error && (
+                    <pre
+                      style={{
+                        background: "#f7012c24",
+                        padding: 12,
+                        borderRadius: 12,
+                      }}
+                    >
+                      {error}
+                    </pre>
+                  )}
+                </div>
+              </>
+            ) : (
+              <iframe
+                srcDoc={selectedQuery || ""}
+                style={{ width: "100%", height: "100%", border: "none" }}
+              />
+            )}
           </Box>
         </Modal>
       </div>
