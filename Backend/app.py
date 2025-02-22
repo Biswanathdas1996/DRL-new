@@ -11,7 +11,12 @@ from Fixed_prompts_module.index import pre_process_data
 from Log.index import log, render_logs_pack
 # from AI_Agent.index import render_agents
 from secretes.secrets import DB_CONFIG
+import re
 
+def extract_query(text):
+    pattern = r'Generate a detailed response for the query:\s*"(.*?)"'
+    match = re.search(pattern, text)
+    return match.group(1) if match else None
 
 
 app = Flask(__name__)
@@ -64,12 +69,6 @@ def query():
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
-    # try:
-    #     query = nlq(user_question, working_table_description)
-    #     result = execute_sql_query(query)
-    #     return jsonify({"result": result, "query": query, "type": "dynamic"})
-    # except Exception as e:
-    #     return jsonify({"error": str(e)}), 500
     try:
         pre_data = pre_process_data(user_question,  controlStatement, chatContext)
         if pre_data:
@@ -134,6 +133,9 @@ def direct_gpt_call():
         return jsonify({"error": "No question provided"}), 400
     try:
         result_json = call_gpt("You are a polite, helping intelligent assistance", user_question, token_limit)
+
+
+        log_id = log(os.environ["X-DRL-USER"], extract_query(user_question), result_json)
         return result_json
     except Exception as e:
         return jsonify({"error": str(e)}), 500
