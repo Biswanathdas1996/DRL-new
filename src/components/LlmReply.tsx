@@ -6,7 +6,7 @@ import { QueryData } from "../types/LLM";
 import Table from "./Table";
 import Analyse from "./Analyse";
 import SqlUpdate from "./SqlUpdate";
-import { SAVE_QUERY, CALL_GPT, FEEDBACK } from "../config";
+import { SAVE_QUERY, FEEDBACK } from "../config";
 import { useAlert } from "../hook/useAlert";
 import { useFetch } from "../hook/useFetch";
 import Loader from "./Loader";
@@ -52,31 +52,6 @@ const LlmReply: React.FC<LlmReplyProps> = ({
 
   const isSingleResponse: boolean =
     typeof message.result === "string" || typeof message?.result === "number";
-
-  const callGpt = async (query: string): Promise<string | null> => {
-    setLoading(true);
-    const response = await fetchData(CALL_GPT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        question: query,
-        token_limit: 15000,
-      }),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        setLoading(false);
-        return data;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setLoading(false);
-        return error;
-      });
-    return response;
-  };
 
   // const generateGPTResponse = async () => {
   //   if (!message.result || message.llmReply) return;
@@ -199,7 +174,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({
 
               <>
                 <div>
-                  {message?.query.includes("error") ? (
+                  {message?.query?.includes("error") ? (
                     <div
                       style={{
                         display: "flex",

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dbSchema } from "../string/dbScgema";
+import { dbSchema } from "../string/dbSchema";
 
 interface Chat {
   type: string;

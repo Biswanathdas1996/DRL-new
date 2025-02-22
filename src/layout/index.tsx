@@ -19,6 +19,7 @@ import VoiceChatIcon from "@mui/icons-material/VoiceChat";
 import DatasetLinkedIcon from "@mui/icons-material/DatasetLinked";
 import HistoryIcon from "@mui/icons-material/History";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const iconStyle = {
   //  color: "#4b2a91",
@@ -36,6 +37,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     //   name: "Argentic Q&A SQL",
     //   icon: () => <SupportAgentIcon style={iconStyle} />,
     // },
+    {
+      path: "/documentation",
+      name: "Documentation",
+      icon: () => <DescriptionIcon style={iconStyle} />,
+    },
     {
       path: "/sql-chat",
       name: "Q&A to SAP Query",
