@@ -223,7 +223,6 @@ export default function Config() {
                       onChange={handleChange}
                     >
                       <MenuItem value={"gpt-4"}>gpt-4</MenuItem>
-                      <MenuItem value={"gpt-4o"}>gpt-4o</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>

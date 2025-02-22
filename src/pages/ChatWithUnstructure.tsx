@@ -208,7 +208,7 @@ const Chat: React.FC = () => {
           </div>
           <br />
           <br />
-          {!chatHistory && <WelcomeChatComp />}
+          {chatHistory?.length === 0 && <WelcomeChatComp />}
           <div className="chat-msg">
             {chatHistory.map((chat: any, index) => {
               return chat.type === "user" ? (
