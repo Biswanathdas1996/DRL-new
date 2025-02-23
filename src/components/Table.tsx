@@ -127,11 +127,6 @@ const CustomTable: React.FC<TableProps> = ({
     return `Mid-month ${newMonth}`;
   }
 
-  console.log(
-    "===========================>",
-    chatHistory.filter((chat) => chat.id === chatId)[0]
-  );
-
   return (
     <>
       {loadingUi ? (
