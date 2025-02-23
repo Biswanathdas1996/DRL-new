@@ -99,7 +99,7 @@ LIMIT 20;`,
     title: "3. Identifying HQs, Brands, and SKUs Contributing Less to Turnover",
     subsections: [
       {
-        title: "HQs Contributing Less than 5% of Total Units Sold",
+        title: "HQs Less than 5% of Total Units Sold",
         query: `WITH TotalSales AS (
                                 SELECT SUM(primary_units) AS total_units FROM Sales WHERE transaction_date BETWEEN ':start_date' AND ':end_date'
 )
@@ -109,7 +109,9 @@ FROM HQ hq
 LEFT JOIN Sales s ON s.hq_id = hq.id AND s.transaction_date BETWEEN ':start_date' AND ':end_date'
 GROUP BY hq.name
 HAVING (COALESCE(SUM(s.primary_units), 0) / (SELECT total_units FROM TotalSales) * 100) < 5
-ORDER BY contribution_percentage ASC;`,
+ORDER BY contribution_percentage ASC
+LIMIT 60
+;`,
       },
     ],
   },

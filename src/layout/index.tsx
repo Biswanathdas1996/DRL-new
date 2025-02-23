@@ -33,6 +33,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [showSideBar, setShowSideBar] = React.useState(false);
   const userRoutes = [
     {
+      path: "/business-inside",
+      name: "Dashboard",
+      icon: () => <DashboardIcon style={iconStyle} />,
+    },
+    {
       path: "/agent-sql-chat",
       name: "Argentic Q&A SQL",
       icon: () => <SupportAgentIcon style={iconStyle} />,

@@ -85,7 +85,6 @@ const Chat: React.FC = () => {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: "follow" as RequestRedirect,
     };
 
     const response = await fetch(GET_AGENT_RESPONSE, requestOptions);

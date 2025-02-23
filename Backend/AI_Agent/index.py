@@ -27,7 +27,7 @@ def query_database(nlq: str, controlStatement: str):
     response = sql_agent.run(f"{nlq} given {controlStatement}")
     return response
 
-def query():
+def agent_query():
     data = request.json
     nlq = data.get('nlq')
     controlStatement = data.get('controlStatement')
@@ -40,5 +40,5 @@ def query():
         return jsonify({"error": str(e)}), 500
 
 def render_agents(app):
-    app.add_url_rule('/get-agent-response', 'query_agent_api', query, methods=['POST'])
+    app.add_url_rule('/get-agent-response', 'query_agent_api', agent_query, methods=['POST'])
     return app
