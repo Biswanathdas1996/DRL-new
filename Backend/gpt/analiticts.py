@@ -36,7 +36,7 @@ def get_analitics(sample_data):
       {sample_output}
     """
     # Call GPT to get the converted data
-    response = call_gpt("You are a good analytics expert", prompt, 1000)
+    response = call_gpt("You are a good analytics expert", prompt)
     return response
   except Exception as e:
     return {"error": str(e)}

@@ -89,11 +89,7 @@ def save_erd_as_png(input_data, filename="sql/erd.png"):
 
 def save_erd_as_text(input_data, filename="sql/erd.txt"):
     try:
-        
         descriptive_text = save_erd_as_text_with_openAI(input_data)
-
-     
-
         with open(filename, 'w') as file:
             file.write(descriptive_text)
     except Exception as e:
@@ -106,7 +102,6 @@ def generate_erd_from(DB_CONFIG):
             erd_json = get_erd_as_json(connection)
 
             if erd_json:
-                save_erd_as_text(erd_json)
                 save_erd_as_png(json.loads(erd_json))
                 save_erd_as_text(json.loads(erd_json))
                 

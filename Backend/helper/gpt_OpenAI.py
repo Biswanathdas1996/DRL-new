@@ -97,9 +97,6 @@ def call_gpt_sql_data(prompt, chatContext):
     # Append the new user prompt
     chatContext.append({"role": "user", "content": prompt})
 
-    print("Chat Context:==============>", chatContext)
-    print("Chat Context end:==============>")
-
     try:
         response = openai.ChatCompletion.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
@@ -116,29 +113,4 @@ def call_gpt_sql_data(prompt, chatContext):
     except Exception as e:
         return f"An error occurred: {e}"
 
-    """Call the GPT model with the given configuration and prompt."""
-    try:
-        openai.api_key = os.environ["OPENAI_API_KEY"]
-    except KeyError:
-        return "API key not found in environment variables."
 
-    try:
-        response = openai.ChatCompletion.create(
-            model=os.environ.get("X-Ai-Model", "gpt-4"),
-            messages=[
-                {"role": "system", "content": config},
-                {"role": "user", "content": f"""
-                    {prompt}\n
-
-                    Where the previous chat history was:\n
-                    {chatContext}
-                    """}
-            ],
-            temperature=0,
-            stop=[";"]
-        )
-        result = response.choices[0].message['content'].strip()
-        print("GPT Response:", response)
-        return result
-    except Exception as e:
-        return f"An error occurred: {e}"

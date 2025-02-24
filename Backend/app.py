@@ -132,7 +132,7 @@ def direct_gpt_call():
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
     try:
-        result_json = call_gpt("You are a polite, helping intelligent assistance", user_question, token_limit)
+        result_json = call_gpt("You are a polite, helping intelligent assistance", user_question)
 
 
         log_id = log(os.environ["X-DRL-USER"], extract_query(user_question), result_json)
