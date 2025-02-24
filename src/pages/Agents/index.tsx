@@ -221,15 +221,15 @@ const AgentsPage: React.FC = () => {
           </Button>
         )}
 
-        {/* <Button
+        <Button
           variant="outlined"
           color="primary"
           style={{ marginLeft: 10 }}
           id="temp_button"
           onClick={() => fetchAllPrompts()}
         >
-          Generate
-        </Button> */}
+          Generate Report
+        </Button>
       </div>
 
       <Box sx={{ flexGrow: 1 }}>
