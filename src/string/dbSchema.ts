@@ -40,4 +40,5 @@ export const dbSchema = `
 
             12. **conversation_log** (id, timestamp, user_id, userquery, sqlquery)  
                 - Stores AI-generated queries.
-                    \n`;
+                    \n
+`;
