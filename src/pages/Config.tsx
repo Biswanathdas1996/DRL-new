@@ -15,6 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import DBConfig from "./DBConfig";
 import Switch from "@mui/material/Switch";
+import { preLoadedInstructions } from "../string/preLoadedInstructions";
 
 interface Field {
   id: number;
@@ -178,6 +179,9 @@ export default function Config() {
       const { instructionForTestCases } = JSON.parse(savedConfig);
 
       setInstructionForTestCases(instructionForTestCases || []);
+    } else {
+      setInstructionForTestCases(preLoadedInstructions);
+      localStorage.setItem("drl_config", JSON.stringify(preLoadedInstructions));
     }
   }, []);
 

@@ -16,8 +16,8 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const prePopulatedQuestions = [
-  "Give me the mid-month performance for current month and past two months?",
-  "What is the current trends",
+  "What is the performance for priority brands for November 2024?",
+  "What Are My Critical HQs?",
   "What is the total revenue?",
   "What is the total number of customers?",
 ];
