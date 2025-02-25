@@ -346,7 +346,7 @@ const CustomTable: React.FC<TableProps> = ({
                                 )}
                               </TableRow>
                             ))}
-                          <TableRow>
+                          {/* <TableRow>
                             {Object.keys(table1Data[0]).map(
                               (columnName, index) => {
                                 const total = table1Data.reduce((sum, row) => {
@@ -389,7 +389,7 @@ const CustomTable: React.FC<TableProps> = ({
                                 );
                               }
                             )}
-                          </TableRow>
+                          </TableRow> */}
                         </TableBody>
                       </Table>
                     </TableContainer>
