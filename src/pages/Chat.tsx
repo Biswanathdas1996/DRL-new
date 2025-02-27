@@ -14,6 +14,7 @@ import PreLoadedQuestions from "../components/PreLoadedQuestions";
 import useChatContext from "../hook/useChatContext";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import replaceLastMonths from "../helper/dateConveter";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
@@ -78,8 +79,11 @@ const Chat: React.FC = () => {
       .join("\n");
     console.log("=============formatInstructions", formatInstructionsText);
 
+    const filtredQuery = applyFilter === "true" ? filterQuery(query) : query;
+    const dateFilteredQuery = replaceLastMonths(filtredQuery);
+
     const raw = JSON.stringify({
-      question: applyFilter === "true" ? filterQuery(query) : query,
+      question: dateFilteredQuery,
       controlStatement: `${
         ifLoginControl === "true"
           ? `WHERE Head Quarters (HQ) id IN (${
