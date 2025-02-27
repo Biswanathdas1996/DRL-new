@@ -54,6 +54,49 @@ def generate_static_sql(query_text: str) -> str:
     
     return sql_query.strip()
 
-# # Example usage
-# query_text = "Which strockist have zero billing for brand Cheeriofor hq Kolkata for 2024-12-01 to 2025-01-01 WHERE Head Quarters (HQ) id IN (50058715,50058741,50173634,50178275),Make all hq_id as String"
-# print(generate_sql(query_text))
+def generate_custom_sql_for_static_zero_billing(query_text: str) -> str:
+    # Extract HQ IDs
+    hq_ids_match = re.search(r'(?i)HQ\)\s+id\s+IN\s+\(([\d,\s]+)\)', query_text)
+    hq_ids = hq_ids_match.group(1).split(',') if hq_ids_match else []
+    hq_ids = [hq.strip() for hq in hq_ids]
+    
+    # Extract date range
+    start_date = datetime.now().replace(day=1).strftime("%Y-%m-%d")
+    end_date = datetime.now().strftime("%Y-%m-%d")
+    
+    # Convert dates to YYYY-MM-DD format
+    if start_date and end_date:
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").strftime("%Y-%m-%d")
+    
+    sql_query = f'''
+    SELECT
+        s.Name AS StockistName,
+        0 AS Billing
+    FROM
+        Stockist s
+        JOIN StockistHQMap shm ON s.ID = shm.Stockist_ID
+        JOIN HQ h ON shm.HQ_ID = h.ID
+    WHERE
+        s.Name IS NOT NULL
+        AND s.Name <> 'unknown'
+        AND s.Name <> ' '
+        AND NOT EXISTS (
+            SELECT
+                1
+            FROM
+                Sales sa
+                JOIN BrandSKUMap bs ON sa.SKU_CODE = bs.SKU_Code
+                JOIN Brand b ON bs.Brand_ID = b.ID
+            WHERE
+                sa.Stockist_ID = s.ID
+                AND sa.hq_id IN ({', '.join(f"'{hq}'" for hq in hq_ids)})
+                {f"AND sa.TRANSACTION_DATE >= '{start_date}'" if start_date else ''}
+                {f"AND sa.TRANSACTION_DATE < '{end_date}'" if end_date else ''}
+                AND sa.primary_sales > 0
+        )
+    ORDER BY
+        s.Name;
+    '''
+    
+    return sql_query.strip()

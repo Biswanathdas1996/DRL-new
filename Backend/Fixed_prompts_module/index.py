@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sql.db import execute_sql_query
 from helper.gpt import call_gpt_sql_data
-from .static_questions import generate_static_sql
+from .static_questions import generate_static_sql, generate_custom_sql_for_static_zero_billing
 from Log.index import log
 import os
 
@@ -51,14 +51,13 @@ def pre_process_data(query, controlStatement="", chatContext={}):
         final_query = query_text
         if(query_id == 12):
             sql_text = generate_static_sql(query + controlStatement)
-            print("sql_text===============>", sql_text) 
             result1 = execute_sql_query(sql_text)
-            print("result1===============>", result1)
-            # response = {
-            #     "table1": result1,
-            #     "questions": "",
-            #     "analytics": ""
-            # } 
+            
+            return {"query": sql_text, "result": result1,"summery":"", "type": "fixed"}
+        elif(query_id == 17):
+            sql_text = generate_custom_sql_for_static_zero_billing(query + controlStatement)
+            result1 = execute_sql_query(sql_text)
+            
             return {"query": sql_text, "result": result1,"summery":"", "type": "fixed"}
         else:
             if use == "Dynamic":

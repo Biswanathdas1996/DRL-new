@@ -1,19 +1,20 @@
-export default function replaceLastMonths(str: string): string {
+const monthNames: string[] = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function replaceLastMonths(str: string): string {
   // Array of month names
-  const monthNames: string[] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
   // Extract the number of months from the string using regex
   const match = str.match(/last (\d+) months?/i);
@@ -45,3 +46,27 @@ export default function replaceLastMonths(str: string): string {
 
   return updatedStr;
 }
+
+function replaceCurrentMonth(str: string): string {
+  // Get the current date
+  const currentDate = new Date();
+  const currentMonthName = monthNames[currentDate.getMonth()]; // Get the current month name
+  const currentYear = currentDate.getFullYear(); // Get the current year
+
+  // Replace the term 'current month' with the current month name and year, case insensitive
+  const updatedStr = str.replace(
+    /current month/i,
+    `${currentMonthName} ${currentYear}`
+  );
+
+  return updatedStr;
+}
+
+const dateConverter = (str: string): string => {
+  let updatedStr = replaceLastMonths(str);
+  updatedStr = replaceCurrentMonth(updatedStr);
+
+  return updatedStr;
+};
+
+export default dateConverter;

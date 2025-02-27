@@ -156,5 +156,12 @@
     "query": "SELECT TO_CHAR(DATE_TRUNC('month', s.transaction_date), 'Mon-YY') AS month, FLOOR((EXTRACT(DAY FROM s.transaction_date) - 1) / 7) + 1 AS week_number, SUM(s.primary_sales) AS weekly_sales, total_monthly_sales FROM sales s INNER JOIN hq ON s.hq_id = hq.id INNER JOIN stockist ON s.stockist_id = stockist.id INNER JOIN (SELECT DATE_TRUNC('month', sales.transaction_date) AS month_start, SUM(sales.primary_sales) AS total_monthly_sales FROM sales INNER JOIN hq ON sales.hq_id = hq.id INNER JOIN stockist ON sales.stockist_id = stockist.id WHERE hq.name = '{{hq_name}}' AND sales.transaction_date BETWEEN '{{start_date}}' AND '{{end_date}}' GROUP BY DATE_TRUNC('month', sales.transaction_date)) monthly_totals ON DATE_TRUNC('month', s.transaction_date) = monthly_totals.month_start WHERE hq.name LIKE '{{hq_name}}' AND s.transaction_date BETWEEN '{{start_date}}' AND '{{end_date}}' GROUP BY month, week_number, total_monthly_sales, DATE_TRUNC('month', s.transaction_date) ORDER BY DATE_TRUNC('month', s.transaction_date);",
     "use": "Dynamic",
     "questions": []
+  },
+  {
+    "id": 17,
+    "name": "Which stockist have zero billing from current month beginning to MTD?",
+    "query": "**** Should be static ***",
+    "use": "Dynamic",
+    "questions": []
   }
 ]

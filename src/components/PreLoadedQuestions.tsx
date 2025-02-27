@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid2";
+import { prePopulatedQuestions } from "../string/preLoadedQuestions";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -14,13 +15,6 @@ const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "#1A2027",
   }),
 }));
-
-const prePopulatedQuestions = [
-  "What is the performance for priority brands for November 2024?",
-  "What Are My Critical HQs?",
-  "What is the total revenue?",
-  "What is the total number of customers?",
-];
 
 interface BasicGridProps {
   doQuery: (query: string) => void;
@@ -48,7 +42,7 @@ export default function BasicGrid({ doQuery }: BasicGridProps) {
             >
               <Item
                 style={{
-                  padding: "1.5rem",
+                  padding: "1rem",
                   minWidth: 400,
                   background: "#f1f1f1",
                   fontWeight: 500,
