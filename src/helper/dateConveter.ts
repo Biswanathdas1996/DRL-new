@@ -62,9 +62,29 @@ function replaceCurrentMonth(str: string): string {
   return updatedStr;
 }
 
+function replaceLastMonth(str: string): string {
+  // Get the current date
+  const currentDate = new Date();
+  const lastMonthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Get the last month index, wrap around for negative index
+  const lastMonthYear =
+    currentDate.getMonth() === 0
+      ? currentDate.getFullYear() - 1
+      : currentDate.getFullYear(); // Adjust year if the last month is December of the previous year
+  const lastMonthName = monthNames[lastMonthIndex]; // Get the last month name
+
+  // Replace the term 'last month' with the last month name and year, case insensitive
+  const updatedStr = str.replace(
+    /last month/i,
+    `${lastMonthName} ${lastMonthYear}`
+  );
+
+  return updatedStr;
+}
+
 const dateConverter = (str: string): string => {
   let updatedStr = replaceLastMonths(str);
   updatedStr = replaceCurrentMonth(updatedStr);
+  updatedStr = replaceLastMonth(updatedStr);
 
   return updatedStr;
 };

@@ -159,13 +159,15 @@ const LlmReply: React.FC<LlmReplyProps> = ({
               >
                 As per your query{" "}
                 <b>
-                  {userQuestion?.message
-                    .toLowerCase()
-                    .replace("?", "")
-                    .replace("what is", "")
-                    .replace("what", "")
-                    .replace("give me", "")
-                    .replace("which", "")}
+                  {userQuestion &&
+                    typeof userQuestion.message === "string" &&
+                    userQuestion.message
+                      .toLowerCase()
+                      .replace("?", "")
+                      .replace("what is", "")
+                      .replace("what", "")
+                      .replace("give me", "")
+                      .replace("which", "")}
                   :
                 </b>
               </div>
