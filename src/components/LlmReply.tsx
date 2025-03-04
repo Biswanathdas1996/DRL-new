@@ -16,6 +16,7 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import DRL_ICON from "../assets/images/icon.png";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import FeedbackComp from "./Feedback";
 
 interface LlmReplyProps {
   loading: boolean;
@@ -107,32 +108,6 @@ const LlmReply: React.FC<LlmReplyProps> = ({
         triggerAlert("Query Saved Successfully!", "success");
       })
       .catch((error) => console.error(error));
-  };
-
-  const feedback = (feedback: number) => {
-    setLoading(true);
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-      id: message?.log_id,
-      feedback: feedback,
-    });
-
-    var requestOptions: RequestInit = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow" as RequestRedirect,
-    };
-
-    fetch(FEEDBACK, requestOptions)
-      .then((response) => response.text())
-      .then((result) => setLoading(false))
-      .catch((error) => {
-        setLoading(false);
-        console.log("error", error);
-      });
   };
 
   return (
@@ -254,14 +229,7 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                   alt="Clear Chat"
                 />
               </button>
-              <ThumbUpIcon
-                style={{ margin: 4, fontSize: 22, cursor: "pointer" }}
-                onClick={() => feedback(1)}
-              />
-              <ThumbDownOffAltIcon
-                style={{ margin: 4, fontSize: 22, cursor: "pointer" }}
-                onClick={() => feedback(0)}
-              />
+              <FeedbackComp chat={chat} />
             </div>
           ) : (
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

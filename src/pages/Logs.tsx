@@ -26,6 +26,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import FixedReplyTemplate from "../components/Table";
 import TextField from "@mui/material/TextField";
 import { isSqlQuery } from "../helper/sql";
+import Report from "../components/Report";
 
 const style = {
   position: "absolute",
@@ -207,7 +208,7 @@ const Queries: React.FC = () => {
 
   const columnsNotToShow = [
     "feedback",
-    // "user_id",
+    "comment",
     "name",
     "userquery",
     "sqlquery",
@@ -218,7 +219,7 @@ const Queries: React.FC = () => {
     <div>
       <h2>Logs</h2>
       <b>Last {paginationModel.pageSize} logs</b>
-
+      <Report />
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
           <TextField
@@ -323,6 +324,8 @@ const Queries: React.FC = () => {
                               ) : (
                                 value == 0 && <ThumbDownOffAltIcon />
                               )
+                            ) : key === "comment" ? (
+                              value && String(value)
                             ) : (
                               <>
                                 {isNaN(Number(value))
