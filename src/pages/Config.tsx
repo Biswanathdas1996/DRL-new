@@ -179,9 +179,6 @@ export default function Config() {
       const { instructionForTestCases } = JSON.parse(savedConfig);
 
       setInstructionForTestCases(instructionForTestCases || []);
-    } else {
-      setInstructionForTestCases(preLoadedInstructions);
-      localStorage.setItem("drl_config", JSON.stringify(preLoadedInstructions));
     }
   }, []);
 
@@ -207,6 +204,14 @@ export default function Config() {
               setFields={setInstructionForTestCases}
               usedFor="instructionForTestCases"
             />
+          </Grid>
+          <Grid size={12}>
+            <h4>Pre Loaded instructions</h4>
+            <ul>
+              {preLoadedInstructions.map((instruction, index) => (
+                <li key={index}>{instruction.value}</li>
+              ))}
+            </ul>
           </Grid>
           <Grid size={12}>
             <Card

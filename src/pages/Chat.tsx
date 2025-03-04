@@ -15,6 +15,7 @@ import useChatContext from "../hook/useChatContext";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import dateConverter from "../helper/dateConveter";
+import { preLoadedInstructions } from "../string/preLoadedInstructions";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
@@ -74,10 +75,14 @@ const Chat: React.FC = () => {
         (item: any) => item.status
       );
     }
+
     const formatInstructionsText = formatInstructions
       .map((instruction: any) => instruction.value)
       .join("\n");
-    console.log("=============formatInstructions", formatInstructionsText);
+
+    const preLoadedInstructionsList = preLoadedInstructions
+      .map((instruction: any) => instruction.value)
+      .join("\n");
 
     const filtredQuery = applyFilter === "true" ? filterQuery(query) : query;
     const dateFilteredQuery = dateConverter(filtredQuery);
@@ -90,7 +95,7 @@ const Chat: React.FC = () => {
               user?.hq_id as string[]
             }),Make all hq_id as String`
           : ""
-      }  \n ${formatInstructionsText}`,
+      }  \n ${preLoadedInstructionsList} \n ${formatInstructionsText}`,
       working_table_description: localStorage.getItem("dbJson"),
       chatContext: JSON.stringify(getContext),
     });

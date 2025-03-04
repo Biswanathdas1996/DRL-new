@@ -25,4 +25,25 @@ export const preLoadedInstructions = [
     type: "instruction",
     status: true,
   },
+  {
+    id: 5,
+    value:
+      "when weekly billing is asked then add the column of weekly sales achievement percentage in the table",
+    type: "instruction",
+    status: true,
+  },
+  {
+    id: 6,
+    value:
+      "if any HQ along with hq_name is written then filter the data only for that hq",
+    type: "instruction",
+    status: true,
+  },
+  {
+    id: 7,
+    value:
+      "if in any question previous n months is given, then ignore the current month and give for previous n months only. n is a number.",
+    type: "instruction",
+    status: true,
+  },
 ];

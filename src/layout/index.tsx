@@ -174,6 +174,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       className="sidenav-button"
                       onClick={() => {
                         localStorage.removeItem("user");
+                        localStorage.clear();
                         window.location.reload();
                       }}
                     >
