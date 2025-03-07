@@ -15,13 +15,13 @@ export const preLoadedInstructions = [
   },
   {
     id: 3,
-    value: "Remove word ID/id/Id/iD from the table",
+    value: "Remove column ID/id/Id/iD/HQ_ID/hq_id from the table",
     type: "instruction",
     status: true,
   },
   {
     id: 4,
-    value: "Do not show the month number, instead show month name  ",
+    value: "Do not show the month number, instead show respective month name  ",
     type: "instruction",
     status: true,
   },
@@ -43,6 +43,13 @@ export const preLoadedInstructions = [
     id: 7,
     value:
       "if in any question previous n months is given, then ignore the current month and give for previous n months only. n is a number.",
+    type: "instruction",
+    status: true,
+  },
+  {
+    id: 8,
+    value:
+      "if any question data is for any specific hq name, then filter the data only for that hq name",
     type: "instruction",
     status: true,
   },
