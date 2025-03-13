@@ -43,7 +43,7 @@ export default function BasicGrid({ doQuery }: BasicGridProps) {
               <Item
                 style={{
                   padding: "1rem",
-                  minWidth: 400,
+                  minWidth: 100,
                   background: "#f1f1f1",
                   fontWeight: 500,
                 }}

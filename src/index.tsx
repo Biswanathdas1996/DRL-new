@@ -3,8 +3,8 @@ import App from "./App";
 import "./App.css";
 import { HashRouter } from "react-router-dom";
 import * as ReactDOM from "react-dom/client";
-import "./css/one.css";
-import "./css/two.css";
+import "./css/style.css";
+/*import "./css/two.css";
 import "./css/three.css";
 import "./css/four.css";
 import "./css/five.css";
@@ -15,7 +15,7 @@ import "./css/nine.css";
 import "./css/ten.css";
 import "./css/eleven.css";
 import "./css/twelve.css";
-import "./css/thirteen.css";
+import "./css/thirteen.css";*/
 
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
