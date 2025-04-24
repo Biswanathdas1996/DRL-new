@@ -8,6 +8,7 @@ export const FEEDBACK = `${BASE_URL}/feedback`;
 export const GET_ALL_LOGS = `${BASE_URL}/get-all-logs`;
 export const SAVE_QUERY = `${BASE_URL}/save-query`;
 export const CALL_GPT = `${BASE_URL}/call-gpt`;
+export const CALL_GPT_FOR_JSON = `${BASE_URL}/call-gpt-for-json`;
 export const UPLOAD_DOC = `${BASE_URL}/upload-collection-doc-mongo`;
 export const INDEXING = `${BASE_URL}/indexing-mongo`;
 export const DELETE_COLLECTION = `${BASE_URL}/delete-collection`;

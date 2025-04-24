@@ -1,8 +1,8 @@
 import React, { Component, useState } from "react";
-import LineChart from "./LineChart";
-import BarChart from "./BarChart";
-import PirChart from "./PirChart";
-import RadarChart from "./RadarChart";
+import LineChart from "./Chart/LineChart";
+import BarChart from "./Chart/BarChart";
+import PirChart from "./Chart/PirChart";
+import RadarChart from "./Chart/RadarChart";
 import { QueryData } from "../types/LLM";
 import { ANALITICS } from "../config";
 import { useDispatch, useSelector } from "react-redux";

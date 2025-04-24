@@ -12,6 +12,7 @@ from Log.index import log, render_logs_pack
 from AI_Agent.index import render_agents
 from secretes.secrets import DB_CONFIG
 import re
+from helper.gpt import call_gpt_for_json
 
 def extract_query(text):
     pattern = r'Generate a detailed response for the query:\s*"(.*?)"'
@@ -136,6 +137,19 @@ def direct_gpt_call():
 
 
         log_id = log(os.environ["X-DRL-USER"], extract_query(user_question), result_json)
+        return result_json
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/call-gpt-for-json', methods=['POST'])
+def direct_gpt_call_for_json():
+    data = request.json
+    prompt = data.get('prompt')
+    if not prompt:
+        return jsonify({"error": "No question provided"}), 400
+    try:
+        result_json = call_gpt_for_json( prompt)
+      
         return result_json
     except Exception as e:
         return jsonify({"error": str(e)}), 500

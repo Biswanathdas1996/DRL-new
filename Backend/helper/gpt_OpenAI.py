@@ -114,3 +114,25 @@ def call_gpt_sql_data(prompt, chatContext):
         return f"An error occurred: {e}"
 
 
+def call_gpt_for_json(prompt):
+    global chat_history
+    try:
+        openai.api_key = os.environ["OPENAI_API_KEY"]
+    except KeyError:
+        return "API key not found in environment variables."
+
+
+    try:
+        response = openai.ChatCompletion.create(
+            model=os.environ.get("X-Ai-Model", "gpt-4"),
+            messages=[{"role": "system", "content": "provide a javascript function for the following prompt:"}, {"role": "user", "content": prompt}],
+            temperature=0,
+            stop=None
+        )
+        result = response.choices[0].message['content'].strip()
+        chat_history.append({"role": "assistant", "content": result})
+        print("GPT Response:", response)
+        return result
+    except Exception as e:
+        return f"An error occurred: {e}"
+   

@@ -118,3 +118,34 @@ def call_gpt_sql_data(prompt, chatContext):
         return extract_sql_code(result)
     except Exception as e:
         return f"An error occurred: {e}"
+    
+
+def call_gpt_for_json(prompt):
+    global chat_history
+    try:
+        os.environ["OPENAI_API_KEY"] = GEMINI_API_KEY
+    except KeyError:
+        return "API key not found in environment variables."
+
+    chat_history.append({"role": "user", "content": prompt})
+
+    if len(chat_history) > 2:
+        chat_history = chat_history[-2:]
+
+    total_tokens = sum(len(message['content'].split()) for message in chat_history)
+    max_allowed_tokens = 2000
+
+    while total_tokens > max_allowed_tokens and len(chat_history) > 1:
+        chat_history.pop(0)
+        total_tokens = sum(len(message['content'].split()) for message in chat_history)
+
+    try:
+        response = model.generate_content(
+            f"Provide a JavaScript function for the following prompt:\n{prompt}"
+        )
+        result = response.text.strip()
+        chat_history.append({"role": "assistant", "content": result})
+        print("Gemini Response:", result)
+        return result
+    except Exception as e:
+        return f"An error occurred: {e}"

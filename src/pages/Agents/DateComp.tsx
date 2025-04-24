@@ -1,6 +1,6 @@
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+// Removed DemoContainer import as it caused a module not found error
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -22,18 +22,18 @@ export default function DatePickerValue({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DatePicker", "DatePicker"]}>
+      <div>
         <DatePicker
           label="Start Date"
           value={sdate}
-          onChange={(newValue) => setSdate(newValue)}
+          onChange={(newValue: Dayjs | null) => setSdate(newValue)}
         />
         <DatePicker
           label="End Date"
           value={edate}
-          onChange={(newValue) => setEdate(newValue)}
+          onChange={(newValue: Dayjs | null) => setEdate(newValue)}
         />
-      </DemoContainer>
+      </div>
     </LocalizationProvider>
   );
 }
