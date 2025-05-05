@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import { GENERATE_ERD_FROM_DB, GET_ERD_IMG } from "../config";
@@ -33,7 +33,7 @@ interface DatabaseSchema {
   [key: string]: Table;
 }
 
-const renderTree = (data: any): JSX.Element => {
+const renderTree = (data: any): any => {
   if (Array.isArray(data)) {
     return (
       <ul>

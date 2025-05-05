@@ -25,6 +25,8 @@ export const ANALITICS = USE_MOCK
   ? `${BASE_URL}/analytics-mock`
   : `${BASE_URL}/analytics`;
 
+export const DATA_PROCESSING = `${BASE_URL}/data-processing`;
+
 export const colors = [
   // "#4b2a91cf",
 

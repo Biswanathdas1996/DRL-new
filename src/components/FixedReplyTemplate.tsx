@@ -13,7 +13,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import SqlUpdate from "./SqlUpdate";
-import Analyse from "./DataVisualations";
 import { UserContext } from "../App";
 import { TableSortLabel } from "@mui/material";
 import { useFetch } from "../hook/useFetch";
@@ -469,19 +468,6 @@ const DynamicDisplay: React.FC<Props> = ({
                   ))}
                 </>
               )}
-
-              {/* {chartId && data?.analytics && (
-                <Analyse
-                  data={{
-                    analytics: data?.analytics,
-                    result: table1Data,
-                    query: "",
-
-                    llmReply: "",
-                    type: "",
-                  }}
-                />
-              )} */}
 
               <div
                 style={{ fontSize: "12px", fontWeight: "400", marginTop: 10 }}

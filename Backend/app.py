@@ -13,6 +13,7 @@ from AI_Agent.index import render_agents
 from secretes.secrets import DB_CONFIG
 import re
 from helper.gpt import call_gpt_for_json
+from DataAnalysis.index import render_data_analytics
 
 def extract_query(text):
     pattern = r'Generate a detailed response for the query:\s*"(.*?)"'
@@ -24,6 +25,7 @@ app = Flask(__name__)
 Compress(app)
 CORS(app)
 app = render_mongo_pack(app)
+app = render_data_analytics(app)
 app = render_logs_pack(app)
 app = render_agents(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit

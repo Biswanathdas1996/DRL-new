@@ -1,66 +1,116 @@
-import dash
-from dash import dcc, html
-import plotly.graph_objs as go
+import google.generativeai as genai
 import pandas as pd
-import plotly.io as pio
+import altair as alt
+import json
 
-# Sample data
-data = [
-    {"HQ Name": "Hooghly", "Sales Achievement %": 109.53, "Total Sales": 743021.11, "Total Target": 678350},
-    {"HQ Name": "Kolkata", "Sales Achievement %": 102.43, "Total Sales": 10106047.64, "Total Target": 9865927},
-    {"HQ Name": "Ranaghat", "Sales Achievement %": 100.09, "Total Sales": 528922.2, "Total Target": 528462},
-    {"HQ Name": "Siliguri", "Sales Achievement %": 103.87, "Total Sales": 1220684.83, "Total Target": 1175215},
-]
-df = pd.DataFrame(data)
+# Replace with your Gemini API key
+GEMINI_API_KEY = "AIzaSyB6SXZ8k-Otk4NmfFvXK6lzqqRCScksku4"
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-2.0-flash-exp')
 
-# Average Sales Achievement
-average_achievement = round(df["Sales Achievement %"].mean(), 2)
+def visualize_sales_data(data):
+    """
+    Generates Altair bar charts for sales data using dynamic input.
 
-# Sales Achievement Gauge
-gauge_figure = go.Figure(go.Indicator(
-    mode="gauge+number",
-    value=average_achievement,
-    title={'text': "Sales Achievement"},
-    gauge={'axis': {'range': [None, 120]}, 'bar': {'color': "orange"}}
-))
-pio.write_image(gauge_figure, "sales_achievement_gauge.png")
+    Args:
+        data: A list of dictionaries, where each dictionary represents
+              sales data for a Headquarter (HQ) with keys:
+              "HQ Name", "Sales Achievement %", "Total Sales", "Total Target".
 
-# Total Sales Bar Chart
-total_sales_figure = go.Figure(data=[
-    go.Bar(x=df["HQ Name"], y=df["Total Sales"], name='Total Sales', marker_color='royalblue')
-]).update_layout(title="Total Sales by HQ", xaxis_title="HQ", yaxis_title="Sales")
-pio.write_image(total_sales_figure, "total_sales_bar_chart.png")
+    Returns:
+        A dictionary containing two JSON strings representing the Altair chart specifications:
+        - "sales_target_chart_json": JSON for the Total Sales vs Total Target bar chart.
+        - "achievement_chart_json": JSON for the Sales Achievement % bar chart.
+        Returns None if there's an error in data processing.
+    """
+    try:
+        df = pd.DataFrame(data)
 
-# Sales Achievement % Horizontal Bar Chart
-achievement_figure = go.Figure(data=[
-    go.Bar(y=df["HQ Name"], x=df["Sales Achievement %"], orientation='h', marker_color='orange')
-]).update_layout(title="Sales Achievement % by HQ", xaxis_title="Achievement %", yaxis_title="HQ")
-pio.write_image(achievement_figure, "sales_achievement_horizontal_bar_chart.png")
+        # Melt the DataFrame for the first chart
+        melted_df = df.melt(id_vars='HQ Name', value_vars=['Total Sales', 'Total Target'],
+                            var_name='Category', value_name='Value')
 
-# Total Sales vs Total Target Grouped Bar Chart
-grouped_bar_figure = go.Figure(data=[
-    go.Bar(name='Sales', x=df["HQ Name"], y=df["Total Sales"], marker_color='blue'),
-    go.Bar(name='Target', x=df["HQ Name"], y=df["Total Target"], marker_color='orange')
-]).update_layout(
-    barmode='group',
-    title="Total Sales vs. Total Target by HQ",
-    xaxis_title="HQ",
-    yaxis_title="Amount"
-)
-pio.write_image(grouped_bar_figure, "total_sales_vs_target_grouped_bar_chart.png")
+        # Create the first bar chart: Total Sales vs Total Target
+        sales_target_chart = alt.Chart(melted_df).mark_bar().encode(
+            x=alt.X('HQ Name', axis=alt.Axis(title='HQ Name')),
+            y=alt.Y('Value', axis=alt.Axis(title='Amount')),
+            color=alt.Color('Category', title=''),
+            tooltip=['HQ Name', 'Category', 'Value']
+        ).properties(
+            title='Total Sales vs Total Target by HQ Name'
+        ).interactive().to_json()
 
-# Initialize the Dash app
-app = dash.Dash(__name__)
-app.title = "KPI Dashboard"
+        # Create the second bar chart: Sales Achievement %
+        achievement_chart = alt.Chart(df).mark_bar().encode(
+            x=alt.X('HQ Name', axis=alt.Axis(title='HQ Name')),
+            y=alt.Y('Sales Achievement %', axis=alt.Axis(title='Sales Achievement %')),
+            tooltip=['HQ Name', 'Sales Achievement %']
+        ).properties(
+            title='Sales Achievement % by HQ Name'
+        ).interactive().to_json()
 
-app.layout = html.Div([
-    html.H1("KPI DASHBOARD", style={'textAlign': 'center'}),
+        return {
+            "sales_target_chart_json": sales_target_chart,
+            "achievement_chart_json": achievement_chart
+        }
 
-    dcc.Graph(figure=gauge_figure),
-    dcc.Graph(figure=total_sales_figure),
-    dcc.Graph(figure=achievement_figure),
-    dcc.Graph(figure=grouped_bar_figure)
-])
+    except Exception as e:
+        print(f"Error processing data: {e}")
+        return None
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def get_insights_from_gemini(data):
+    """
+    Generates insights from the sales data using the Gemini Pro model.
+
+    Args:
+        data: A list of dictionaries, same format as visualize_sales_data input.
+
+    Returns:
+        A string containing the insights generated by Gemini, or None if an error occurs.
+    """
+    try:
+        df = pd.DataFrame(data)
+        prompt = f"""
+        Analyze the following sales performance data for different HQs and provide key insights:
+
+        {df.to_string()}
+
+        Focus on:
+        - Overall performance against targets.
+        - Significant overachievers or underachievers.
+        - Any notable trends or observations.
+        - Suggestions for improvement or areas of success.
+        """
+        # Removed invalid method call 'generate_image'
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        print(f"Error generating insights: {e}")
+        return None
+
+if __name__ == "__main__":
+    # Example of dynamic data coming from your application
+    dynamic_sales_data = [
+        {"HQ Name": "Delhi", "Sales Achievement %": 115.20, "Total Sales": 920500.75, "Total Target": 800750},
+        {"HQ Name": "Mumbai", "Sales Achievement %": 98.55, "Total Sales": 1576800.30, "Total Target": 1600000},
+        {"HQ Name": "Chennai", "Sales Achievement %": 105.88, "Total Sales": 635200.12, "Total Target": 600000},
+        {"HQ Name": "Bangalore", "Sales Achievement %": 101.12, "Total Sales": 1112350.90, "Total Target": 1100000},
+    ]
+
+    # Visualize the dynamic data
+    chart_jsons = visualize_sales_data(dynamic_sales_data)
+    if chart_jsons:
+        print("Altair Chart JSONs:")
+        print("Sales vs Target Chart:")
+        print(chart_jsons["sales_target_chart_json"])
+        print("\nSales Achievement % Chart:")
+        print(chart_jsons["achievement_chart_json"])
+
+        # You can now embed these JSON strings into your web application
+        # using a JavaScript library like Vega-Embed.
+
+    # Get insights from Gemini
+    insights = get_insights_from_gemini(dynamic_sales_data)
+    if insights:
+        print("\nGemini Insights:")
+        print(insights)

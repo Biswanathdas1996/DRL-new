@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
   // Entry point for the application
@@ -11,7 +12,7 @@ module.exports = {
   },
   // webpack 5 comes with devServer which loads in development mode
   devServer: {
-    port: 3000,
+    port: 30010,
   },
   // Rules of how webpack will take our files, compile & bundle them for the browser
   module: {
@@ -44,5 +45,22 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
-  plugins: [new HtmlWebpackPlugin({ template: "./src/index.html" })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: "./src/index.html" }),
+    new ModuleFederationPlugin({
+      name: "remote",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./Chat": "./src/pages/Chat",
+      },
+      shared: {
+        react: { singleton: true, eager: true, requiredVersion: "^17.0.0" },
+        "react-dom": {
+          singleton: true,
+          eager: true,
+          requiredVersion: "^17.0.0",
+        },
+      },
+    }),
+  ],
 };

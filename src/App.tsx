@@ -15,6 +15,7 @@ import Logs from "./pages/Logs";
 import AgentChat from "./pages/AgentChat";
 import BUSINESS_INSIDE from "./pages/Agents/index";
 import Documentation from "./pages/Documentation";
+import DataAnalysis from "./pages/DataAnalysis";
 
 export const UserContext = createContext<any>(null);
 
@@ -61,6 +62,7 @@ function App() {
               <Route path="/logs" element={<Logs />} />
               <Route path="/business-inside" element={<BUSINESS_INSIDE />} />
               <Route path="/documentation" element={<Documentation />} />
+              <Route path="/data-analysis" element={<DataAnalysis />} />
             </>
           ) : null}
         </Routes>

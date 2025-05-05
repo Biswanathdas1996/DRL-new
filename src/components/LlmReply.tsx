@@ -4,7 +4,6 @@ import { AppDispatch, RootState } from "../redux/store";
 import { addLLMReply } from "../redux/slices/chatSlices";
 import { QueryData } from "../types/LLM";
 import Table from "./Table";
-import Analyse from "./Analyse";
 import SqlUpdate from "./SqlUpdate";
 import { SAVE_QUERY, FEEDBACK } from "../config";
 import { useAlert } from "../hook/useAlert";
@@ -16,7 +15,6 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import DRL_ICON from "../assets/images/icon.png";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import DataVisualize from "./DataVisualize";
 
 interface LlmReplyProps {
   loading: boolean;
@@ -195,7 +193,6 @@ const LlmReply: React.FC<LlmReplyProps> = ({
                         chatId={id}
                         userQuestion={userQuestion}
                       />
-                      <DataVisualize chatId={id.toString()} />
                     </div>
                   )}
                 </div>

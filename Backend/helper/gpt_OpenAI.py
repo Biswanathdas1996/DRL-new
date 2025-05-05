@@ -13,15 +13,16 @@ def save_erd_as_text_with_openAI(input_data):
     try:
         openai.api_key = OPENAI_API_KEY
         
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-               {"role": "system", "content": "Convert the following JSON schema into a descriptive text format:"},
-                {"role": "user", "content": input_data}
+            {"role": "system", "content": "Convert the following JSON schema into a descriptive text format:"},
+            {"role": "user", "content": input_data}
             ],
             max_tokens=1500
         )
-        return response.choices[0].message['content'].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"The error '{e}' occurred")
      
@@ -54,13 +55,15 @@ def call_gpt(config, prompt, max_tokens=50):
         total_tokens = sum(len(message['content'].split()) for message in chat_history)
 
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
             messages=[{"role": "system", "content": config}] + chat_history,
             temperature=0,
-            stop=None
+            stop=None,
+            max_tokens=max_tokens
         )
-        result = response.choices[0].message['content'].strip()
+        result = response.choices[0].message.content.strip()
         chat_history.append({"role": "assistant", "content": result})
         print("GPT Response:", response)
         return result
@@ -98,13 +101,14 @@ def call_gpt_sql_data(prompt, chatContext):
     chatContext.append({"role": "user", "content": prompt})
 
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
             messages=chatContext,
             temperature=0,
             stop=[";"]
         )
-        result = response.choices[0].message['content'].strip()
+        result = response.choices[0].message.content.strip()
         
         # Print the response for debugging
         print("GPT Response:", response)
@@ -123,9 +127,13 @@ def call_gpt_for_json(prompt):
 
 
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
-            messages=[{"role": "system", "content": "provide a javascript function for the following prompt:"}, {"role": "user", "content": prompt}],
+            messages=[
+            {"role": "system", "content": "provide a javascript function for the following prompt:"},
+            {"role": "user", "content": prompt}
+            ],
             temperature=0,
             stop=None
         )
