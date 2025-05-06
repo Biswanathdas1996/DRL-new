@@ -6,10 +6,12 @@ import Grid from "@mui/material/Grid2";
 
 interface MyResponsiveSunburstProps {
   data: any;
+  chartId?: number;
 }
 
 const MyResponsiveSunburst: React.FC<MyResponsiveSunburstProps> = ({
   data,
+  chartId,
 }) => {
   const [loadingUi, setLoadingUi] = useState(false);
   const [responseData, setResponseData] = useState<any>(null);
@@ -65,6 +67,37 @@ const MyResponsiveSunburst: React.FC<MyResponsiveSunburstProps> = ({
       .then((response) => response.json())
       .then((result) => {
         setResponseData(result);
+        if (result) {
+          try {
+            const storedChartData = localStorage.getItem("chartData");
+            let chartDataArr = [];
+            if (storedChartData) {
+              chartDataArr = JSON.parse(storedChartData);
+              if (Array.isArray(chartDataArr) && chartDataArr.length > 0) {
+                chartDataArr.push({
+                  ...result,
+                  chartType: "sunBurst",
+                  chartId: Date.now(),
+                });
+              } else {
+                // If not array, convert to array
+                chartDataArr = [
+                  { ...result, chartType: "sunBurst", chartId: Date.now() },
+                ];
+              }
+            } else {
+              chartDataArr = [
+                { ...result, chartType: "sunBurst", chartId: Date.now() },
+              ];
+            }
+            localStorage.setItem("chartData", JSON.stringify(chartDataArr));
+          } catch (e) {
+            console.error(
+              "Failed to save sunBurst chart data to localStorage",
+              e
+            );
+          }
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -74,7 +107,26 @@ const MyResponsiveSunburst: React.FC<MyResponsiveSunburstProps> = ({
       });
   };
   useEffect(() => {
-    handleSubmit();
+    const storedData = localStorage.getItem("chartData");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        // If chartData is an array, find the sunBurst chart data
+        const sunBurstChartData = parsedData.find(
+          (item: any) =>
+            item.chartType === "sunBurst" && item.chartId === chartId
+        );
+        setResponseData(sunBurstChartData);
+      } catch (e) {
+        console.error(
+          "Failed to parse sunBurst chart data from localStorage",
+          e
+        );
+        handleSubmit();
+      }
+    } else {
+      handleSubmit();
+    }
   }, []);
   return (
     <>

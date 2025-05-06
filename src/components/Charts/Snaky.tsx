@@ -8,9 +8,10 @@ import Grid from "@mui/material/Grid2";
 
 type MyResponsiveSankeyProps = {
   data: any;
+  chartId?: number;
 };
 
-const MyResponsiveSankey = ({ data }: MyResponsiveSankeyProps) => {
+const MyResponsiveSankey = ({ data, chartId }: MyResponsiveSankeyProps) => {
   const [loadingUi, setLoadingUi] = useState(false);
   const [responseData, setResponseData] = useState<any>(null);
   const fetchData = useFetch();
@@ -65,6 +66,34 @@ const MyResponsiveSankey = ({ data }: MyResponsiveSankeyProps) => {
       .then((response) => response.json())
       .then((result) => {
         setResponseData(result);
+        if (result) {
+          try {
+            const storedChartData = localStorage.getItem("chartData");
+            let chartDataArr = [];
+            if (storedChartData) {
+              chartDataArr = JSON.parse(storedChartData);
+              if (Array.isArray(chartDataArr) && chartDataArr.length > 0) {
+                chartDataArr.push({
+                  ...result,
+                  chartType: "snaky",
+                  chartId: Date.now(),
+                });
+              } else {
+                // If not array, convert to array
+                chartDataArr = [
+                  { ...result, chartType: "snaky", chartId: Date.now() },
+                ];
+              }
+            } else {
+              chartDataArr = [
+                { ...result, chartType: "snaky", chartId: Date.now() },
+              ];
+            }
+            localStorage.setItem("chartData", JSON.stringify(chartDataArr));
+          } catch (e) {
+            console.error("Failed to save snaky chart data to localStorage", e);
+          }
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -74,7 +103,25 @@ const MyResponsiveSankey = ({ data }: MyResponsiveSankeyProps) => {
       });
   };
   useEffect(() => {
-    handleSubmit();
+    const storedData = localStorage.getItem("chartData");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        // If chartData is an array, find the snaky chart data
+        const snakyChartData = Array.isArray(parsedData)
+          ? parsedData.find(
+              (item: any) =>
+                item.chartType === "snaky" && item.chartId === chartId
+            )
+          : parsedData;
+        setResponseData(snakyChartData);
+      } catch (e) {
+        console.error("Failed to parse snaky chart data from localStorage", e);
+        handleSubmit();
+      }
+    } else {
+      handleSubmit();
+    }
   }, []);
 
   // Check for circular links in responseData before rendering the chart

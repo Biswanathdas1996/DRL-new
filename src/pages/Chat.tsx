@@ -14,6 +14,11 @@ import PreLoadedQuestions from "../components/PreLoadedQuestions";
 import useChatContext from "../hook/useChatContext";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import { Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
+import Modal from "@mui/material/Modal";
+import DataAnalysis from "./DataAnalysis";
 
 const Chat: React.FC = () => {
   const chatHistory = useSelector((state: RootState) => state.chat.value);
@@ -24,7 +29,9 @@ const Chat: React.FC = () => {
   const filterQuery = useQueryFilter;
 
   const [loading, setLoading] = React.useState<boolean>(false);
-
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const onsubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -241,6 +248,46 @@ const Chat: React.FC = () => {
 
       <br />
       <br />
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "auto",
+        }}
+      >
+        <div
+          style={{
+            maxHeight: "90vh",
+            width: "85vw",
+            overflowY: "auto",
+            background: "#fff",
+            borderRadius: 8,
+            padding: 24,
+            boxShadow: "0 4px 32px rgba(0,0,0,0.15)",
+          }}
+        >
+          <DataAnalysis />
+        </div>
+      </Modal>
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={{
+          position: "fixed",
+          bottom: 32,
+          right: 32,
+          zIndex: 1000,
+        }}
+        onClick={handleOpen}
+      >
+        <TroubleshootIcon />
+      </Fab>
       <br />
     </>
   );
