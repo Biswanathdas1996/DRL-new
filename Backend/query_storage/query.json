@@ -1,5 +1,40 @@
 [
   {
+    "id": 999,
+    "questions": [],
+    "hide": true,
+    "name": "Template",
+    "use": "Static",
+    "templates": [
+      {
+        "id": 0,
+        "display": "summarize",
+        "name": "last 6 months billing stockist",
+        "query": "SELECT s.stockist_id, st.name AS stockist_name, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2024-09' THEN s.primary_sales ELSE 0 END) AS Sep_2024, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2024-10' THEN s.primary_sales ELSE 0 END) AS Oct_2024, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2024-11' THEN s.primary_sales ELSE 0 END) AS Nov_2024, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2024-12' THEN s.primary_sales ELSE 0 END) AS Dec_2024, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2025-01' THEN s.primary_sales ELSE 0 END) AS Jan_2025, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') = '2025-02' THEN s.primary_sales ELSE 0 END) AS Feb_2025, SUM(CASE WHEN TO_CHAR(s.transaction_date, 'YYYY-MM') BETWEEN '2024-09' AND '2025-02' THEN s.primary_sales ELSE 0 END) AS stockist_grand_total FROM sales s JOIN stockist st ON s.stockist_id = st.id WHERE s.transaction_date >= DATE '2024-09-01' AND s.transaction_date < DATE '2025-03-01' AND s.hq_id IN ('50058715', '50058741', '50173634', '50178275') GROUP BY s.stockist_id, st.name ORDER BY s.stockist_id LIMIT 5;"
+      },
+      {
+        "id": 1,
+        "display": "list",
+        "name": "Stockist having billing in March 2025 and last 6 months",
+        "query": "SELECT st.id AS stockist_id, st.name AS stockist_name, SUM(CASE WHEN s.transaction_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-12' THEN s.primary_sales ELSE 0 END) AS sales_march, SUM(CASE WHEN s.transaction_date BETWEEN DATE '2024-09-01' AND DATE '2025-02-28' THEN s.primary_sales ELSE 0 END) AS sales_last_6_months FROM sales s JOIN stockist st ON s.stockist_id = st.id WHERE s.hq_id IN ('50058715', '50058741', '50173634', '50178275') AND s.transaction_date BETWEEN DATE '2024-09-01' AND DATE '2025-03-12' GROUP BY st.id, st.name HAVING SUM(CASE WHEN s.transaction_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-12' THEN s.primary_sales ELSE 0 END) > 0 ORDER BY st.name LIMIT 5;"
+      },
+      {
+        "id": 1.1,
+        "display": "list",
+        "name": "All Stockist Names",
+        "query": "SELECT name FROM stockist LIMIT 5;"
+      },
+
+      {
+        "id": 2,
+        "display": "table",
+        "name": "Stockist with no billing in March 2025 but billing in last 6 months",
+        "query": "SELECT st.id AS stockist_id, st.name AS stockist_name, SUM(CASE WHEN s.transaction_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-12' THEN s.primary_sales ELSE 0 END) AS sales_march, SUM(CASE WHEN s.transaction_date BETWEEN DATE '2024-09-01' AND DATE '2025-02-28' THEN s.primary_sales ELSE 0 END) AS sales_last_6_months FROM sales s JOIN stockist st ON s.stockist_id = st.id WHERE s.hq_id IN ('50058715', '50058741', '50173634', '50178275') AND s.transaction_date BETWEEN DATE '2024-09-01' AND DATE '2025-03-12' GROUP BY st.id, st.name HAVING SUM(CASE WHEN s.transaction_date BETWEEN DATE '2025-03-01' AND DATE '2025-03-12' THEN s.primary_sales ELSE 0 END) = 0 AND SUM(CASE WHEN s.transaction_date BETWEEN DATE '2024-09-01' AND DATE '2025-02-28' THEN s.primary_sales ELSE 0 END) > 0 ORDER BY st.name LIMIT 5;"
+      }
+    ]
+  },
+
+  {
     "id": 0.1,
     "questions": [],
     "hide": true,

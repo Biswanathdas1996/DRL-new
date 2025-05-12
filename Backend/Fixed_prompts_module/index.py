@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sql.db import execute_sql_query
 from helper.gpt import call_gpt_sql_data
 from .static_questions import generate_static_sql
+from .templates import get_templates
 from Log.index import log
 import os
 
@@ -46,19 +47,16 @@ def pre_process_data(query, controlStatement="", chatContext={}):
         questions_texts = most_similar_query.get('questions')
         use = most_similar_query.get('use')
         analytics = most_similar_query.get('analytics')
+        templates = most_similar_query.get('templates')
         print("query_id===============>", query_id) 
 
         final_query = query_text
-        if(query_id == 12):
+        if(query_id == 999):
+            result_data = get_templates(templates)
+            return {"query": "NA", "result": result_data,"summery":"", "type": "template"}
+        elif(query_id == 12):
             sql_text = generate_static_sql(query + controlStatement)
-            print("sql_text===============>", sql_text) 
             result1 = execute_sql_query(sql_text)
-            print("result1===============>", result1)
-            # response = {
-            #     "table1": result1,
-            #     "questions": "",
-            #     "analytics": ""
-            # } 
             return {"query": sql_text, "result": result1,"summery":"", "type": "fixed"}
         else:
             if use == "Dynamic":

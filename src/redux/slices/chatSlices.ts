@@ -4,7 +4,7 @@ import { Analitics } from "../../types/LLM";
 interface ChatMessage {
   id: number;
   type: string;
-  message: string | object;
+  message: string | object | Array<any>;
   time: string;
 }
 

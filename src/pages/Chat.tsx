@@ -2,7 +2,7 @@ import React from "react";
 import WelcomeChatComp from "../components/WelcomeChatComp";
 import UserChat from "../components/UserChat";
 import LlmReply from "../components/LlmReply";
-import FixedReplyTemplate from "../components/FixedReplyTemplate";
+import FixedTemplate from "../components/FixedTemplate";
 import { QUERY, CALL_GPT } from "../config";
 import Loader from "../components/Loader";
 import { useSelector, useDispatch } from "react-redux";
@@ -195,21 +195,25 @@ const Chat: React.FC = () => {
                 </div>
               ) : (
                 <div key={chat.id} style={{ position: "relative" }}>
-                  <LlmReply
-                    index={index}
-                    chat={chat}
-                    loading={loading}
-                    userQuestion={chatHistory[index - 1]}
-                    Delete={() => (
-                      <CloseIcon
-                        style={{
-                          cursor: "pointer",
-                          float: "right",
-                        }}
-                        onClick={() => dispatch(deleteMessage(chat.id))}
-                      />
-                    )}
-                  />
+                  {chat?.message?.type === "template" ? (
+                    <FixedTemplate chat={chat} />
+                  ) : (
+                    <LlmReply
+                      index={index}
+                      chat={chat}
+                      loading={loading}
+                      userQuestion={chatHistory[index - 1]}
+                      Delete={() => (
+                        <CloseIcon
+                          style={{
+                            cursor: "pointer",
+                            float: "right",
+                          }}
+                          onClick={() => dispatch(deleteMessage(chat.id))}
+                        />
+                      )}
+                    />
+                  )}
                 </div>
               );
             })}

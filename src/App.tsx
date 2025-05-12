@@ -41,7 +41,6 @@ function App() {
       window.location.replace("/#/");
     }
   }, []);
-
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <SimpleAlert />
