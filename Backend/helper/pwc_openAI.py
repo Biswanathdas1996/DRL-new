@@ -1,12 +1,42 @@
+import requests
+import json
 import openai  # type: ignore
 import os
 from secretes.secrets import OPENAI_API_KEY
-import json
 
-try:
-    os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-except Exception as e:
-    print(f"Error setting environment variable: {e}")
+
+url = "https://genai-sharedservice-americas.pwc.com/completions"
+
+
+def call_pwc_openai(prompt):
+    payload = json.dumps({
+        "model": "azure.gpt-4-0613",
+        "prompt": prompt,
+        "presence_penalty": 0,
+        "seed": 25,
+        "stop": None,
+        "stream": False,
+        "stream_options": None,
+        "temperature": 1,
+        "top_p": 1
+    })
+    headers = {
+        'Cookie': 'visid_incap_3145883=9uUBYSTeT2275FtjYNuVtT5bHGgAAAAAQUIPAAAAAAB9JfvKpJwD0GVLfyRwjDjA; incap_ses_707_3145883=AZ8qdsyAeXJudF8O+cTPCT9bHGgAAAAAirG7qpFpZYDbDmRwZr3wyA==',
+        'Content-Type': 'application/json',
+        'API-Key': 'sk-o0SVi3-3oZEeKMAIGMuAuQ',
+        'Authorization': 'Bearer sk-o0SVi3-3oZEeKMAIGMuAuQ',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print("Response:", response)  # Print the response for debugging
+    return response 
+
+
+
+# -----------------------------------------------------------------------------------------------------
+
+
 
 
 def save_erd_as_text_with_openAI(input_data):
@@ -131,7 +161,7 @@ def call_gpt_for_json(prompt):
         response = client.chat.completions.create(
             model=os.environ.get("X-Ai-Model", "gpt-4"),
             messages=[
-            {"role": "system", "content": "provide a summarize for the following prompt:"},
+            {"role": "system", "content": "provide a javascript function for the following prompt:"},
             {"role": "user", "content": prompt}
             ],
             temperature=0,

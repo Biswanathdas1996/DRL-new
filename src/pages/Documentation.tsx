@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { callLLM } from "../helper/llm";
 import { uiData as data } from "../string/documentation";
-import { dbSchema } from "../string/dbSchema";
+import { dbSchema as fixedDbSchema } from "../string/dbSchema";
 import { TextField, Button, Card } from "@mui/material";
 import Loader from "../components/Loader";
 
 const Documentation: React.FC = () => {
   const [prompts, setPrompts] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
+
+  const dbSchema = localStorage.getItem("DB_SCHEMA_DEF") || fixedDbSchema;
+
   const fetchPrompt = async () => {
     setLoading(true);
     const promptInput = (

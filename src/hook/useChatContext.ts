@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dbSchema } from "../string/dbSchema";
+import { dbSchema as fixedDbSchema } from "../string/dbSchema";
 
 interface Chat {
   type: string;
@@ -34,6 +34,8 @@ const useChatContext = (chatHistory: Chat[]) => {
     const userMessages = mappedChatContext.filter(
       (chat) => chat.role === "user"
     );
+
+    const dbSchema = localStorage.getItem("DB_SCHEMA_DEF") || fixedDbSchema;
 
     const systemMessages = {
       role: "system",

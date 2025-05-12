@@ -39,5 +39,10 @@
     "api_type": "azure",
     "base_url": "https://soumenopenai.openai.azure.com/",
     "api_version": "2023-05-15"
+  },
+  {
+    "model": "azure.gpt-4-0613",
+    "api_key": "sk-o0SVi3-3oZEeKMAIGMuAuQ",
+    "base_url": "https://genai-sharedservice-americas.pwc.com/"
   }
 ]

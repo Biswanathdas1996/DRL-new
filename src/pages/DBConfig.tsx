@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
-import { GENERATE_ERD_FROM_DB, GET_ERD_IMG } from "../config";
+import {
+  GENERATE_ERD_FROM_DB,
+  GET_ERD_IMG,
+  DB_SCHEMA_DEF_AGENT,
+} from "../config";
 import Button from "@mui/material/Button";
 import BRD from "../components/BRD";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -102,6 +106,28 @@ const DBConfig: React.FC = () => {
     }));
   };
 
+  const handleSchemaDefAgent = (dbConfig: any): void => {
+    setLoading(true);
+    fetch(DB_SCHEMA_DEF_AGENT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ db_schema: dbConfig }),
+    })
+      .then((response: Response) => response.text())
+      .then((result: any) => {
+        localStorage.setItem("DB_SCHEMA_DEF", JSON.stringify(result));
+      })
+      .catch((error: unknown) => {
+        console.error(error);
+        triggerAlert(JSON.stringify(error), "error");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const handleFileUpload = () => {
     localStorage.setItem("dbConfig", JSON.stringify(dbConfig));
     setLoading(true);
@@ -119,16 +145,16 @@ const DBConfig: React.FC = () => {
     };
 
     fetch(GENERATE_ERD_FROM_DB, requestOptions)
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((result) => {
-        setDbJson(result);
-        localStorage.setItem("dbJson", JSON.stringify(result));
-        setLoading(false);
+        localStorage.setItem("DB_SCHEMA_DEF", JSON.stringify(result));
       })
       .catch((error) => {
-        setLoading(false);
         console.error(error);
         triggerAlert(JSON.stringify(error), "error");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 

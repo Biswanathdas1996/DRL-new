@@ -9,7 +9,7 @@ from sql.db import generate_erd_from, execute_sql_query
 from mongodb.rag import render_mongo_pack
 from Fixed_prompts_module.index import pre_process_data
 from Log.index import log, render_logs_pack
-from AI_Agent.index import render_agents
+# from AI_Agent.index import render_agents
 from secretes.secrets import DB_CONFIG
 import re
 from helper.gpt import call_gpt_for_json
@@ -27,7 +27,7 @@ CORS(app)
 app = render_mongo_pack(app)
 app = render_data_analytics(app)
 app = render_logs_pack(app)
-app = render_agents(app)
+# app = render_agents(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 
 @app.before_request
@@ -161,7 +161,26 @@ def direct_gpt_call_for_json():
 def generate_erd_from_db():
     try:
         json_result = generate_erd_from(DB_CONFIG)
-        return json_result, 200
+
+        result_json = call_gpt_for_json(str(f"""
+            You are a database documentation assistant. Given the following ERD JSON, generate a concise, markdown-formatted schema summary in text format, following this structure:
+
+                
+                1. **table_name** (column1, column2, ...)
+                - 🔗 foreign_key_column → referenced_table.referenced_column
+                - Additional notes if needed.
+
+                2. **next_table** (columns...)
+                - 🔗 ...
+
+                ...and so on for each table.
+
+                Only output the template literal as shown above. Do not include explanations or extra text. Here is the ERD JSON:
+                {json_result}
+
+            """))
+        print("=========uuuuu========>",result_json)
+        return result_json, 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

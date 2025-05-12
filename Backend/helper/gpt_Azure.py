@@ -4,24 +4,25 @@ import openai  # You can still use the openai package with Azure endpoints
 from secretes.secrets import AZURE_OPENAI_API_KEY, AZURE_ENDPOINT
 
 # Set environment variables for Azure
-os.environ["OPENAI_API_KEY"] = AZURE_OPENAI_API_KEY
+os.environ["AZURE_OPENAI_API_KEY"] = AZURE_OPENAI_API_KEY
 os.environ["AZURE_ENDPOINT"] = AZURE_ENDPOINT
 
 # Setting the OpenAI endpoint for Azure
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = os.environ["AZURE_OPENAI_API_KEY"]
 openai.api_base = os.environ["AZURE_ENDPOINT"]
 
 def save_erd_as_text_with_openAI(input_data):
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["AZURE_OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model="gpt-4",  # You can specify other models if needed
             messages=[
-                {"role": "system", "content": "Convert the following JSON schema into a descriptive text format:"},
-                {"role": "user", "content": input_data}
+            {"role": "system", "content": "Convert the following JSON schema into a descriptive text format:"},
+            {"role": "user", "content": input_data}
             ],
             max_tokens=1500
         )
-        return response['choices'][0]['message']['content'].strip()
+        return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"The error '{e}' occurred")
 
@@ -31,7 +32,7 @@ def call_gpt(config, prompt, max_tokens=50):
     global chat_history
     try:
         # Ensure Azure API is set up correctly
-        openai.api_key = os.environ["OPENAI_API_KEY"]
+        openai.api_key = os.environ["AZURE_OPENAI_API_KEY"]
         openai.api_base = os.environ["AZURE_ENDPOINT"]
     except KeyError:
         return "API key or endpoint not found in environment variables."
@@ -54,13 +55,14 @@ def call_gpt(config, prompt, max_tokens=50):
         total_tokens = sum(len(message['content'].split()) for message in chat_history)
 
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["AZURE_OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model="gpt-4",  # Use the appropriate model
             messages=[{"role": "system", "content": config}] + chat_history,
             temperature=0,
             max_tokens=max_tokens
         )
-        result = response['choices'][0]['message']['content'].strip()
+        result = response.choices[0].message.content.strip()
         chat_history.append({"role": "assistant", "content": result})
         return result
     except Exception as e:
@@ -68,7 +70,7 @@ def call_gpt(config, prompt, max_tokens=50):
 
 def call_gpt_sql_data(prompt, chatContext):
     try:
-        openai.api_key = os.environ["OPENAI_API_KEY"]
+        openai.api_key = os.environ["AZURE_OPENAI_API_KEY"]
         openai.api_base = os.environ["AZURE_ENDPOINT"]
     except KeyError:
         return "API key or endpoint not found in environment variables."
@@ -97,13 +99,41 @@ def call_gpt_sql_data(prompt, chatContext):
     chatContext.append({"role": "user", "content": prompt})
 
     try:
-        response = openai.ChatCompletion.create(
+        client = openai.OpenAI(api_key=os.environ["AZURE_OPENAI_API_KEY"])
+        response = client.chat.completions.create(
             model="gpt-4",  # Use the appropriate model
             messages=chatContext,
             temperature=0,
             stop=[";"]
         )
-        result = response['choices'][0]['message']['content'].strip()
+        result = response.choices[0].message.content.strip()
         return result
     except Exception as e:
         return f"An error occurred: {e}"
+
+def call_gpt_for_json(prompt):
+    global chat_history
+    try:
+        openai.api_key = os.environ["AZURE_OPENAI_API_KEY"]
+    except KeyError:
+        return "API key not found in environment variables."
+
+
+    try:
+        client = openai.OpenAI(api_key=os.environ["AZURE_OPENAI_API_KEY"])
+        response = client.chat.completions.create(
+            model=os.environ.get("X-Ai-Model", "gpt-4"),
+            messages=[
+            {"role": "system", "content": "You are an assistant that provides JavaScript functions for user prompts."},
+            {"role": "user", "content": prompt}
+            ],
+            temperature=0,
+            stop=None
+        )
+        result = response.choices[0].message['content'].strip()
+        chat_history.append({"role": "assistant", "content": result})
+        print("GPT Response:", response)
+        return result
+    except Exception as e:
+        return f"An error occurred: {e}"
+   
